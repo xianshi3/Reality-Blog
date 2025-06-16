@@ -5,6 +5,13 @@ interface RightSidebarProps {
   recommends: string[];
 }
 
+/**
+ * 右侧边栏组件，显示个人信息、热门标签和推荐阅读列表。
+ *
+ * @param tags - 热门标签数组，将以标签形式展示。
+ * @param recommends - 推荐阅读标题数组，将以列表形式展示。
+ * @returns 渲染右侧边栏的 React 组件。
+ */
 export default function RightSidebar({ tags, recommends }: RightSidebarProps) {
   return (
     <aside className="lg:w-1/4 w-full space-y-6">
