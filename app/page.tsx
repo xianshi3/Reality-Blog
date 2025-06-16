@@ -1,5 +1,19 @@
-import Image from "next/image";
+import Header from "../components/Header";
+import LeftSidebar from "../components/LeftSidebar";
+import MainContent from "../components/MainContent";
+import RightSidebar from "../components/RightSidebar";
+import Footer from "../components/Footer";
 
+/**
+ * Home 组件是博客首页的主入口，负责组织页面的整体布局和数据传递。
+ *
+ * - 展示博客文章列表、标签、推荐内容等。
+ * - 使用 Header、Footer、LeftSidebar、MainContent、RightSidebar 等子组件进行页面分区。
+ * - 通过 props 向 Footer 传递当前年份，向 MainContent、RightSidebar 传递文章、标签和推荐数据。
+ *
+ * @component
+ * @returns {JSX.Element} 博客首页布局
+ */
 export default function Home() {
   const currentYear = new Date().getFullYear();
 
@@ -8,116 +22,44 @@ export default function Home() {
       title: "博客文章标题一",
       date: "2024-06-01",
       category: "技术",
-      summary: "这里是一段文章摘要，简要介绍文章内容，吸引读者点击阅读全文。",
+      summary:
+        "这里是一段文章摘要，简要介绍文章内容，吸引读者点击阅读全文。",
       link: "#",
     },
     {
       title: "博客文章标题二",
       date: "2024-05-20",
       category: "生活",
-      summary: "这里是一段文章摘要，简要介绍文章内容，吸引读者点击阅读全文。",
+      summary:
+        "这里是一段文章摘要，简要介绍文章内容，吸引读者点击阅读全文。",
       link: "#",
     },
   ];
 
-  const tags = ["JavaScript", "React", "生活", "设计", "全栈", "Tailwind", "Next.js"];
-  const recommends = ["深入理解 React", "Vite 与 Webpack 对比", "使用 Tailwind 构建博客"];
+  const tags = [
+    "JavaScript",
+    "React",
+    "生活",
+    "设计",
+    "全栈",
+    "Tailwind",
+    "Next.js",
+  ];
+  const recommends = [
+    "深入理解 React",
+    "Vite 与 Webpack 对比",
+    "使用 Tailwind 构建博客",
+  ];
 
   return (
-    <div className="home-container">
-      {/* 顶部 */}
-      <header className="home-header">
-        <Image
-          className="avatarImg"
-          src="/avatar.jpg"
-          alt="头像"
-          width={96}
-          height={96}
-          priority
-        />
-        <h1 className="home-title">Reality</h1>
-        <p className="home-description">全栈开发工程师的技术与生活</p>
-      </header>
-
-      {/* 内容区域三栏布局 */}
-      <main className="flex flex-col lg:flex-row w-full max-w-6xl px-4 gap-6">
-        {/* 左侧边栏 */}
-        <aside className="lg:w-1/4 w-full space-y-6">
-          <div className="article-item">
-            <h3 className="article-title">导航</h3>
-            <ul className="text-sm">
-              <li><a href="#">🏠 首页</a></li>
-              <li><a href="#">📚 分类</a></li>
-              <li><a href="#">📧 联系我</a></li>
-            </ul>
-          </div>
-
-          <div className="article-item">
-            <h3 className="article-title">公告</h3>
-            <p className="text-sm">欢迎来到 Reality 的博客！正在持续更新中~</p>
-          </div>
-        </aside>
-
-        {/* 主内容区 */}
-        <section className="flex-1 space-y-8">
-          {/* 最新文章 */}
-          <div className="article-section">
-            <h2 className="section-title">📝 最新文章</h2>
-            <ul className="space-y-6">
-              {articles.map((article, idx) => (
-                <li className="article-item" key={idx}>
-                  <a href={article.link} className="block">
-                    <h3 className="article-title">{article.title}</h3>
-                    <p className="article-meta">{article.date} · {article.category}</p>
-                    <p className="article-summary">{article.summary}</p>
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* 关于我 */}
-          <div className="article-section">
-            <h2 className="section-title">👤 关于我</h2>
-            <p className="about-para">
-              👋 你好，我是 Reality，一名热爱技术与生活的全栈开发者。
-              喜欢探索现代前端框架与构建简洁、优雅的系统。
-            </p>
-          </div>
-        </section>
-
-        {/* 右侧边栏 */}
-        <aside className="lg:w-1/4 w-full space-y-6">
-          <div className="article-item">
-            <h3 className="article-title">热门标签</h3>
-            <div className="flex flex-wrap gap-2">
-              {tags.map((tag, idx) => (
-                <span key={idx} className="bg-gray-200">
-                  #{tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="article-item">
-            <h3 className="article-title">推荐阅读</h3>
-            <ul className="text-sm">
-              {recommends.map((title, idx) => (
-                <li key={idx}><a href="#" className="hover:underline">📌 {title}</a></li>
-              ))}
-            </ul>
-          </div>
-        </aside>
+    <div className="home-container pt-16 bg-gray-100 min-h-screen">
+      <Header />
+      <main className="container mx-auto flex flex-col lg:flex-row w-full max-w-6xl px-4 gap-6 py-8">
+        <LeftSidebar />
+        <MainContent articles={articles} />
+        <RightSidebar tags={tags} recommends={recommends} />
       </main>
-
-      {/* 页脚 */}
-      <footer className="footer mt-8">
-        <div>© {currentYear} Reality-Blog. 保留所有权利.</div>
-        <div className="footer-links">
-          <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="mailto:your@email.com">Email</a>
-        </div>
-      </footer>
+      <Footer currentYear={currentYear} />
     </div>
   );
 }
