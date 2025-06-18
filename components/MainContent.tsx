@@ -1,10 +1,5 @@
-type Article = {
-  title: string;
-  link: string;
-  date: string;
-  category: string;
-  summary: string;
-};
+import type { Article } from '../types/article';
+import ArticleList from '../components/ArticleList';
 
 export default function MainContent({ articles }: { articles: Article[] }) {
   return (
@@ -13,18 +8,22 @@ export default function MainContent({ articles }: { articles: Article[] }) {
       <div className="article-section">
         <h2 className="section-title">📝 最新文章</h2>
         <ul className="space-y-6">
-            {articles.map((article: Article, idx: number) => (
-            <li className="article-item" key={idx}>
-              <a href={article.link} className="block">
-              <h3 className="article-title">{article.title}</h3>
-              <p className="article-meta">
-                {article.date} · {article.category}
-              </p>
-              <p className="article-summary">{article.summary}</p>
+          {articles.map((article, idx) => (
+            <li className="article-item" key={article.link || idx}>
+              <a href={article.link} className="block rounded p-4 transition">
+                <h3 className="article-title font-bold text-lg">{article.title}</h3>
+                <p className="article-meta text-gray-500 text-sm">
+                  {article.date} · {article.category}
+                </p>
+                <p className="article-summary text-gray-700">{article.summary}</p>
               </a>
             </li>
-            ))}
+          ))}
         </ul>
+      </div>
+
+      <div >
+        <ArticleList />
       </div>
 
       {/* 关于我 */}
