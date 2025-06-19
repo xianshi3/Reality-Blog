@@ -28,7 +28,6 @@ export default async function Home() {
     ...item,
     link: `/article/${item.id}`,
   }));
-
   const currentYear = new Date().getFullYear();
 
   const tags = [
