@@ -1,10 +1,20 @@
+/**
+ * 主内容区组件
+ * 
+ * @module MainContent
+ */
+
 import type { Article } from '../types/article';
 import ArticleList from '../components/ArticleList';
 
+/**
+ * MainContent 组件
+ * @param articles - 文章数组
+ */
 export default function MainContent({ articles }: { articles: Article[] }) {
   return (
     <section className="flex-1 space-y-8">
-      {/* 最新文章 */}
+      {/* 最新文章区域 */}
       <div className="article-section">
         <h2 className="section-title">📝 最新文章</h2>
         <ul className="space-y-6">
@@ -22,16 +32,16 @@ export default function MainContent({ articles }: { articles: Article[] }) {
         </ul>
       </div>
 
-      <div >
+      {/* 推荐文章列表 */}
+      <div>
         <ArticleList />
       </div>
 
-      {/* 关于我 */}
+      {/* 关于我区域 */}
       <div className="article-section">
         <h2 className="section-title">👤 关于我</h2>
         <p className="about-para">
           👋 你好，我是 Reality，一名热爱技术与生活的全栈开发者。
-          喜欢探索现代前端框架与构建简洁、优雅的系统。
         </p>
       </div>
     </section>

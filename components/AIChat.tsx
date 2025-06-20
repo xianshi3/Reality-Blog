@@ -1,11 +1,19 @@
+/**
+ * AIChat 组件
+ * 
+ * @module AIChat
+ */
+
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 
+/** 消息类型定义 */
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
 
+/** 用户和 AI 的头像 */
 const AVATAR = {
   user: (
     <div className="w-8 h-8 rounded-full bg-blue-400 flex items-center justify-center text-white font-bold shadow">
@@ -19,19 +27,25 @@ const AVATAR = {
   ),
 };
 
+/**
+ * AIChat 组件
+ * 悬浮按钮点击弹出对话框，支持与 AI 聊天
+ */
 export default function AIChat() {
-  const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false); // 控制对话框显示
+  const [messages, setMessages] = useState<Message[]>([]); // 消息列表
+  const [input, setInput] = useState(""); // 输入框内容
+  const [loading, setLoading] = useState(false); // 发送状态
+  const messagesEndRef = useRef<HTMLDivElement>(null); // 滚动到底部
 
+  // 每次消息变化或打开时自动滚动到底部
   useEffect(() => {
     if (open) {
       setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     }
   }, [messages, open]);
 
+  // 发送消息
   const handleSend = async () => {
     if (!input.trim() || loading) return;
     const newMessages = [...messages, { role: "user" as const, content: input }];
@@ -100,7 +114,7 @@ export default function AIChat() {
             {messages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`flex items-end gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`flex items-end gap-2 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-scaleIn`}
               >
                 {msg.role === "assistant" && AVATAR.assistant}
                 <div
