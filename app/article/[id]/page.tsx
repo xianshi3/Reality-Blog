@@ -1,9 +1,14 @@
 import { supabase } from "../../../lib/supabaseClient";
 import type { Article } from "../../../types/article";
-import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
+import LikeButton from "../../../components/LikeButton";
+import ReadingProgress from "../../../components/ReadingProgress";
 
-export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
+export default async function ArticlePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
 
   const { data, error } = await supabase
@@ -14,8 +19,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   if (error || !data) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="bg-red-100 text-red-700 p-6 rounded shadow animate-fadeInUp" style={{ animation: 'fadeInUp 0.8s' }}>
+      <div className="flex items-center justify-center min-h-screen home-container">
+        <div className="bg-red-100 text-red-700 p-6 rounded shadow animate-fadeInUp">
           <h2 className="font-bold text-lg mb-2">文章未找到</h2>
           <p>{error?.message}</p>
         </div>
@@ -32,33 +37,49 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="home-container pt-16">
-      <Header />
-      <main className="container mx-auto max-w-3xl px-4 py-8">
-        <div className="bg-white dark:bg-[#23272f] rounded-xl shadow-lg p-8 animate-fadeInUp" style={{ animation: 'fadeInUp 0.8s' }}>
-          <h1 className="article-title text-3xl mb-4 animate-fadeInUp" style={{ animation: 'fadeInUp 1s' }}>
-            {article.title}
-          </h1>
-          <div className="article-meta mb-2">{article.date} · {article.category}</div>
-          <div className="article-summary mb-4">{article.summary}</div>
-          <article className="prose text-gray-800 dark:text-gray-200 mb-6 animate-fadeInUp" style={{ animation: 'fadeInUp 1.2s' }}>
-            {article.content}
-          </article>
-          {article.tags && article.tags.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-2">
-              {article.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-gray-200 text-sm mr-2 px-3 py-1 rounded-full animate-scaleUp"
-                  style={{ animation: 'scaleUp 0.5s' }}
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+    <div className="min-h-screen flex flex-col article-page-container relative">
+      <ReadingProgress />
+
+      <a href="/" className="return-home" aria-label="返回首页">
+        <span className="text-lg">←</span>
+        <span>返回首页</span>
+      </a>
+
+      <main className="article-container">
+        <article className="article-content animate-fadeInUp">
+          <h1 className="article-title">{article.title}</h1>
+
+          <div className="article-meta">
+            <span>{article.date}</span>
+            <span>·</span>
+            <span>{article.category}</span>
+          </div>
+
+          {article.summary && (
+            <div className="article-summary">{article.summary}</div>
           )}
-        </div>
+
+          <div
+            className="prose"
+            dangerouslySetInnerHTML={{ __html: article.content ?? "" }}
+          ></div>
+
+          <div className="tag-like-container mt-10">
+            <div>
+              {article.tags &&
+                article.tags.length > 0 &&
+                article.tags.map((tag) => (
+                  <span key={tag} className="tag">
+                    #{tag}
+                  </span>
+                ))}
+            </div>
+
+            <LikeButton articleId={article.id} />
+          </div>
+        </article>
       </main>
+
       <Footer currentYear={currentYear} />
     </div>
   );
