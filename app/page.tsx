@@ -5,6 +5,7 @@ import RightSidebar from "../components/RightSidebar";
 import Footer from "../components/Footer";
 import { supabase } from "../lib/supabaseClient";
 import type { Article } from "../types/article";
+import AIChat from "../components/AIChat";
 
 export default async function Home() {
   const { data: articlesRaw, error, status } = await supabase
@@ -53,6 +54,10 @@ export default async function Home() {
         <MainContent articles={articles} />
         <RightSidebar tags={tags} recommends={recommends} />
       </main>
+      {/* AIChat 固定在左下角 */}
+      <div className="fixed bottom-4 left-4 z-50 w-[350px] max-w-[90vw] pointer-events-auto">
+        <AIChat />
+      </div>
       <Footer currentYear={currentYear} />
     </div>
   );
