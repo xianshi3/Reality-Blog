@@ -32,10 +32,10 @@ export default function MainContent({ articles }: { articles: Article[] }) {
         </ul>
       </div>
 
-      {/* 推荐文章列表 */}
+      {/* 测试文章列表
       <div>
         <ArticleList />
-      </div>
+      </div> */}
 
       {/* 关于我区域 */}
       <div className="article-section">
