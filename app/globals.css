@@ -40,6 +40,42 @@ body {
   animation: scaleIn 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+@keyframes fadeInRight {
+  0% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-fadeInRight {
+  animation: fadeInRight 0.8s ease-out forwards;
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+.animate-fadeInLeft {
+  animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+/* 可用于多个组件组合动画节奏 */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+/* 注意：需设置 animation-fill-mode 保证动画结束后保留样式 */
+.animate-fill-both { animation-fill-mode: both; }
+
+
 /* ========= 页面基础布局 ========= */
 .home-container {
   min-height: 100vh;
@@ -219,7 +255,9 @@ body {
   margin-top: 0.5rem;
 }
 @media (min-width: 640px) {
-  .footer-links { margin-top: 0; }
+  .footer-links {
+    margin-top: 0;
+  }
 }
 
 /* ========= 公共样式：标签 & 小文字 ========= */
