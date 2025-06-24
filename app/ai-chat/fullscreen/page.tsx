@@ -2,47 +2,55 @@
 
 import React, { useState, useEffect } from "react";
 
-// 全屏聊天页面组件
+/**
+ * 全屏聊天页面组件
+ * 该组件实现了一个简单的聊天界面，用户可以输入消息并接收 AI 的回复。
+ */
 export default function FullscreenChat() {
   const [messages, setMessages] = useState<any[]>([]);  // 存储聊天消息
   const [input, setInput] = useState("");               // 存储用户输入的消息
   const [loading, setLoading] = useState(false);        // 加载状态，用于控制发送消息时的加载动画
 
-  // 从 URL 查询参数中获取消息内容
+  /**
+   * 从 URL 查询参数中获取消息内容，并设置到消息列表
+   */
   useEffect(() => {
     const queryMessages = new URLSearchParams(window.location.search).get("messages");
     if (queryMessages) {
       try {
         setMessages(JSON.parse(queryMessages));  // 解析 URL 中的消息并设置
       } catch (error) {
-        console.error("消息解析失败:", error);
+        console.error("消息解析失败:", error);  // 错误处理
       }
     }
   }, []);
 
-  // 处理发送消息
+  /**
+   * 处理发送消息
+   * 模拟 AI 回复，实际应用中应该调用 API 获取 AI 回复
+   */
   const handleSend = async () => {
     if (!input.trim() || loading) return;  // 如果输入为空或正在加载，则不发送消息
     setLoading(true);  // 设置加载状态
     const newMessages = [...messages, { role: "user", content: input }];
-    setMessages(newMessages);  // 更新消息列表
-    setInput("");  // 清空输入框
+    setMessages(newMessages); 
+    setInput(""); 
 
-    // 模拟 AI 回复 (在实际应用中，应该调用 API 获取 AI 回复)
+    // 模拟 AI 回复 (模拟延迟)
     setTimeout(() => {
       setMessages([
         ...newMessages,
         { role: "assistant", content: `AI 回复: ${input}` },  // AI 的回复
       ]);
-      setLoading(false);  // 结束加载状态
-    }, 1000);  // 模拟延迟
+      setLoading(false);
+    }, 1000); 
   };
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900">
       {/* 返回按钮 */}
       <button
-        onClick={() => window.history.back()} // 返回上一页
+        onClick={() => window.history.back()}  // 返回上一页
         className="absolute top-4 left-4 text-xl text-gray-600 hover:text-gray-800"
       >
         ← 返回
@@ -95,8 +103,8 @@ export default function FullscreenChat() {
           className="flex-1 border border-gray-300 rounded-lg px-4 py-2 text-sm bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
           placeholder="输入你的问题..."
           value={input}
-          onChange={(e) => setInput(e.target.value)} // 更新输入框内容
-          onKeyDown={(e) => e.key === "Enter" && handleSend()} // 回车键发送消息
+          onChange={(e) => setInput(e.target.value)}  // 更新输入框内容
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}  // 回车键发送消息
         />
         {/* 发送按钮 */}
         <button
