@@ -1,4 +1,3 @@
-// components/TechStackCard.tsx
 "use client";
 
 import { useState } from 'react';
@@ -31,10 +30,10 @@ export default function TechStackCard() {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <div className="bg-white dark:bg-[#23272f] rounded-xl font-sans">
       {/* 标题 */}
       <div className="p-6 pb-0">
-        <h3 className="text-xl font-bold flex items-center">
+        <h3 className="text-xl font-bold flex items-center text-gray-800 dark:text-gray-100">
           <span className="mr-2">💻</span> 我的技术栈
         </h3>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
@@ -82,7 +81,7 @@ export default function TechStackCard() {
           {techStack[activeTab].map((tech) => (
             <li key={tech.name}>
               <div className="flex items-center justify-between mb-1">
-                <span className="font-medium flex items-center">
+                <span className="font-medium flex items-center text-gray-700 dark:text-gray-300">
                   <span className="mr-2">{tech.icon}</span>
                   {tech.name}
                 </span>
