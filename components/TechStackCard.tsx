@@ -8,18 +8,18 @@ export default function TechStackCard() {
 
   const techStack = {
     frontend: [
-      { name: 'Next.js', level: 90, icon: '🅰️' },
-      { name: 'React', level: 95, icon: '⚛️' },
+      { name: 'Next.js', level: 70, icon: '🅰️' },
+      { name: 'React', level: 75, icon: '⚛️' },
       { name: 'TypeScript', level: 85, icon: '📘' },
       { name: 'Tailwind CSS', level: 80, icon: '🎨' },
-      { name: 'Redux', level: 75, icon: '🔄' }
+      { name: 'Vue.js', level: 90, icon: '🟢' }
     ],
     backend: [
-      { name: 'Node.js', level: 85, icon: '🟢' },
-      { name: 'Express', level: 80, icon: '🚂' },
-      { name: 'Supabase', level: 75, icon: '🛢️' },
-      { name: 'PostgreSQL', level: 70, icon: '🐘' },
-      { name: 'REST API', level: 85, icon: '🔗' }
+      { name: 'JavaSE', level: 85, icon: '☕' },
+      { name: '.NET', level: 80, icon: '🔷' },
+      { name: 'Go', level: 75, icon: '🐹' },
+      { name: 'Python', level: 80, icon: '🐍' },
+      { name: 'C++', level: 70, icon: '➕➕' }
     ],
     devops: [
       { name: 'Vercel', level: 80, icon: '▲' },
@@ -99,36 +99,6 @@ export default function TechStackCard() {
             </li>
           ))}
         </ul>
-
-        {/* 技术亮点 */}
-        <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
-          <h4 className="text-sm font-semibold mb-2 flex items-center">
-            <span className="mr-1">✨</span> 技术亮点
-          </h4>
-          <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
-            {activeTab === 'frontend' && (
-              <>
-                <li>• 精通Next.js服务端渲染和静态生成</li>
-                <li>• 熟练使用React Hooks和状态管理</li>
-                <li>• 擅长响应式和无障碍设计</li>
-              </>
-            )}
-            {activeTab === 'backend' && (
-              <>
-                <li>• 使用Supabase构建全栈应用</li>
-                <li>• 设计高性能RESTful API</li>
-                <li>• 实现数据模型优化和查询优化</li>
-              </>
-            )}
-            {activeTab === 'devops' && (
-              <>
-                <li>• 熟练使用Vercel部署Next.js应用</li>
-                <li>• 配置自动化CI/CD流程</li>
-                <li>• 实施监控和日志解决方案</li>
-              </>
-            )}
-          </ul>
-        </div>
       </div>
     </div>
   );
