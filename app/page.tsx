@@ -13,7 +13,6 @@ import Footer from "../components/Footer";
 import { supabase } from "../lib/supabaseClient";
 import type { Article } from "../types/article";
 import AIChat from "../components/AIChat";
-import RandomArticleCard from '../components/RandomArticleCard';
 
 /**
  * 博客首页组件
