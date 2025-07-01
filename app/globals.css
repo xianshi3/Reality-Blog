@@ -13,7 +13,7 @@ body {
   100% { opacity: 1; transform: translateY(0);}
 }
 .animate-fadeInUp {
-  animation: fadeInUp 0.8s ease-out forwards;
+  animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
 @keyframes fadeInDown {
@@ -68,21 +68,6 @@ body {
   animation: fadeInLeft 0.8s ease-out forwards;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeInUp {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
-}
 
 /* 可用于多个组件组合动画节奏 */
 .delay-100 { animation-delay: 0.1s; }

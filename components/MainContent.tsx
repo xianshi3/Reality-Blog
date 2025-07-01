@@ -5,7 +5,6 @@
  */
 
 import type { Article } from '../types/article';
-import ArticleList from '../components/ArticleList';
 
 /**
  * MainContent 组件
