@@ -1,4 +1,3 @@
-// components/DeleteButton.tsx
 "use client";
 
 import { supabase } from "@/lib/supabaseClient";
