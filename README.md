@@ -20,7 +20,6 @@ bun dev
 
 This should help your team or any developers setting up the project to easily configure Supabase for local development.
 
-
 打开 [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
