@@ -1,9 +1,8 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import Link from 'next/link';
+import Link from "next/link";
+import { createServerSupabase } from "@/lib/supabaseServer";
 
 export default async function AdminPage() {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await createServerSupabase();
 
   const {
     data: { session },
@@ -13,7 +12,7 @@ export default async function AdminPage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-gray-600">
-          未登录，请先访问{' '}
+          未登录，请先{" "}
           <a href="/login" className="text-blue-500 underline">
             登录页面
           </a>
@@ -23,9 +22,9 @@ export default async function AdminPage() {
   }
 
   const { data: articles } = await supabase
-    .from('articles')
-    .select('id, title, date')
-    .order('date', { ascending: false });
+    .from("articles")
+    .select("id, title, date")
+    .order("date", { ascending: false });
 
   return (
     <div className="p-8 max-w-4xl mx-auto">
@@ -35,9 +34,12 @@ export default async function AdminPage() {
       </Link>
       <ul className="space-y-4">
         {articles?.map((article) => (
-          <li key={article.id} className="flex justify-between items-center border-b pb-2">
+          <li
+            key={article.id}
+            className="flex justify-between items-center border-b pb-2"
+          >
             <div>
-              <span className="font-medium">{article.title}</span> -{' '}
+              <span className="font-medium">{article.title}</span> -{" "}
               <span className="text-sm text-gray-500">{article.date}</span>
             </div>
             <div>

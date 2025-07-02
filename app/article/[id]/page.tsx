@@ -1,16 +1,15 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
 import type { Article } from '../../../types/article';
 import Footer from '../../../components/Footer';
 import LikeButton from '../../../components/LikeButton';
 import ReadingProgress from '../../../components/ReadingProgress';
+import { createServerSupabase } from '../../../lib/supabaseServer';
 
 export default async function ArticlePage({
   params,
 }: {
   params: { id: string };
 }) {
-  const supabase = createServerComponentClient({ cookies });
+  const supabase = await createServerSupabase();
   const { id } = params;
 
   const { data, error } = await supabase

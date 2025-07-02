@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/lib/supabaseClient"; // 你客户端的 supabase 初始化
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -31,22 +31,13 @@ export default function AuthPage() {
         },
       });
 
-      console.log("🟢 注册响应：", { data, error });
-
       if (error) {
-        if (error.message.includes("Password")) {
-          setErrorMsg("❌ 注册失败：密码不符合要求，请使用更复杂的密码。");
-        } else if (error.message.includes("email")) {
-          setErrorMsg("❌ 注册失败：邮箱格式无效或已被注册。");
-        } else {
-          setErrorMsg("❌ 注册失败：" + error.message);
-        }
+        setErrorMsg("注册失败：" + error.message);
       } else {
-        setInfoMsg("✅ 注册成功！请前往邮箱点击验证链接，验证后才能登录。");
+        setInfoMsg("注册成功！请检查邮箱完成验证后再登录。");
       }
     } catch (err: any) {
-      console.error("🚨 注册异常：", err);
-      setErrorMsg("注册时发生错误：" + (err.message || JSON.stringify(err)));
+      setErrorMsg("注册异常：" + (err.message || JSON.stringify(err)));
     } finally {
       setLoading(false);
     }
@@ -68,21 +59,15 @@ export default function AuthPage() {
         password,
       });
 
-      console.log("🔐 登录响应：", { data, error });
-
       if (error) {
-        if (error.message.includes("Invalid login credentials")) {
-          setErrorMsg("❌ 登录失败：账号或密码错误，或邮箱尚未验证。");
-        } else if (error.status === 429) {
-          setErrorMsg("⚠️ 登录频率过高，请稍后再试。");
-        } else if (error.status === 400 && error.message.includes("email")) {
-          setErrorMsg("⚠️ 邮箱格式无效或用户不存在。");
-        } else {
-          setErrorMsg(`❌ 登录失败（${error.status || "未知错误"}）：${error.message}`);
-        }
-      } else if (data?.session) {
-        // 写入 HttpOnly Cookie，调用后端 API
-        await fetch("/api/auth/set-cookie", {
+        setErrorMsg("登录失败：" + error.message);
+        setLoading(false);
+        return;
+      }
+
+      if (data?.session) {
+        // 调用后端接口写 HttpOnly Cookie
+        const res = await fetch("/api/auth/set-cookie", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -91,14 +76,19 @@ export default function AuthPage() {
           }),
         });
 
-        console.log("✅ 登录成功，会话信息：", data.session);
+        if (!res.ok) {
+          const err = await res.json();
+          setErrorMsg("登录失败，写 cookie 错误：" + err.error);
+          setLoading(false);
+          return;
+        }
+
         router.push("/admin");
       } else {
-        setErrorMsg("登录失败：无有效会话，请检查邮箱是否已验证。");
+        setErrorMsg("登录失败：未获取有效会话");
       }
     } catch (err: any) {
-      console.error("🚨 登录异常：", err);
-      setErrorMsg("登录时发生未知错误：" + (err.message || JSON.stringify(err)));
+      setErrorMsg("登录异常：" + (err.message || JSON.stringify(err)));
     } finally {
       setLoading(false);
     }
