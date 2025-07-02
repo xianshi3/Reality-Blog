@@ -81,6 +81,16 @@ export default function AuthPage() {
           setErrorMsg(`❌ 登录失败（${error.status || "未知错误"}）：${error.message}`);
         }
       } else if (data?.session) {
+        // 写入 HttpOnly Cookie，调用后端 API
+        await fetch("/api/auth/set-cookie", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          }),
+        });
+
         console.log("✅ 登录成功，会话信息：", data.session);
         router.push("/admin");
       } else {
