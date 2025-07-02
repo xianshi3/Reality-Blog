@@ -4,13 +4,18 @@ import LikeButton from '../../../components/LikeButton';
 import ReadingProgress from '../../../components/ReadingProgress';
 import { createServerSupabase } from '../../../lib/supabaseServer';
 
-export default async function ArticlePage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const supabase = await createServerSupabase();
+type PageProps = {
+  params: {
+    id: string;
+  } | Promise<{ id: string }>;
+};
+
+export default async function ArticlePage(props: PageProps) {
+  // 兼容 params 为 Promise 的情况
+  const params = await props.params;
   const { id } = params;
+
+  const supabase = await createServerSupabase();
 
   const { data, error } = await supabase
     .from('articles')
