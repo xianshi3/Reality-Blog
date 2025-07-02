@@ -1,20 +1,22 @@
-import { supabase } from "../../../lib/supabaseClient";
-import type { Article } from "../../../types/article";
-import Footer from "../../../components/Footer";
-import LikeButton from "../../../components/LikeButton";
-import ReadingProgress from "../../../components/ReadingProgress";
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import type { Article } from '../../../types/article';
+import Footer from '../../../components/Footer';
+import LikeButton from '../../../components/LikeButton';
+import ReadingProgress from '../../../components/ReadingProgress';
 
 export default async function ArticlePage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const { id } = await params;
+  const supabase = createServerComponentClient({ cookies });
+  const { id } = params;
 
   const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("id", id)
+    .from('articles')
+    .select('*')
+    .eq('id', id)
     .single();
 
   if (error || !data) {
@@ -31,7 +33,7 @@ export default async function ArticlePage({
   const article: Article = {
     ...data,
     link: `/article/${data.id}`,
-    tags: data.tags ? data.tags.split(",") : [],
+    tags: data.tags ? data.tags.split(',') : [],
   };
 
   const currentYear = new Date().getFullYear();
@@ -61,7 +63,7 @@ export default async function ArticlePage({
 
           <div
             className="prose"
-            dangerouslySetInnerHTML={{ __html: article.content ?? "" }}
+            dangerouslySetInnerHTML={{ __html: article.content ?? '' }}
           ></div>
 
           <div className="tag-like-container mt-10">
