@@ -1,20 +1,25 @@
-import { supabase } from "../../../lib/supabaseClient";
-import type { Article } from "../../../types/article";
-import Footer from "../../../components/Footer";
-import LikeButton from "../../../components/LikeButton";
-import ReadingProgress from "../../../components/ReadingProgress";
+import type { Article } from '../../../types/article';
+import Footer from '../../../components/Footer';
+import LikeButton from '../../../components/LikeButton';
+import ReadingProgress from '../../../components/ReadingProgress';
+import { createServerSupabase } from '../../../lib/supabaseServer';
 
-export default async function ArticlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+type PageProps = {
+  params: Promise<{
+    id: string;
+  }>;
+};
+
+export default async function ArticlePage({ params }: PageProps) {
+  // 必须 await params
   const { id } = await params;
 
+  const supabase = await createServerSupabase();
+
   const { data, error } = await supabase
-    .from("articles")
-    .select("*")
-    .eq("id", id)
+    .from('articles')
+    .select('*')
+    .eq('id', id)
     .single();
 
   if (error || !data) {
@@ -31,7 +36,7 @@ export default async function ArticlePage({
   const article: Article = {
     ...data,
     link: `/article/${data.id}`,
-    tags: data.tags ? data.tags.split(",") : [],
+    tags: data.tags ? data.tags.split(',') : [],
   };
 
   const currentYear = new Date().getFullYear();
@@ -61,20 +66,17 @@ export default async function ArticlePage({
 
           <div
             className="prose"
-            dangerouslySetInnerHTML={{ __html: article.content ?? "" }}
+            dangerouslySetInnerHTML={{ __html: article.content ?? '' }}
           ></div>
 
           <div className="tag-like-container mt-10">
             <div>
-              {article.tags &&
-                article.tags.length > 0 &&
-                article.tags.map((tag) => (
-                  <span key={tag} className="tag">
-                    #{tag}
-                  </span>
-                ))}
+              {article.tags?.map((tag) => (
+                <span key={tag} className="tag">
+                  #{tag}
+                </span>
+              ))}
             </div>
-
             <LikeButton articleId={article.id} />
           </div>
         </article>
