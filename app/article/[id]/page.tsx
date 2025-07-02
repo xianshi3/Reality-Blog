@@ -1,3 +1,5 @@
+// app/article/[id]/page.tsx
+
 import type { Article } from '../../../types/article';
 import Footer from '../../../components/Footer';
 import LikeButton from '../../../components/LikeButton';
@@ -5,13 +7,11 @@ import ReadingProgress from '../../../components/ReadingProgress';
 import { createServerSupabase } from '../../../lib/supabaseServer';
 
 type PageProps = {
-  params: {
-    id: string;
-  } | Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 };
 
 export default async function ArticlePage(props: PageProps) {
-  // 兼容 params 为 Promise 的情况
+  // 异步等待 params
   const params = await props.params;
   const { id } = params;
 
@@ -71,16 +71,15 @@ export default async function ArticlePage(props: PageProps) {
           ></div>
 
           <div className="tag-like-container mt-10">
-            <div>
-              {article.tags &&
-                article.tags.length > 0 &&
+              <div>
+              {article.tags && article.tags.length > 0 &&
                 article.tags.map((tag) => (
                   <span key={tag} className="tag">
                     #{tag}
                   </span>
-                ))}
+                ))
+              }
             </div>
-
             <LikeButton articleId={article.id} />
           </div>
         </article>
