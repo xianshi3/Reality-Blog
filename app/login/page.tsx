@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabaseClient"; // 你客户端的 supabase 初始化
+import { supabase } from "@/lib/supabaseClient";
+import "./login.css";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -66,7 +67,6 @@ export default function AuthPage() {
       }
 
       if (data?.session) {
-        // 调用后端接口写 HttpOnly Cookie
         const res = await fetch("/api/auth/set-cookie", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -95,21 +95,19 @@ export default function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-8 shadow rounded w-full max-w-md space-y-6">
-        <h1 className="text-2xl font-bold text-center">
-          {mode === "login" ? "管理员登录" : "注册账号"}
-        </h1>
+    <div className="login-bg min-h-screen flex items-center justify-center">
+      <div className="login-card animate-fade-in-up">
+        <h1 className="login-title">管理员登录</h1>
 
         {errorMsg && (
-          <p className="text-red-600 text-sm bg-red-50 p-2 rounded">{errorMsg}</p>
+          <p className="login-error animate-fade-in">{errorMsg}</p>
         )}
         {infoMsg && (
-          <p className="text-green-600 text-sm bg-green-50 p-2 rounded">{infoMsg}</p>
+          <p className="login-info animate-fade-in">{infoMsg}</p>
         )}
 
         <input
-          className="w-full border px-3 py-2 rounded"
+          className="login-input"
           placeholder="邮箱"
           type="email"
           value={email}
@@ -118,7 +116,7 @@ export default function AuthPage() {
         />
 
         <input
-          className="w-full border px-3 py-2 rounded"
+          className="login-input"
           placeholder="密码"
           type="password"
           value={password}
@@ -126,59 +124,30 @@ export default function AuthPage() {
           disabled={loading}
         />
 
-        {mode === "login" ? (
-          <>
-            <button
-              disabled={loading}
-              className={`w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 ${
-                loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={handleLogin}
-            >
-              {loading ? "正在登录..." : "登录"}
-            </button>
-            <p className="text-center text-sm mt-2">
-              还没有账号？{" "}
-              <button
-                className="text-blue-600 hover:underline"
-                onClick={() => {
-                  setMode("signup");
-                  setErrorMsg("");
-                  setInfoMsg("");
-                }}
-                disabled={loading}
-              >
-                注册一个
-              </button>
-            </p>
-          </>
-        ) : (
-          <>
-            <button
-              disabled={loading}
-              className={`w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 ${
-                loading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              onClick={handleSignup}
-            >
-              {loading ? "正在注册..." : "注册"}
-            </button>
-            <p className="text-center text-sm mt-2">
-              已有账号？{" "}
-              <button
-                className="text-blue-600 hover:underline"
-                onClick={() => {
-                  setMode("login");
-                  setErrorMsg("");
-                  setInfoMsg("");
-                }}
-                disabled={loading}
-              >
-                登录
-              </button>
-            </p>
-          </>
-        )}
+        <button
+          disabled={loading}
+          className={`login-btn ${loading ? "login-btn-disabled" : ""}`}
+          onClick={handleLogin}
+        >
+          {loading ? "正在登录..." : "登录"}
+        </button>
+
+        {/* 
+        <p className="text-center text-sm mt-2">
+          还没有账号？{" "}
+          <button
+            className="text-blue-600 hover:underline"
+            onClick={() => {
+              setMode("signup");
+              setErrorMsg("");
+              setInfoMsg("");
+            }}
+            disabled={loading}
+          >
+            注册一个
+          </button>
+        </p>
+        */}
       </div>
     </div>
   );
