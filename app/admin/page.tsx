@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabaseServer";
+import "./admin.css";
 
 export default async function AdminPage() {
   const supabase = await createServerSupabase();
@@ -10,13 +11,15 @@ export default async function AdminPage() {
 
   if (!session) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-gray-600">
-          未登录，请先{" "}
-          <a href="/login" className="text-blue-500 underline">
-            登录页面
-          </a>
-        </p>
+      <div className="admin-bg flex items-center justify-center min-h-screen">
+        <div className="admin-card animate-fade-in-down">
+          <p className="text-gray-600 text-lg">
+            未登录，请先{" "}
+            <a href="/login" className="text-blue-500 underline font-semibold hover:text-blue-700 transition">
+              登录页面
+            </a>
+          </p>
+        </div>
       </div>
     );
   }
@@ -27,29 +30,48 @@ export default async function AdminPage() {
     .order("date", { ascending: false });
 
   return (
-    <div className="p-8 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">博客管理后台</h1>
-      <Link href="/admin/create" className="text-blue-500 underline mb-4 block">
-        ➕ 新建文章
-      </Link>
-      <ul className="space-y-4">
-        {articles?.map((article) => (
-          <li
-            key={article.id}
-            className="flex justify-between items-center border-b pb-2"
-          >
-            <div>
-              <span className="font-medium">{article.title}</span> -{" "}
-              <span className="text-sm text-gray-500">{article.date}</span>
-            </div>
-            <div>
-              <Link href={`/admin/edit/${article.id}`} className="text-blue-600">
-                编辑
-              </Link>
-            </div>
-          </li>
-        ))}
-      </ul>
+    <div className="admin-bg min-h-screen py-12">
+      <div className="admin-card max-w-3xl mx-auto animate-fade-in-up">
+        <h1 className="admin-title flex items-center gap-2">
+          <span className="admin-emoji">📝</span>
+          博客管理后台
+        </h1>
+        <Link
+          href="/admin/create"
+          className="admin-create-btn"
+        >
+          ➕ 新建文章
+        </Link>
+        <ul className="admin-list">
+          {articles?.length ? (
+            articles.map((article, idx) => (
+              <li
+                key={article.id}
+                className="admin-list-item"
+                style={{ animationDelay: `${idx * 60}ms` }}
+              >
+                <div>
+                  <span className="admin-article-title">{article.title}</span>
+                  <span className="admin-article-date">
+                    {article.date && new Date(article.date).toLocaleDateString()}
+                  </span>
+                </div>
+                <Link
+                  href={`/admin/edit/${article.id}`}
+                  className="admin-edit-link"
+                >
+                  编辑
+                </Link>
+              </li>
+            ))
+          ) : (
+            <li className="admin-empty">
+              <span className="admin-empty-icon">📭</span>
+              暂无文章
+            </li>
+          )}
+        </ul>
+      </div>
     </div>
   );
 }

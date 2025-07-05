@@ -1,0 +1,91 @@
+.login-bg {
+  background: linear-gradient(120deg, #f0f7ff 0%, #ede9fe 100%);
+  min-height: 100vh;
+  animation: fade-in 0.7s both;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 1.3rem;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.13);
+  padding: 2.5rem 2rem 2rem 2rem;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  animation: fade-in-up 0.7s both;
+}
+
+.login-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-align: center;
+  color: #3730a3;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+}
+
+.login-input {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  padding: 0.7rem 1rem;
+  border-radius: 0.7rem;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+.login-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px #6366f133;
+}
+
+.login-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #3b82f6 60%, #6366f1 100%);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.7rem 0;
+  border-radius: 0.8rem;
+  font-size: 1.08rem;
+  margin-top: 0.2rem;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.10);
+  cursor: pointer;
+}
+.login-btn:hover:not(.login-btn-disabled) {
+  background: linear-gradient(90deg, #2563eb 60%, #7c3aed 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 4px 18px rgba(99, 102, 241, 0.13);
+}
+.login-btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.login-error {
+  color: #dc2626;
+  background: #fef2f2;
+  font-size: 0.97rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.6rem;
+  text-align: center;
+}
+.login-info {
+  color: #059669;
+  background: #ecfdf5;
+  font-size: 0.97rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.6rem;
+  text-align: center;
+}
+
+/* 动画效果 */
+@keyframes fade-in {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(30px);}
+  to { opacity: 1; transform: translateY(0);}
+}
