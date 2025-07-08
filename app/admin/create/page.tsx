@@ -17,7 +17,7 @@ export default function CreateArticle() {
   const router = useRouter();
 
   const handleSubmit = async () => {
-    if (loading) return; // 防止重复提交
+    if (loading) return;
     if (!form.title) {
       alert("标题不能为空");
       return;
@@ -46,8 +46,8 @@ export default function CreateArticle() {
   };
 
   return (
-    <div className="create-bg min-h-screen flex items-center justify-center relative">
-      {/* 固定左上角返回按钮 */}
+    <div className="create-bg min-h-screen flex items-center justify-center relative px-6">
+      {/* 左上角返回按钮 */}
       <button
         onClick={handleBack}
         className="create-back-button"
@@ -57,9 +57,20 @@ export default function CreateArticle() {
         ← 返回
       </button>
 
-      <div className="create-card animate-fade-in-up">
-        <h2 className="text-2xl font-bold mb-6 text-center tracking-wide">创建文章</h2>
-        <div className="space-y-4">
+      <div className="create-card create-layout">
+        {/* 左侧内容编辑 */}
+        <div className="create-main-content">
+          <textarea
+            className="create-input create-textarea"
+            placeholder="内容"
+            value={form.content}
+            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            disabled={loading}
+          />
+        </div>
+
+        {/* 右侧其他字段和按钮 */}
+        <div className="create-side-form space-y-4">
           <input
             className="create-input"
             placeholder="标题"
@@ -95,14 +106,7 @@ export default function CreateArticle() {
             onChange={(e) => setForm({ ...form, date: e.target.value })}
             disabled={loading}
           />
-          <textarea
-            className="create-input"
-            placeholder="内容"
-            rows={10}
-            value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
-            disabled={loading}
-          />
+
           <button
             className={`create-btn ${loading ? "create-btn-loading" : ""}`}
             onClick={handleSubmit}

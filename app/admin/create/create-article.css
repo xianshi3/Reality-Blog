@@ -4,47 +4,95 @@
 }
 
 .create-card {
-  background: #fff;
   border-radius: 18px;
   box-shadow: 0 4px 32px 0 rgba(60, 72, 88, 0.08);
-  padding: 2.5rem 2rem;
-  width: 100%;
-  max-width: 420px;
+  background: #fff;
   animation: fade-in-up 0.6s cubic-bezier(.39,.575,.565,1) both;
+  max-width: none;
+  width: 100%;
 }
 
-.create-input {
+/* 左右布局容器 */
+.create-layout {
+  display: flex;
+  gap: 2.5rem;
+  max-width: 1100px; /* 加宽到1100px */
   width: 100%;
+  padding: 3rem 3rem; /* 增加内边距 */
+  border-radius: 18px;
+}
+
+/* 左侧内容编辑区域 */
+.create-main-content {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 内容编辑框 */
+.create-textarea {
+  height: 100%;
+  min-height: 550px; /* 高度加大 */
+  resize: vertical;
+  font-size: 1.15rem;
+  padding: 1.25rem;
+  line-height: 1.7;
+  border-radius: 12px;
+  border: none;
+  background: #f3f6fa;
+  box-shadow: 0 1px 3px 0 rgba(60,72,88,0.06);
+  outline: none;
+  transition: box-shadow 0.2s;
+}
+
+.create-textarea:focus {
+  box-shadow: 0 0 0 3px #60a5fa;
+  background: #eaf1fb;
+}
+
+/* 右侧表单区域 */
+.create-side-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+/* 右侧输入框统一样式 */
+.create-side-form .create-input {
+  width: 100%;
+  margin-bottom: 0.75rem;
   border: none;
   border-radius: 8px;
   background: #f3f6fa;
   padding: 0.75rem 1rem;
   font-size: 1rem;
-  transition: box-shadow 0.2s;
   box-shadow: 0 1px 2px 0 rgba(60,72,88,0.03);
   outline: none;
-  margin-bottom: 0.5rem;
+  transition: box-shadow 0.2s;
 }
 
-.create-input:focus {
-  box-shadow: 0 0 0 2px #60a5fa;
+.create-side-form .create-input:focus {
+  box-shadow: 0 0 0 3px #60a5fa;
   background: #eaf1fb;
 }
 
+/* 发布按钮 */
 .create-btn {
-  width: 100%;
-  background: linear-gradient(90deg, #60a5fa 0%, #2563eb 100%);
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
+  margin-top: 1rem;
   padding: 0.75rem 0;
-  font-size: 1.1rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%);
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  transition: background 0.3s ease;
+  border: none;
   cursor: pointer;
-  transition: background 0.2s, opacity 0.2s;
-  margin-top: 0.5rem;
-  position: relative;
-  overflow: hidden;
+}
+
+.create-btn:hover:not(:disabled) {
+  background: linear-gradient(90deg, #1d4ed8 0%, #3b82f6 100%);
 }
 
 .create-btn:disabled {
@@ -52,6 +100,28 @@
   cursor: not-allowed;
 }
 
+/* 返回按钮 */
+.create-back-button {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #2563eb;
+  font-weight: 600;
+  padding: 0;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.create-back-button:hover {
+  color: #1d4ed8;
+}
+
+/* 动画 */
 @keyframes fade-in-up {
   0% {
     opacity: 0;
@@ -75,26 +145,26 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg);}
-  100% { transform: rotate(360deg);}
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.create-back-button {
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 1000;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: #2563eb; /* blue-600 */
-  font-weight: 600;
-  padding: 0;
-  user-select: none;
-  transition: color 0.2s;
-}
-
-.create-back-button:hover {
-  color: #1d4ed8; /* blue-700 */
+/* 响应式：小屏幕改成上下布局 */
+@media (max-width: 768px) {
+  .create-layout {
+    flex-direction: column;
+    padding: 1.5rem;
+  }
+  .create-main-content,
+  .create-side-form {
+    flex: unset;
+    width: 100%;
+  }
+  .create-textarea {
+    min-height: 300px;
+  }
 }
