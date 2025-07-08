@@ -5,22 +5,11 @@ import ReadingProgress from '../../../components/ReadingProgress';
 import { createServerSupabase } from '../../../lib/supabaseServer';
 import ArticleContent from '@/components/ArticleContent';
 
-type PageProps = {
-  params: Promise<{
-    id: string;
-  }>;
-};
-
-export default async function ArticlePage({ params }: PageProps) {
+export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   const supabase = await createServerSupabase();
-
-  const { data, error } = await supabase
-    .from('articles')
-    .select('*')
-    .eq('id', id)
-    .single();
+  const { data, error } = await supabase.from('articles').select('*').eq('id', id).single();
 
   if (error || !data) {
     return (
@@ -42,7 +31,7 @@ export default async function ArticlePage({ params }: PageProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="min-h-screen flex flex-col article-page-container relative">
+    <div className="article-page-container">
       <ReadingProgress />
 
       <a href="/" className="return-home" aria-label="返回首页">
@@ -64,9 +53,9 @@ export default async function ArticlePage({ params }: PageProps) {
             <div className="article-summary">{article.summary}</div>
           )}
 
-          <ArticleContent content={article.content ?? ""} />
+          <ArticleContent content={article.content ?? ''} />
 
-          <div className="tag-like-container mt-10">
+          <div className="tag-like-container">
             <div>
               {article.tags?.map((tag) => (
                 <span key={tag} className="tag">

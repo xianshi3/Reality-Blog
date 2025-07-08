@@ -3,7 +3,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
-import 'highlight.js/styles/github.css'; // 代码高亮主题，可替换
+import 'highlight.js/styles/github-dark.css';
 
 type Props = {
   content: string;
