@@ -24,7 +24,6 @@ export default function CreateArticle() {
     }
     setLoading(true);
 
-    // 构造插入对象，避免空字符串传给 timestamp 字段
     const insertData: any = { ...form };
     if (!form.date) delete insertData.date;
     if (!form.summary) delete insertData.summary;
@@ -42,8 +41,22 @@ export default function CreateArticle() {
     }
   };
 
+  const handleBack = () => {
+    router.push("/admin");
+  };
+
   return (
-    <div className="create-bg min-h-screen flex items-center justify-center">
+    <div className="create-bg min-h-screen flex items-center justify-center relative">
+      {/* 固定左上角返回按钮 */}
+      <button
+        onClick={handleBack}
+        className="create-back-button"
+        aria-label="返回管理页"
+        type="button"
+      >
+        ← 返回
+      </button>
+
       <div className="create-card animate-fade-in-up">
         <h2 className="text-2xl font-bold mb-6 text-center tracking-wide">创建文章</h2>
         <div className="space-y-4">
