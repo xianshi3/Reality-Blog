@@ -1,4 +1,6 @@
 "use client";
+
+import "./edit-article.css";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
@@ -6,37 +8,68 @@ import { supabase } from "@/lib/supabaseClient";
 export default function EditArticle() {
   const { id } = useParams();
   const router = useRouter();
+
   const [form, setForm] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const { data } = await supabase.from("articles").select("*").eq("id", id).single();
-      setForm(data);
+      const { data } = await supabase
+        .from("articles")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (data) setForm(data);
+      setLoading(false);
     })();
   }, [id]);
 
   const handleUpdate = async () => {
-    const { error } = await supabase.from("articles").update(form).eq("id", id);
-    if (error) alert("更新失败：" + error.message);
-    else router.push("/admin");
+    if (!form) return;
+
+    setSaving(true);
+    const { id: _id, ...updateData } = form;
+    const { error } = await supabase.from("articles").update(updateData).eq("id", id);
+    setSaving(false);
+
+    if (error) {
+      alert("更新失败：" + error.message);
+    } else {
+      router.push("/admin");
+    }
   };
 
-  if (!form) return <div>加载中...</div>;
+  if (loading || !form) {
+    return <div className="text-center text-gray-500 mt-20">加载中...</div>;
+  }
 
   return (
-    <div className="p-8 max-w-xl mx-auto">
-      <h2 className="text-xl font-bold mb-4">编辑文章</h2>
+    <div className="edit-container">
+      <h2 className="edit-title">编辑文章</h2>
+
       <input
-        className="w-full border px-3 py-2 mb-2"
-        value={form.title}
+        className="edit-input"
+        value={form.title || ""}
         onChange={(e) => setForm({ ...form, title: e.target.value })}
+        placeholder="文章标题"
       />
-      {/* 其他字段类似 */}
+
+      <textarea
+        className="edit-textarea"
+        value={form.content || ""}
+        onChange={(e) => setForm({ ...form, content: e.target.value })}
+        placeholder="文章内容"
+      />
+
       <button
-        className="bg-green-600 text-white px-4 py-2 rounded"
         onClick={handleUpdate}
+        disabled={saving}
+        className="edit-button"
       >
-        保存
+        {saving && <div className="spinner" />}
+        {saving ? "保存中..." : "保存"}
       </button>
     </div>
   );

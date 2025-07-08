@@ -1,0 +1,80 @@
+.create-bg {
+  background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+  min-height: 100vh;
+}
+
+.create-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 32px 0 rgba(60, 72, 88, 0.08);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 420px;
+  animation: fade-in-up 0.6s cubic-bezier(.39,.575,.565,1) both;
+}
+
+.create-input {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: #f3f6fa;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 2px 0 rgba(60,72,88,0.03);
+  outline: none;
+  margin-bottom: 0.5rem;
+}
+
+.create-input:focus {
+  box-shadow: 0 0 0 2px #60a5fa;
+  background: #eaf1fb;
+}
+
+.create-btn {
+  width: 100%;
+  background: linear-gradient(90deg, #60a5fa 0%, #2563eb 100%);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+  margin-top: 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.create-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.loader {
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  border-top: 3px solid #60a5fa;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}

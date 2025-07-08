@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabaseServer";
+import ArticleItem from "@/components/ArticleItem";
 import "./admin.css";
 
 export default async function AdminPage() {
@@ -36,33 +37,14 @@ export default async function AdminPage() {
           <span className="admin-emoji">📝</span>
           博客管理后台
         </h1>
-        <Link
-          href="/admin/create"
-          className="admin-create-btn"
-        >
+        <Link href="/admin/create" className="admin-create-btn">
           ➕ 新建文章
         </Link>
+
         <ul className="admin-list">
           {articles?.length ? (
             articles.map((article, idx) => (
-              <li
-                key={article.id}
-                className="admin-list-item"
-                style={{ animationDelay: `${idx * 60}ms` }}
-              >
-                <div>
-                  <span className="admin-article-title">{article.title}</span>
-                  <span className="admin-article-date">
-                    {article.date && new Date(article.date).toLocaleDateString()}
-                  </span>
-                </div>
-                <Link
-                  href={`/admin/edit/${article.id}`}
-                  className="admin-edit-link"
-                >
-                  编辑
-                </Link>
-              </li>
+              <ArticleItem key={article.id} article={article} delay={idx * 60} />
             ))
           ) : (
             <li className="admin-empty">
