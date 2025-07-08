@@ -168,3 +168,12 @@
     min-height: 300px;
   }
 }
+
+.insert-code-btn {
+  background: #10b981; /* 绿 */
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.insert-code-btn:hover {
+  background: #059669;
+}

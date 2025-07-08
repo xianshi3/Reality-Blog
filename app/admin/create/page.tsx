@@ -16,6 +16,15 @@ export default function CreateArticle() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // 在内容光标处插入代码块模板
+  const insertCodeBlock = () => {
+    const codeBlockTemplate = "\n```js\n// 这里写代码\n```\n";
+    setForm((f) => ({
+      ...f,
+      content: f.content + codeBlockTemplate,
+    }));
+  };
+
   const handleSubmit = async () => {
     if (loading) return;
     if (!form.title) {
@@ -47,7 +56,6 @@ export default function CreateArticle() {
 
   return (
     <div className="create-bg min-h-screen flex items-center justify-center relative px-6">
-      {/* 左上角返回按钮 */}
       <button
         onClick={handleBack}
         className="create-back-button"
@@ -62,7 +70,7 @@ export default function CreateArticle() {
         <div className="create-main-content">
           <textarea
             className="create-input create-textarea"
-            placeholder="内容"
+            placeholder="内容 (支持 Markdown 语法)"
             value={form.content}
             onChange={(e) => setForm({ ...form, content: e.target.value })}
             disabled={loading}
@@ -71,6 +79,14 @@ export default function CreateArticle() {
 
         {/* 右侧其他字段和按钮 */}
         <div className="create-side-form space-y-4">
+          <button
+            type="button"
+            className="create-btn insert-code-btn"
+            onClick={insertCodeBlock}
+          >
+            插入代码块
+          </button>
+
           <input
             className="create-input"
             placeholder="标题"

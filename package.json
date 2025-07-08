@@ -12,9 +12,12 @@
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.50.2",
     "axios": "^1.10.0",
+    "highlight.js": "^11.11.1",
     "next": "^15.3.4",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "rehype-highlight": "^7.0.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

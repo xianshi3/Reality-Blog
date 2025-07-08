@@ -3,6 +3,7 @@ import Footer from '../../../components/Footer';
 import LikeButton from '../../../components/LikeButton';
 import ReadingProgress from '../../../components/ReadingProgress';
 import { createServerSupabase } from '../../../lib/supabaseServer';
+import ArticleContent from '@/components/ArticleContent';
 
 type PageProps = {
   params: Promise<{
@@ -11,7 +12,6 @@ type PageProps = {
 };
 
 export default async function ArticlePage({ params }: PageProps) {
-  // 必须 await params
   const { id } = await params;
 
   const supabase = await createServerSupabase();
@@ -64,10 +64,7 @@ export default async function ArticlePage({ params }: PageProps) {
             <div className="article-summary">{article.summary}</div>
           )}
 
-          <div
-            className="prose"
-            dangerouslySetInnerHTML={{ __html: article.content ?? '' }}
-          ></div>
+          <ArticleContent content={article.content ?? ""} />
 
           <div className="tag-like-container mt-10">
             <div>
