@@ -307,7 +307,7 @@ body {
 /* 文章正文区域 */
 .article-page-container .article-container {
   width: 100%;
-  max-width: 48rem;
+  max-width: 100ch; /*阅读宽度 */
   margin: 3rem auto 4rem;
   flex: 1 1 auto;
 }
@@ -465,4 +465,48 @@ body {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
   }
+}
+
+/* 代码块外层容器 */
+.prose pre {
+  background-color: #0d1117;   /* 深色背景（跟 github-dark 主题协调） */
+  border-radius: 12px;          /* 圆角 */
+  padding: 1rem 1.5rem;         /* 内边距 */
+  margin: 1.5rem 0;             /* 与上下文本距离 */
+  overflow-x: auto;             /* 横向溢出滚动 */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* 轻微阴影 */
+  font-size: 0.9rem;
+  line-height: 1.5;
+  font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+}
+
+/* 代码文本颜色和排版 */
+.prose code {
+  font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #c9d1d9;  /* 浅色文本 */
+}
+
+/* 代码块内联代码样式 */
+.prose p code,
+.prose li code {
+  background-color: rgba(110, 118, 129, 0.15);
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
+}
+
+/* 让代码块内的行高更紧凑 */
+.prose pre code {
+  line-height: 1.4;
+  white-space: pre;
+}
+
+/* 代码行高亮（rehype-highlight会加class）可选 */
+.hljs-comment,
+.hljs-quote {
+  color: #6a737d;
+  font-style: italic;
 }

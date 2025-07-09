@@ -16,15 +16,23 @@ export default function CreateArticle() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  // 在内容光标处插入代码块模板
+  const insertCodeBlock = () => {
+    const codeBlockTemplate = "\n```js\n// 这里写代码\n```\n";
+    setForm((f) => ({
+      ...f,
+      content: f.content + codeBlockTemplate,
+    }));
+  };
+
   const handleSubmit = async () => {
-    if (loading) return; // 防止重复提交
+    if (loading) return;
     if (!form.title) {
       alert("标题不能为空");
       return;
     }
     setLoading(true);
 
-    // 构造插入对象，避免空字符串传给 timestamp 字段
     const insertData: any = { ...form };
     if (!form.date) delete insertData.date;
     if (!form.summary) delete insertData.summary;
@@ -42,11 +50,43 @@ export default function CreateArticle() {
     }
   };
 
+  const handleBack = () => {
+    router.push("/admin");
+  };
+
   return (
-    <div className="create-bg min-h-screen flex items-center justify-center">
-      <div className="create-card animate-fade-in-up">
-        <h2 className="text-2xl font-bold mb-6 text-center tracking-wide">创建文章</h2>
-        <div className="space-y-4">
+    <div className="create-bg min-h-screen flex items-center justify-center relative px-6">
+      <button
+        onClick={handleBack}
+        className="create-back-button"
+        aria-label="返回管理页"
+        type="button"
+      >
+        ← 返回
+      </button>
+
+      <div className="create-card create-layout">
+        {/* 左侧内容编辑 */}
+        <div className="create-main-content">
+          <textarea
+            className="create-input create-textarea"
+            placeholder="内容 (支持 Markdown 语法)"
+            value={form.content}
+            onChange={(e) => setForm({ ...form, content: e.target.value })}
+            disabled={loading}
+          />
+        </div>
+
+        {/* 右侧其他字段和按钮 */}
+        <div className="create-side-form space-y-4">
+          <button
+            type="button"
+            className="create-btn insert-code-btn"
+            onClick={insertCodeBlock}
+          >
+            插入代码块
+          </button>
+
           <input
             className="create-input"
             placeholder="标题"
@@ -82,14 +122,7 @@ export default function CreateArticle() {
             onChange={(e) => setForm({ ...form, date: e.target.value })}
             disabled={loading}
           />
-          <textarea
-            className="create-input"
-            placeholder="内容"
-            rows={10}
-            value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
-            disabled={loading}
-          />
+
           <button
             className={`create-btn ${loading ? "create-btn-loading" : ""}`}
             onClick={handleSubmit}
