@@ -20,7 +20,7 @@ export default function LeftSidebar({ articles }: LeftSidebarProps) {
     'transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl';
 
   return (
-    <aside className="lg:w-1/4 w-full space-y-6 animate-fadeInLeft delay-100">
+    <aside className="lg:w-1/4 w-full space-y-6 animate-fadeInUp delay-100">
       {/* 导航卡片 */}
       <div className={`${cardBaseClass} ${cardHoverClass}`}>
         <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-4">导航</h3>

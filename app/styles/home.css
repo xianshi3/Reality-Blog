@@ -6,7 +6,6 @@
   align-items: center;
   font-family: var(--font-geist-sans), sans-serif;
   background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef);
-  animation: fadeInUp 1s ease-out;
 }
 
 /* 深色模式首页背景渐变 */
@@ -17,14 +16,14 @@
 }
 
 /* ======= 首页头部容器 ======= */
-.home-header {
+.navbar-container {
   width: 100%;
-  margin: 0 auto;
+  padding: 1.5rem 2rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  animation: fadeInUp 1s ease-out;
+  justify-content: center;
+  background: transparent;
+  z-index: 10;
+  position: relative;
 }
 
 /* 头像样式 */

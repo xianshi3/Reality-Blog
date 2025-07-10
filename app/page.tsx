@@ -35,11 +35,11 @@ export default async function Home() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <div className="home-container pt-16 bg-gray-100 min-h-screen">
+    <div className="home-container pt-14 bg-gray-100">
       <Header />
 
       {/* 三栏布局 */}
-      <main className="container mx-auto flex flex-col lg:flex-row w-full max-w-6xl px-4 gap-6 py-8">
+      <main className="container mx-auto flex flex-col lg:flex-row w-full max-w-6xl px-3 gap-6 py-10">
         <LeftSidebar articles={articles} />
         <MainContent articles={articles} />
         <RightSidebar tags={TAGS} recommends={RECOMMENDED_ARTICLES} />
