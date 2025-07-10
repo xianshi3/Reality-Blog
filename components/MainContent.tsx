@@ -1,49 +1,43 @@
-/**
- * 主内容区组件
- * 
- * @module MainContent
- */
-
 import type { Article } from '../types/article';
 
-/**
- * MainContent 组件
- * @param articles - 文章数组
- */
 export default function MainContent({ articles }: { articles: Article[] }) {
   return (
-    <section className="flex-1 space-y-8">
+    <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-2 space-y-8">
       {/* 最新文章区域 */}
-      <div className="article-section">
+      <section>
         <h2 className="section-title">📝 最新文章</h2>
-        <ul className="space-y-6">
+        <ul className="space-y-8">
           {articles.map((article, idx) => (
-            <li className="article-item" key={article.link || idx}>
-              <a href={article.link} className="article-link">
-                <h3 className="article-title">{article.title}</h3>
-                <p className="article-meta">
-                  {article.date
-                    ? new Date(article.date).toLocaleDateString('zh-CN', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric',
-                      })
-                    : '未知日期'}{' '}
-                  · {article.category}
-                </p>
-                <p className="article-summary">{article.summary}</p>
-              </a>
+            <li key={article.link ?? idx}>
+              <article className="article-item">
+                <a href={article.link} className="article-link" tabIndex={0}>
+                  <h3 className="article-title">{article.title}</h3>
+                  <p className="article-meta">
+                    {article.date
+                      ? new Date(article.date).toLocaleDateString('zh-CN', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric',
+                        })
+                      : '未知日期'}{' '}
+                    · {article.category}
+                  </p>
+                  <p className="article-summary">{article.summary}</p>
+                </a>
+              </article>
             </li>
           ))}
         </ul>
-      </div>
+      </section>
 
       {/* 关于我区域 */}
-      <div className="article-section about-section">
+      <aside className="article-section about-section max-w-xl mx-auto">
         <h2>👤 关于我</h2>
         <div className="about-card">
           <div className="about-author">
-            <div className="emoji">🧑‍💻</div>
+            <div className="emoji" aria-label="程序员emoji" role="img">
+              🧑‍💻
+            </div>
             <div className="about-name">
               <p className="name">Reality</p>
               <p className="role">全栈开发者 · 技术爱好者</p>
@@ -54,7 +48,7 @@ export default function MainContent({ articles }: { articles: Article[] }) {
             本博客记录我的开发笔记，欢迎常来看看！
           </p>
         </div>
-      </div>
-    </section>
+      </aside>
+    </main>
   );
 }
