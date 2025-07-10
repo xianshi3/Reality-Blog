@@ -43,10 +43,10 @@ export default function LeftSidebar({ articles }: LeftSidebarProps) {
       <div className={`${cardBaseClass} ${cardHoverClass}`}>
         <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3">公告</h3>
         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-          欢迎来到 <span className="text-blue-600 dark:text-blue-400 font-medium">Reality</span> 的博客！<br />
-          正在持续更新中，敬请期待 <span className="text-yellow-500">✨</span>
+          目前我会在有空闲时间更新网站，内容还在持续完善中 <span className="text-yellow-500">✨</span>
         </p>
       </div>
+
 
       {/* 随机文章推荐卡片 */}
       <RandomArticleCard articles={articles} />

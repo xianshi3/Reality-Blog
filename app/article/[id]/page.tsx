@@ -30,6 +30,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   const currentYear = new Date().getFullYear();
 
+  // 格式化文章时间
+  const formattedDate = article.date
+    ? new Date(article.date).toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : '未知日期';
+
   return (
     <div className="article-page-container">
       <ReadingProgress />
@@ -44,7 +53,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
           <h1 className="article-title">{article.title}</h1>
 
           <div className="article-meta">
-            <span>{article.date}</span>
+            <span>{formattedDate}</span>
             <span>·</span>
             <span>{article.category}</span>
           </div>

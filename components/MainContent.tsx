@@ -22,7 +22,14 @@ export default function MainContent({ articles }: { articles: Article[] }) {
               <a href={article.link} className="article-link">
                 <h3 className="article-title">{article.title}</h3>
                 <p className="article-meta">
-                  {article.date} · {article.category}
+                  {article.date
+                    ? new Date(article.date).toLocaleDateString('zh-CN', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric',
+                      })
+                    : '未知日期'}{' '}
+                  · {article.category}
                 </p>
                 <p className="article-summary">{article.summary}</p>
               </a>
@@ -51,4 +58,3 @@ export default function MainContent({ articles }: { articles: Article[] }) {
     </section>
   );
 }
-
