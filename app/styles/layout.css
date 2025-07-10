@@ -1,3 +1,4 @@
+/* 首页整体容器，垂直居中，使用 Geist 字体，背景渐变，动画淡入上浮 */
 .home-container {
   min-height: 100vh;
   display: flex;
@@ -8,12 +9,14 @@
   animation: fadeInUp 1s ease-out;
 }
 
+/* 深色模式下首页背景渐变色调整 */
 @media (prefers-color-scheme: dark) {
   .home-container {
     background-image: linear-gradient(to bottom right, #18181b, #23272f);
   }
 }
 
+/* 主内容区域宽度限制与内边距 */
 .main-content {
   width: 100%;
   max-width: 48rem;
@@ -21,10 +24,12 @@
   padding: 0 1rem;
 }
 
+/* 文章区域底部外边距 */
 .article-section {
   margin-bottom: 3rem;
 }
 
+/* 区块标题样式，字体大小加粗，颜色 */
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -32,12 +37,14 @@
   margin-bottom: 1rem;
 }
 
+/* 深色模式下区块标题颜色调整 */
 @media (prefers-color-scheme: dark) {
   .section-title {
     color: #f3f4f6;
   }
 }
 
+/* 页脚容器，最大宽度限制，边距和内边距，顶部边框，居中排列，淡入上浮动画 */
 .footer {
   width: 100%;
   max-width: 48rem;
@@ -52,6 +59,7 @@
   animation: fadeInUp 1s ease-out;
 }
 
+/* 大屏幕时页脚布局改为水平分布，左右间距 */
 @media (min-width: 640px) {
   .footer {
     flex-direction: row;
@@ -59,6 +67,7 @@
   }
 }
 
+/* 深色模式下页脚文字和边框颜色调整 */
 @media (prefers-color-scheme: dark) {
   .footer {
     color: #9ca3af;
@@ -66,12 +75,14 @@
   }
 }
 
+/* 页脚链接组，横向排列，间距，默认顶部间距 */
 .footer-links {
   display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
 }
 
+/* 大屏幕时页脚链接组去除顶部间距 */
 @media (min-width: 640px) {
   .footer-links {
     margin-top: 0;

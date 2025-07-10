@@ -1,3 +1,4 @@
+/* 首页头部容器 */
 .home-header {
   width: 100%;
   margin: 0 auto;
@@ -8,6 +9,7 @@
   animation: fadeInUp 1s ease-out;
 }
 
+/* 头像样式 */
 .avatarImg {
   border-radius: 9999px;
   border: 4px solid #fff;
@@ -16,6 +18,7 @@
   animation: scaleUp 0.5s ease-out;
 }
 
+/* 首页标题 */
 .home-title {
   font-weight: 700;
   font-size: 1.875rem;
@@ -23,18 +26,21 @@
   margin-bottom: 0.5rem;
 }
 
+/* 大屏幕时首页标题字体加大 */
 @media (min-width: 640px) {
   .home-title {
     font-size: 2.25rem;
   }
 }
 
+/* 深色模式首页标题颜色 */
 @media (prefers-color-scheme: dark) {
   .home-title {
     color: #fff;
   }
 }
 
+/* 首页描述文字 */
 .home-description {
   font-size: 1.125rem;
   text-align: center;
@@ -42,13 +48,14 @@
   color: #4b5563;
 }
 
+/* 深色模式首页描述文字颜色 */
 @media (prefers-color-scheme: dark) {
   .home-description {
     color: #d1d5db;
   }
 }
 
-/* “关于我”卡片 */
+/* 关于我卡片容器，添加简约淡入上浮动画 */
 .about-card {
   background-color: #fff;
   border-radius: 0.5rem;
@@ -56,35 +63,44 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  /* 动画 */
+  animation: fadeInUpSimple 0.6s ease-out forwards;
 }
 
+/* 深色模式关于我卡片背景 */
 @media (prefers-color-scheme: dark) {
   .about-card {
     background-color: #23272f;
   }
 }
 
+/* 关于我作者信息 */
 .about-author {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
+/* 关于我表情符号大小 */
 .about-author .emoji {
   font-size: 1.5rem;
 }
 
+/* 关于我姓名 */
 .about-name .name {
   font-size: 1rem;
   font-weight: 600;
   color: #1f2937;
 }
 
+/* 关于我职位角色 */
 .about-name .role {
   font-size: 0.875rem;
   color: #6b7280;
 }
 
+/* 深色模式关于我姓名和职位颜色 */
 @media (prefers-color-scheme: dark) {
   .about-name .name {
     color: #f3f4f6;
@@ -94,6 +110,7 @@
   }
 }
 
+/* 关于我描述文本 */
 .about-description {
   font-size: 0.875rem;
   color: #374151;
@@ -101,13 +118,14 @@
   margin-top: 0.5rem;
 }
 
+/* 深色模式关于我描述颜色 */
 @media (prefers-color-scheme: dark) {
   .about-description {
     color: #d1d5db;
   }
 }
 
-/* 首页文章卡片 */
+/* 首页文章卡片容器 */
 .article-item {
   background-color: #fff;
   border-radius: 0.75rem;
@@ -117,17 +135,20 @@
   animation: fadeInUp 0.8s ease-out;
 }
 
+/* 文章卡片悬停效果 */
 .article-item:hover {
   box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.08);
   transform: scale(1.02);
 }
 
+/* 深色模式文章卡片背景 */
 @media (prefers-color-scheme: dark) {
   .article-item {
     background-color: #23272f;
   }
 }
 
+/* 文章标题 */
 .article-title {
   font-size: 1.125rem;
   font-weight: 700;
@@ -135,16 +156,19 @@
   margin-bottom: 0.5rem;
 }
 
+/* 文章元信息 */
 .article-meta {
   font-size: 0.875rem;
   color: #4b5563;
   margin-bottom: 0.5rem;
 }
 
+/* 文章摘要 */
 .article-summary {
   color: #374151;
 }
 
+/* 深色模式文章标题、元信息和摘要颜色 */
 @media (prefers-color-scheme: dark) {
   .article-title {
     color: #fff;
@@ -157,18 +181,20 @@
   }
 }
 
+/* 关于我段落文字 */
 .about-para {
   color: #374151;
   line-height: 1.625;
 }
 
+/* 深色模式关于我段落文字 */
 @media (prefers-color-scheme: dark) {
   .about-para {
     color: #d1d5db;
   }
 }
 
-/* 标签和小字体 */
+/* 标签样式 */
 .tag {
   font-size: 0.875rem;
   padding: 0.25rem 0.75rem;
@@ -177,6 +203,7 @@
   color: #1f2937;
 }
 
+/* 深色模式标签颜色 */
 @media (prefers-color-scheme: dark) {
   .tag {
     background-color: #374151;
@@ -184,13 +211,53 @@
   }
 }
 
+/* 小字号文本 */
 .text-sm {
   font-size: 0.875rem;
   color: #4b5563;
 }
 
+/* 深色模式小字号文本颜色 */
 @media (prefers-color-scheme: dark) {
   .text-sm {
     color: #d1d5db;
+  }
+}
+
+/* 动画定义 */
+
+/* 淡入上浮动画 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 头像放大动画 */
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 关于我卡片简约淡入上浮动画 */
+@keyframes fadeInUpSimple {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
