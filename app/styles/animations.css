@@ -1,0 +1,61 @@
+/* 通用渐入上浮动画 */
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeInUp {
+  animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+/* 渐入下落动画 */
+@keyframes fadeInDown {
+  0% { opacity: 0; transform: translateY(-40px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.animate-fadeInDown {
+  animation: fadeInDown 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 缩放放大动画 */
+@keyframes scaleUp {
+  0% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+.animate-scaleUp {
+  animation: scaleUp 0.5s ease-out;
+}
+
+/* 缩放放大且渐入动画 */
+@keyframes scaleIn {
+  0% { opacity: 0; transform: scale(0.95); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-scaleIn {
+  animation: scaleIn 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* 从右侧渐入动画 */
+@keyframes fadeInRight {
+  0% { opacity: 0; transform: translateX(40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+.animate-fadeInRight {
+  animation: fadeInRight 0.8s ease-out forwards;
+}
+
+/* 从左侧渐入动画 */
+@keyframes fadeInLeft {
+  0% { opacity: 0; transform: translateX(-40px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+.animate-fadeInLeft {
+  animation: fadeInLeft 0.8s ease-out forwards;
+}
+
+/* 多组件动画延迟控制 */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+
+/* 动画结束后保留最终样式 */
+.animate-fill-both { animation-fill-mode: both; }

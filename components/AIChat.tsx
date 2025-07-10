@@ -170,11 +170,15 @@ export default function AIChat() {
     <div className="fixed bottom-6 left-6 z-50">
       {/* 修改为正方形圆角按钮 */}
       <button
-        className="bg-gradient-to-br from-blue-500 to-purple-500 text-white rounded-lg w-14 h-14 flex items-center justify-center shadow-lg hover:scale-110 transition-all focus:outline-none active:scale-95"
+        className="w-14 h-14 flex items-center justify-center rounded-xl 
+                  bg-white/30 dark:bg-[#23272f]/30 
+                  backdrop-blur-md border-white/20 dark:border-gray-600 
+                  shadow-xl text-2xl hover:scale-110 transition-all 
+                  active:scale-95 text-gray-800 dark:text-white"
         onClick={() => setOpen((prev) => !prev)}
         aria-label="打开AI对话"
       >
-        <span className="text-2xl">🤖</span>
+        🤖
       </button>
 
       {open && (

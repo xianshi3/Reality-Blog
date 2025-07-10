@@ -30,9 +30,9 @@ export default function TechStackCard() {
   };
 
   return (
-    <div className="bg-white dark:bg-[#23272f] rounded-xl font-sans shadow-md hover:shadow-lg transition-shadow duration-300">
+    <div className="bg-white dark:bg-[#23272f] rounded-2xl shadow-lg p-6 animate-fadeInUp animate-scaleIn transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl">
       {/* 标题 */}
-      <div className="p-6 pb-0">
+      <div className="pb-0">
         <h3 className="text-xl font-bold flex items-center text-gray-800 dark:text-gray-100">
           <span className="mr-2 hover:rotate-45 transition-transform duration-300">💻</span> 
           <span className="hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-300">我的技术栈</span>
@@ -43,41 +43,24 @@ export default function TechStackCard() {
       </div>
 
       {/* 标签页 */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700 px-6 mt-4">
-        <button
-          onClick={() => setActiveTab('frontend')}
-          className={`py-2 px-4 font-medium text-sm border-b-2 transition-all duration-300 ${
-            activeTab === 'frontend'
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400 scale-105'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-[1.03]'
-          }`}
-        >
-          前端技术
-        </button>
-        <button
-          onClick={() => setActiveTab('backend')}
-          className={`py-2 px-4 font-medium text-sm border-b-2 transition-all duration-300 ${
-            activeTab === 'backend'
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400 scale-105'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-[1.03]'
-          }`}
-        >
-          后端技术
-        </button>
-        <button
-          onClick={() => setActiveTab('devops')}
-          className={`py-2 px-4 font-medium text-sm border-b-2 transition-all duration-300 ${
-            activeTab === 'devops'
-              ? 'border-blue-500 text-blue-600 dark:text-blue-400 scale-105'
-              : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-[1.03]'
-          }`}
-        >
-          运维部署
-        </button>
+      <div className="flex border-b border-gray-200 dark:border-gray-700 mt-4">
+        {(['frontend', 'backend', 'devops'] as const).map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`py-2 px-4 font-medium text-sm border-b-2 transition-all duration-300 ${
+              activeTab === tab
+                ? 'border-blue-500 text-blue-600 dark:text-blue-400 scale-105'
+                : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-[1.03]'
+            }`}
+          >
+            {tab === 'frontend' ? '前端技术' : tab === 'backend' ? '后端技术' : '运维部署'}
+          </button>
+        ))}
       </div>
 
       {/* 技术栈内容 */}
-      <div className="p-6">
+      <div className="pt-4">
         <ul className="space-y-4">
           {techStack[activeTab].map((tech, index) => (
             <li 
