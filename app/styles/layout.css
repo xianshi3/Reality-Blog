@@ -16,14 +16,6 @@
   }
 }
 
-/* 主内容区域宽度限制与内边距 */
-.main-content {
-  width: 100%;
-  max-width: 48rem;
-  flex: 1;
-  padding: 0 1rem;
-}
-
 /* 文章区域底部外边距 */
 .article-section {
   margin-bottom: 3rem;
