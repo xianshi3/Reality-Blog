@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 深色模式文字色彩优化（用于 prose 文章内容） */
+@media (prefers-color-scheme: dark) {
+  .prose,
+  .prose p,
+  .prose li,
+  .prose span,
+  .prose strong,
+  .prose em,
+  .prose blockquote,
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    color: #d1d5db !important;
+  }
+}
