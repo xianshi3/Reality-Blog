@@ -39,10 +39,21 @@ export default function MainContent({ articles }: { articles: Article[] }) {
       {/* 关于我区域 */}
       <div className="article-section">
         <h2 className="section-title">👤 关于我</h2>
-        <p className="about-para">
-          👋 你好，我是 Reality，一名热爱技术与生活的全栈开发者。
-        </p>
+        <div className="about-card">
+          <div className="about-author">
+            <div className="emoji">🧑‍💻</div>
+            <div className="about-name">
+              <p className="name">Reality</p>
+              <p className="role">全栈开发者 · 技术爱好者</p>
+            </div>
+          </div>
+          <p className="about-description">
+            👋 你好，我是 Reality，一名热爱技术与生活的开发者，喜欢构建有趣的产品与工具。
+            本博客记录我的开发笔记、AI 尝试与一些碎碎念，欢迎常来看看！
+          </p>
+        </div>
       </div>
+
     </section>
   );
 }

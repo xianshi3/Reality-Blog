@@ -60,7 +60,7 @@ export default async function Home() {
         <RightSidebar tags={tags} recommends={recommends} />
       </main>
       <div className="fixed bottom-4 left-4 z-50 w-[350px] max-w-[90vw] pointer-events-auto">
-        <AIChat />
+        {/* <AIChat /> */}
       </div>
       <Footer currentYear={currentYear} />
     </div>
