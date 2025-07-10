@@ -2,7 +2,7 @@ import type { Article } from '../types/article';
 
 export default function MainContent({ articles }: { articles: Article[] }) {
   return (
-    <main className="flex-1 max-w-4xl mx-auto px-4 sm:px-6 lg:px-2 space-y-8">
+    <main className="space-y-8">
       {/* 最新文章区域 */}
       <section>
         <h2 className="section-title">📝 最新文章</h2>
