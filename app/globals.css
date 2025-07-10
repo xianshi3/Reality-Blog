@@ -7,39 +7,67 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ========= 动画效果 ========= */
+/* ========= 动画定义与通用动画类 ========= */
+
+/* 通用渐入上浮动画 */
 @keyframes fadeInUp {
-  0% { opacity: 0; transform: translateY(20px);}
-  100% { opacity: 1; transform: translateY(0);}
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .animate-fadeInUp {
   animation: fadeInUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
+/* 渐入下落动画 */
 @keyframes fadeInDown {
-  0% { opacity: 0; transform: translateY(-40px);}
-  100% { opacity: 1; transform: translateY(0);}
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 .animate-fadeInDown {
   animation: fadeInDown 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* 缩放放大动画 */
 @keyframes scaleUp {
-  0% { transform: scale(0.95);}
-  100% { transform: scale(1);}
+  0% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 .animate-scaleUp {
   animation: scaleUp 0.5s ease-out;
 }
 
+/* 缩放放大且渐入动画 */
 @keyframes scaleIn {
-  0% { opacity: 0; transform: scale(0.95);}
-  100% { opacity: 1; transform: scale(1);}
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 .animate-scaleIn {
   animation: scaleIn 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
+/* 从右侧渐入动画 */
 @keyframes fadeInRight {
   0% {
     opacity: 0;
@@ -54,6 +82,7 @@ body {
   animation: fadeInRight 0.8s ease-out forwards;
 }
 
+/* 从左侧渐入动画 */
 @keyframes fadeInLeft {
   0% {
     opacity: 0;
@@ -68,14 +97,21 @@ body {
   animation: fadeInLeft 0.8s ease-out forwards;
 }
 
+/* 多组件动画延迟控制 */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-300 {
+  animation-delay: 0.3s;
+}
 
-/* 可用于多个组件组合动画节奏 */
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-/* 注意：需设置 animation-fill-mode 保证动画结束后保留样式 */
-.animate-fill-both { animation-fill-mode: both; }
-
+/* 动画结束后保留最终样式 */
+.animate-fill-both {
+  animation-fill-mode: both;
+}
 
 /* ========= 页面基础布局 ========= */
 .home-container {
@@ -87,13 +123,14 @@ body {
   background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef);
   animation: fadeInUp 1s ease-out;
 }
+
 @media (prefers-color-scheme: dark) {
   .home-container {
     background-image: linear-gradient(to bottom right, #18181b, #23272f);
   }
 }
 
-/* 深色模式下文章文字自动浅色处理 */
+/* ========= 深色模式文字色彩优化（用于 prose 文章内容） ========= */
 @media (prefers-color-scheme: dark) {
   .prose,
   .prose p,
@@ -127,24 +164,31 @@ body {
 .avatarImg {
   border-radius: 9999px;
   border: 4px solid #fff;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1),
-              0 4px 6px -4px rgba(0,0,0,0.1);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
   animation: scaleUp 0.5s ease-out;
 }
 
-/* ========= 标题和描述 ========= */
+/* ========= 首页标题与描述 ========= */
 .home-title {
   font-weight: 700;
   font-size: 1.875rem;
   color: #111827;
   margin-bottom: 0.5rem;
 }
+
 @media (min-width: 640px) {
-  .home-title { font-size: 2.25rem; }
+  .home-title {
+    font-size: 2.25rem;
+  }
 }
+
 @media (prefers-color-scheme: dark) {
-  .home-title { color: #fff; }
+  .home-title {
+    color: #fff;
+  }
 }
 
 .home-description {
@@ -153,8 +197,11 @@ body {
   max-width: 36rem;
   color: #4b5563;
 }
+
 @media (prefers-color-scheme: dark) {
-  .home-description { color: #d1d5db; }
+  .home-description {
+    color: #d1d5db;
+  }
 }
 
 /* ========= 主体内容区域 ========= */
@@ -164,20 +211,25 @@ body {
   flex: 1;
   padding: 0 1rem;
 }
+
 .article-section {
   margin-bottom: 3rem;
 }
+
 .section-title {
   font-size: 1.25rem;
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 1rem;
 }
+
 @media (prefers-color-scheme: dark) {
-  .section-title { color: #f3f4f6; }
+  .section-title {
+    color: #f3f4f6;
+  }
 }
 
-/* ========= 关于我卡片区域 ========= */
+/* ========= “关于我”卡片 ========= */
 .about-card {
   background-color: #fff;
   border-radius: 0.5rem;
@@ -186,6 +238,7 @@ body {
   flex-direction: column;
   gap: 0.5rem;
 }
+
 @media (prefers-color-scheme: dark) {
   .about-card {
     background-color: #23272f;
@@ -207,10 +260,12 @@ body {
   font-weight: 600;
   color: #1f2937;
 }
+
 .about-name .role {
   font-size: 0.875rem;
   color: #6b7280;
 }
+
 @media (prefers-color-scheme: dark) {
   .about-name .name {
     color: #f3f4f6;
@@ -226,49 +281,65 @@ body {
   line-height: 1.625;
   margin-top: 0.5rem;
 }
+
 @media (prefers-color-scheme: dark) {
   .about-description {
     color: #d1d5db;
   }
 }
 
-
-/* ========= 文章卡片（首页列表） ========= */
+/* ========= 文章卡片（首页文章列表） ========= */
 .article-item {
   background-color: #fff;
   border-radius: 0.75rem;
   padding: 1.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05),
-              0 4px 6px -4px rgba(0,0,0,0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -4px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.2s, transform 0.2s;
   animation: fadeInUp 0.8s ease-out;
 }
+
 .article-item:hover {
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1),
-              0 8px 10px -6px rgba(0,0,0,0.08);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.08);
   transform: scale(1.02);
 }
+
 @media (prefers-color-scheme: dark) {
-  .article-item { background-color: #23272f; }
+  .article-item {
+    background-color: #23272f;
+  }
 }
+
 .article-title {
   font-size: 1.125rem;
   font-weight: 700;
   color: #111827;
   margin-bottom: 0.5rem;
 }
+
 .article-meta {
   font-size: 0.875rem;
   color: #4b5563;
   margin-bottom: 0.5rem;
 }
+
 .article-summary {
   color: #374151;
 }
+
 @media (prefers-color-scheme: dark) {
-  .article-title { color: #fff; }
-  .article-meta { color: #d1d5db; }
-  .article-summary { color: #9ca3af; }
+  .article-title {
+    color: #fff;
+  }
+  .article-meta {
+    color: #d1d5db;
+  }
+  .article-summary {
+    color: #9ca3af;
+  }
 }
 
 /* ========= “关于我”段落 ========= */
@@ -276,8 +347,11 @@ body {
   color: #374151;
   line-height: 1.625;
 }
+
 @media (prefers-color-scheme: dark) {
-  .about-para { color: #d1d5db; }
+  .about-para {
+    color: #d1d5db;
+  }
 }
 
 /* ========= 页脚区域 ========= */
@@ -294,30 +368,34 @@ body {
   color: #6b7280;
   animation: fadeInUp 1s ease-out;
 }
+
 @media (min-width: 640px) {
   .footer {
     flex-direction: row;
     justify-content: space-between;
   }
 }
+
 @media (prefers-color-scheme: dark) {
   .footer {
     color: #9ca3af;
     border-top-color: #374151;
   }
 }
+
 .footer-links {
   display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
 }
+
 @media (min-width: 640px) {
   .footer-links {
     margin-top: 0;
   }
 }
 
-/* ========= 公共样式：标签 & 小文字 ========= */
+/* ========= 公共标签和小字号文本样式 ========= */
 .tag {
   font-size: 0.875rem;
   padding: 0.25rem 0.75rem;
@@ -325,6 +403,7 @@ body {
   background-color: #e5e7eb;
   color: #1f2937;
 }
+
 @media (prefers-color-scheme: dark) {
   .tag {
     background-color: #374151;
@@ -336,13 +415,14 @@ body {
   font-size: 0.875rem;
   color: #4b5563;
 }
+
 @media (prefers-color-scheme: dark) {
   .text-sm {
     color: #d1d5db;
   }
 }
 
-/* ========= 文章详情页样式（避免和首页冲突） ========= */
+/* ========= 文章详情页样式（避免与首页样式冲突） ========= */
 .article-page-container {
   min-height: 100vh;
   display: flex;
@@ -354,6 +434,7 @@ body {
   padding: 0 1rem;
   position: relative;
 }
+
 @media (prefers-color-scheme: dark) {
   .article-page-container {
     background-image: linear-gradient(to bottom right, #18181b, #23272f);
@@ -363,7 +444,7 @@ body {
 /* 文章正文区域 */
 .article-page-container .article-container {
   width: 100%;
-  max-width: 100ch; /*阅读宽度 */
+  max-width: 100ch; /* 文章阅读宽度限制 */
   margin: 3rem auto 4rem;
   flex: 1 1 auto;
 }
@@ -373,16 +454,20 @@ body {
   background-color: #fff;
   border-radius: 1.5rem;
   padding: 2.5rem 3rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05),
-              0 4px 6px -4px rgba(0,0,0,0.05);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -4px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   animation: fadeInUp 0.8s ease-out;
 }
+
 .article-page-container .article-content:hover {
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1),
-              0 8px 10px -6px rgba(0,0,0,0.08);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.08);
   transform: scale(1.02);
 }
+
 @media (prefers-color-scheme: dark) {
   .article-page-container .article-content {
     background-color: #23272f;
@@ -396,6 +481,7 @@ body {
   margin-bottom: 1rem;
   color: #111827;
 }
+
 @media (prefers-color-scheme: dark) {
   .article-page-container .article-title {
     color: #fff;
@@ -408,6 +494,7 @@ body {
   color: #6b7280;
   margin-bottom: 1.5rem;
 }
+
 @media (prefers-color-scheme: dark) {
   .article-page-container .article-meta {
     color: #9ca3af;
@@ -424,6 +511,7 @@ body {
   margin-bottom: 2rem;
   line-height: 1.6;
 }
+
 @media (prefers-color-scheme: dark) {
   .article-page-container .article-summary {
     background-color: #1f2937;
@@ -450,6 +538,7 @@ body {
   border-radius: 9999px;
   user-select: none;
 }
+
 @media (prefers-color-scheme: dark) {
   .article-page-container .tag-like-container .tag {
     background-color: #374151;
@@ -463,11 +552,11 @@ body {
   top: 1.5rem;
   left: 1.5rem;
   z-index: 50;
-  background-color: rgba(255,255,255,0.9);
+  background-color: rgba(255, 255, 255, 0.9);
   border: 1px solid #d1d5db;
   border-radius: 9999px;
   padding: 0.5rem 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -479,12 +568,14 @@ body {
   text-decoration: none;
   font-size: 1rem;
 }
+
 .article-page-container .return-home:hover {
   background-color: #f3f4f6;
 }
+
 @media (prefers-color-scheme: dark) {
   .article-page-container .return-home {
-    background-color: rgba(31,41,55,0.8);
+    background-color: rgba(31, 41, 55, 0.8);
     border-color: #4b5563;
     color: #d1d5db;
   }
@@ -493,58 +584,76 @@ body {
   }
 }
 
-/* AI对话页面动画效果 */
+/* ========= AI对话页面动画效果 ========= */
 @layer components {
   .animate-fade-in {
     animation: fadeIn 0.3s ease-out forwards;
   }
-  
+
   .animate-message-in {
     animation: messageIn 0.25s ease-out forwards;
   }
-  
+
   .animate-fade-in-up {
     animation: fadeInUp 0.35s ease-out forwards;
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
-  
+
   @keyframes messageIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  
+
   @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
-/* 代码块外层容器 */
+/* ========= 代码块及内联代码样式 ========= */
+
+/* 代码块容器 */
 .prose pre {
-  background-color: #0d1117;   /* 深色背景（跟 github-dark 主题协调） */
-  border-radius: 12px;          /* 圆角 */
-  padding: 1rem 1.5rem;         /* 内边距 */
-  margin: 1.5rem 0;             /* 与上下文本距离 */
-  overflow-x: auto;             /* 横向溢出滚动 */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* 轻微阴影 */
+  background-color: #0d1117; /* 深色背景，github-dark风格 */
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   font-size: 0.9rem;
   line-height: 1.5;
   font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
 }
 
-/* 代码文本颜色和排版 */
+/* 代码文本 */
 .prose code {
   font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
   font-size: 0.9rem;
   line-height: 1.5;
-  color: #c9d1d9;  /* 浅色文本 */
+  color: #c9d1d9;
 }
 
-/* 代码块内联代码样式 */
+/* 代码块内联代码 */
 .prose p code,
 .prose li code {
   background-color: rgba(110, 118, 129, 0.15);
@@ -554,13 +663,13 @@ body {
   font-family: 'Fira Code', Consolas, Monaco, 'Courier New', monospace;
 }
 
-/* 让代码块内的行高更紧凑 */
+/* 代码块中代码的行高更紧凑 */
 .prose pre code {
   line-height: 1.4;
   white-space: pre;
 }
 
-/* 代码行高亮（rehype-highlight会加class）可选 */
+/* 代码高亮特定样式（如rehype-highlight生成） */
 .hljs-comment,
 .hljs-quote {
   color: #6a737d;
