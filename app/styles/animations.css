@@ -59,3 +59,18 @@
 
 /* 动画结束后保留最终样式 */
 .animate-fill-both { animation-fill-mode: both; }
+
+@keyframes chat-fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.animate-chat-fade-in {
+  animation: chat-fade-in 0.3s ease-out;
+}

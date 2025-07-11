@@ -36,7 +36,6 @@ export default function Navbar() {
               { label: "首页", href: "/" },
               { label: "分类", href: "/category" },
               { label: "AI Chat", href: "/ai-chat/fullscreen" },
-              { label: "联系我", href: "/contact" },
             ].map(({ label, href }) => (
               <li key={href}>
                 <Link
@@ -56,7 +55,7 @@ export default function Navbar() {
             className="text-sm sm:text-base font-medium text-gray-800 dark:text-white hover:text-gray-600 
             dark:hover:text-gray-300 transition-colors duration-200 px-2 sm:px-3 py-1 sm:py-2 rounded-lg hover:bg-white/20"
           >
-            {isDark ? "浅色" : "深色"}
+            {isDark ? "浅色" : "深色 ( 没做捏 )"}
           </button>
 
           {/* 移动端菜单按钮 */}

@@ -1,3 +1,4 @@
+/* AI聊天页面的： */
 @layer components {
   /* 渐显动画，常用于元素淡入显示 */
   .animate-fade-in {
