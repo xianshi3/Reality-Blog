@@ -4,7 +4,8 @@ import LikeButton from '../../../components/LikeButton';
 import ReadingProgress from '../../../components/ReadingProgress';
 import { createServerSupabase } from '../../../lib/supabaseServer';
 import ArticleContent from '@/components/ArticleContent';
-import AIChat from '../../../components/AIChat';  // 确认路径正确
+import AIChat from '../../../components/AIChat';
+import ReturnHome from '../../../components/ReturnHome';
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -31,7 +32,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
   const currentYear = new Date().getFullYear();
 
-  // 格式化文章时间
   const formattedDate = article.date
     ? new Date(article.date).toLocaleDateString('zh-CN', {
         year: 'numeric',
@@ -41,13 +41,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     : '未知日期';
 
   return (
-    <div className="article-page-container relative"> {/* 加 relative 方便固定定位子元素 */}
+    <div className="article-page-container relative">
       <ReadingProgress />
 
-      <a href="/" className="return-home" aria-label="返回首页">
-        <span className="text-lg">←</span>
-        <span>返回首页</span>
-      </a>
+      <ReturnHome />
 
       <main className="article-container">
         <article className="article-content animate-fadeInUp">
@@ -78,7 +75,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
         </article>
       </main>
 
-      {/* AI 聊天组件，固定左下，宽度限制同首页 */}
       <div className="fixed bottom-4 left-4 z-50 w-[350px] max-w-[90vw] pointer-events-auto">
         <AIChat />
       </div>

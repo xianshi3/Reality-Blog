@@ -109,39 +109,50 @@
   }
 }
 
+/* 优化后的返回首页按钮样式 */
+
 .article-page-container .return-home {
   position: fixed;
-  top: 1.5rem;
-  left: 1.5rem;
-  z-index: 50;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid #d1d5db;
-  border-radius: 9999px;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  top: calc(env(safe-area-inset-top, 1rem) + 0.75rem);
+  left: calc(env(safe-area-inset-left, 1rem) + 0.75rem);
+  z-index: 9999;
+  background-color: rgba(255 255 255 / 0.6);
+  backdrop-filter: saturate(180%) blur(8px);
+  border-radius: 12px;
+  padding: 0.25rem 0.7rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.15);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: 600;
-  color: #374151;
-  transition: background-color 0.3s ease;
-  backdrop-filter: blur(6px);
+  gap: 0.3rem;
   cursor: pointer;
-  text-decoration: none;
-  font-size: 1rem;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  touch-action: manipulation;
+  user-select: none;
 }
 
 .article-page-container .return-home:hover {
-  background-color: #f3f4f6;
+  background-color: rgba(255 255 255 / 0.8);
 }
 
+/* 隐藏时的样式 */
+.return-home.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+}
+
+/* 深色模式调整 */
 @media (prefers-color-scheme: dark) {
   .article-page-container .return-home {
-    background-color: rgba(31, 41, 55, 0.8);
-    border-color: #4b5563;
+    background-color: rgba(31 41 55 / 0.6);
     color: #d1d5db;
+    box-shadow: 0 2px 6px rgb(0 0 0 / 0.4);
   }
+
   .article-page-container .return-home:hover {
-    background-color: #374151;
+    background-color: rgba(31 41 55 / 0.8);
   }
 }
