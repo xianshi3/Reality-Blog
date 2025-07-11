@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabaseServer";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const { id } = params;
+// GET 方法：从 URL 解析 id
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const id = url.pathname.split("/").at(-2); // 获取路径中的 [id]
+
+  if (!id) {
+    return NextResponse.json({ error: "缺少文章 ID" }, { status: 400 });
+  }
 
   const supabase = await createServerSupabase();
 
@@ -22,11 +25,12 @@ export async function GET(
   return NextResponse.json({ likes: article.likes ?? 0 });
 }
 
+// POST 方法：解构 context 里的 params
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
+  const { id } = await context.params;
 
   const supabase = await createServerSupabase();
 
