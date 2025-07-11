@@ -74,3 +74,12 @@
 .animate-chat-fade-in {
   animation: chat-fade-in 0.3s ease-out;
 }
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}

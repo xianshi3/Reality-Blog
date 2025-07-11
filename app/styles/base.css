@@ -15,6 +15,30 @@ body {
   }
 }
 
+:root {
+  --like-bg: #f3f4f6;        /* 类似全局背景灰白 #f3f4f6 */
+  --like-bg-hover: #e5e7eb;  /* 比较浅的灰色hover */
+  --like-border: #d1d5db;    /* 边框颜色 */
+  --like-text: #374151;      /* 文字颜色 */
+  --like-active-bg: #fce7f3; /* 点赞后背景，淡粉色 */
+  --like-active-border: #f9a8d4;
+  --like-active-text: #db2777; /* 粉色 */
+  --like-shadow: rgba(244, 114, 182, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --like-bg: #23272f;
+    --like-bg-hover: #374151;
+    --like-border: #4b5563;
+    --like-text: #d1d5db;
+    --like-active-bg: #4b1127;
+    --like-active-border: #db2777;
+    --like-active-text: #f9a8d4;
+    --like-shadow: rgba(244, 114, 182, 0.6);
+  }
+}
+
 
 /* 深色模式文字色彩优化（用于 prose 文章内容） */
 @media (prefers-color-scheme: dark) {
