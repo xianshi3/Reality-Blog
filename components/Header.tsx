@@ -19,14 +19,11 @@ export default function Header() {
         <Navbar />
       </div>
 
-      {/* 视差背景区，居中显示，带圆角和动画 */}
-      <div
-        style={{ width: "100%", maxWidth: "1200px", margin: "0 auto" }}
-        className="overflow-hidden rounded-3xl shadow-xl animate-fadeInDown transition-transform duration-700 ease-in-out hover:scale-105"
-      >
-        <ParallaxSection backgroundImage="/parallax-bg.jpg" height={400}>
-          {/* 可在此处填充内容 */}
-        </ParallaxSection>
+      {/* 视差背景区：响应式居中，圆角动画 */}
+      <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <div className="overflow-hidden rounded-3xl shadow-xl animate-fadeInDown transition-transform duration-700 ease-in-out hover:scale-105 sm:hover:scale-100">
+          <ParallaxSection backgroundImage="/parallax-bg.jpg" />
+        </div>
       </div>
     </>
   );

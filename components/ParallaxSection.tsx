@@ -16,6 +16,15 @@ export default function ParallaxSection({
   const [offsetY, setOffsetY] = useState(0); // 页面滚动偏移量
   const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 }); // 鼠标偏移
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // 判断是否为移动端
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   // 滚动监听
   useEffect(() => {
@@ -24,8 +33,9 @@ export default function ParallaxSection({
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // 鼠标移动监听（相对容器中心）
+  // 鼠标移动监听
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
 
@@ -43,19 +53,28 @@ export default function ParallaxSection({
       ref={containerRef}
       onMouseMove={handleMouseMove}
       className="relative overflow-hidden"
-      style={{ height }}
+      style={{
+        height: isMobile ? 200 : height, // 小屏自动缩小高度
+      }}
     >
-      {/* 背景图层：结合滚动视差与鼠标偏移 */}
+      {/* 背景图层 */}
       <div
-        className="absolute inset-0 bg-cover bg-center will-change-transform"
+        className={`
+          absolute inset-0 
+          bg-no-repeat bg-center 
+          ${isMobile ? "bg-contain" : "bg-cover"} 
+          will-change-transform
+        `}
         style={{
           backgroundImage: `url(${backgroundImage})`,
-          transform: `
-            translateY(${offsetY * 0.5}px)
-            translateX(${mouseOffset.x * 20}px)
-            translateY(${mouseOffset.y * 20}px)
-            scale(1.05)
-          `,
+          transform: isMobile
+            ? "scale(1)"
+            : `
+              translateY(${offsetY * 0.5}px)
+              translateX(${mouseOffset.x * 20}px)
+              translateY(${mouseOffset.y * 20}px)
+              scale(1.05)
+            `,
           transition: "transform 0.1s ease-out",
         }}
       />
