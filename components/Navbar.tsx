@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
@@ -31,36 +32,41 @@ export default function Navbar() {
         {/* 导航区域 */}
         <div className="flex items-center space-x-4 sm:space-x-8">
           {/* 桌面导航链接 */}
-          <ul className="hidden md:flex space-x-6">
-            {[
-              { label: "首页", href: "/" },
-              { label: "分类", href: "/category" },
-              { label: "AI Chat", href: "/ai-chat/fullscreen" },
-            ].map(({ label, href }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className="
-                    text-sm sm:text-base font-semibold
-                    text-gray-900 dark:text-white
-                    hover:text-black
-                  dark:hover:bg-blue-900/50
-                    drop-shadow-sm
-                    rounded-lg
-                    px-3 py-2
-                    transition
-                    duration-300
-                    transform
-                    hover:scale-105
-                    hover:shadow-lg
-                    block
-                  "
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <ul className="hidden md:flex space-x-6">
+          {[
+            { label: "首页", href: "/" },
+            { label: "分类", href: "/category" },
+            { label: "AI Chat", href: "/ai-chat/fullscreen" },
+          ].map(({ label, href }) => (
+            <li key={href}>
+              <Link
+                href={href}
+                className="
+                  text-sm sm:text-base font-semibold
+                  text-gray-900 dark:text-white
+                  hover:text-black
+                dark:hover:bg-blue-900/50
+                  drop-shadow-sm
+                  rounded-lg
+                  px-3 py-2
+                  transition
+                  duration-300
+                  transform
+                  hover:scale-105
+                  hover:shadow-lg
+                  block
+                "
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+
+          {/* 主题切换按钮 */}
+          <ThemeToggle />
+
           {/* 移动端菜单按钮 */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
