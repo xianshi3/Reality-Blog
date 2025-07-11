@@ -202,8 +202,6 @@ export default function AIChat() {
     <div className="fixed bottom-6 left-6 z-50">
       <button
         className="w-14 h-14 flex items-center justify-center rounded-2xl 
-                   bg-white/30 dark:bg-[#23272f]/30 backdrop-blur-lg 
-                   bg-white/20 dark:bg-gray-600/20 
                    shadow-lg text-2xl hover:scale-110 transition-all duration-200 
                    active:scale-95 text-gray-800 dark:text-white hover:bg-white/50 dark:hover:bg-[#2c2f3a]"
         onClick={() => setOpen((prev) => !prev)}
