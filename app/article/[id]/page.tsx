@@ -70,7 +70,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
                 </span>
               ))}
             </div>
-            <LikeButton articleId={article.id} />
+            <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
           </div>
         </article>
       </main>

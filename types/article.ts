@@ -7,6 +7,7 @@ export interface Article {
   content?: string;
   tags?: string[];
   link: string;
+  likes?: number;
 }
 
 export default Article;
