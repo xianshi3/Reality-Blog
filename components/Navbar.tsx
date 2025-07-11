@@ -31,7 +31,7 @@ export default function Navbar() {
         {/* 导航区域 */}
         <div className="flex items-center space-x-4 sm:space-x-8">
           {/* 桌面导航链接 */}
-          <ul className="hidden md:flex space-x-4 sm:space-x-8">
+          <ul className="hidden md:flex space-x-6">
             {[
               { label: "首页", href: "/" },
               { label: "分类", href: "/category" },
@@ -40,24 +40,27 @@ export default function Navbar() {
               <li key={href}>
                 <Link
                   href={href}
-                  className="text-sm sm:text-base font-medium text-gray-800 dark:text-white hover:text-gray-600 
-                  dark:hover:text-gray-300 transition-colors duration-200 px-2 sm:px-3 py-1 sm:py-2 rounded-lg hover:bg-white/20"
+                  className="
+                    text-sm sm:text-base font-semibold
+                    text-gray-900 dark:text-white
+                    hover:text-black
+                  dark:hover:bg-blue-900/50
+                    drop-shadow-sm
+                    rounded-lg
+                    px-3 py-2
+                    transition
+                    duration-300
+                    transform
+                    hover:scale-105
+                    hover:shadow-lg
+                    block
+                  "
                 >
                   {label}
                 </Link>
               </li>
             ))}
           </ul>
-
-          {/* 主题切换按钮 */}
-          <button
-            onClick={toggleTheme}
-            className="text-sm sm:text-base font-medium text-gray-800 dark:text-white hover:text-gray-600 
-            dark:hover:text-gray-300 transition-colors duration-200 px-2 sm:px-3 py-1 sm:py-2 rounded-lg hover:bg-white/20"
-          >
-            {isDark ? "浅色" : "深色 ( 没做捏 )"}
-          </button>
-
           {/* 移动端菜单按钮 */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
