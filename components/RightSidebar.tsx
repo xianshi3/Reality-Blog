@@ -26,7 +26,7 @@ export default function RightSidebar({ tags, recommends }: RightSidebarProps) {
         />
         <h1 className="text-xl font-bold text-gray-800 dark:text-white mb-1">Reality</h1>
         <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-[200px]">
-          全栈开发工程师的技术与生活
+          Full Stack Developer
         </p>
       </div>
 
@@ -35,7 +35,7 @@ export default function RightSidebar({ tags, recommends }: RightSidebarProps) {
 
       {/* 热门标签卡片 */}
       <div className={cardClass}>
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">热门标签</h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">标签</h3>
         <div className="flex flex-wrap gap-2">
           {tags.map((tag, idx) => (
             <span

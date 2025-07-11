@@ -5,7 +5,11 @@ export default function MainContent({ articles }: { articles: Article[] }) {
     <main className="space-y-8">
       {/* 最新文章区域 */}
       <section>
-        <h2 className="section-title">📝 最新文章</h2>
+      <h2 className="section-title text-gray-800 dark:text-gray-100 font-semibold flex items-center gap-2">
+        <span className="text-xl">📄</span>
+        日志更新
+      </h2>
+
         <ul className="space-y-8">
           {articles.map((article, idx) => (
             <li key={article.link ?? idx}>

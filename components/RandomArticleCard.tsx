@@ -27,7 +27,7 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
     <div className="bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 animate-fadeInUp animate-scaleIn
     transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">🎲 随机推荐</h3>
+        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">随机日志</h3>
         <button
           onClick={getRandomArticle}
           className="text-sm text-blue-600 hover:underline dark:text-blue-400"
