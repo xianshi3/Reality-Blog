@@ -17,10 +17,12 @@ interface NavCardProps {
 
 export default function NavCard({ className = '' }: NavCardProps) {
   const cardBaseClass =
-    'bg-white dark:bg-[#23272f] rounded-2xl shadow-md p-6 animate-fadeInUp animate-scaleIn transition-shadow duration-300 hover:shadow-lg';
+    'bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 animate-fadeInUp animate-scaleIn';
+  const cardHoverClass =
+  'transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl';
 
   return (
-    <div className={`${cardBaseClass} ${className}`}>
+    <div className={`${cardBaseClass} ${cardHoverClass} ${className}`}>
       <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-6">导航</h3>
       <ul className="space-y-4">
         {NAV_LINKS.map(({ href, icon, label, description }) => (
