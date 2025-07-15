@@ -4,16 +4,17 @@ import type { Article } from '../types/article';
 
 interface LeftSidebarProps {
   articles: Article[];
+  className?: string;
 }
 
-export default function LeftSidebar({ articles }: LeftSidebarProps) {
+export default function LeftSidebar({ articles, className }: LeftSidebarProps) {
   const cardBaseClass =
     'bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 animate-fadeInUp animate-scaleIn';
   const cardHoverClass =
     'transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl';
 
   return (
-    <aside className="lg:w-1/4 w-full space-y-6 animate-fadeInUp delay-100">
+    <aside className={`lg:w-1/4 w-full space-y-6 animate-fadeInUp delay-100 ${className ?? ''}`}>
       <NavCard />
 
       <div className={`${cardBaseClass} ${cardHoverClass}`}>

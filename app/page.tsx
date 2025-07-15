@@ -40,9 +40,9 @@ export default async function Home() {
 
       {/* 三栏布局 */}
       <main className="container mx-auto flex flex-col lg:flex-row w-full max-w-6xl px-3 gap-6 py-10">
-        <LeftSidebar articles={articles} />
-        <MainContent articles={articles} />
-        <RightSidebar tags={TAGS} recommends={RECOMMENDED_ARTICLES} />
+        <LeftSidebar className="w-60 flex-shrink-0" articles={articles} />
+        <MainContent className="flex-1 min-w-0" articles={articles} />
+        <RightSidebar className="w-60 flex-shrink-0" tags={TAGS} recommends={RECOMMENDED_ARTICLES} />
       </main>
 
       {/* AI 聊天组件 */}

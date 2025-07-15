@@ -1,14 +1,19 @@
 import type { Article } from '../types/article';
 
-export default function MainContent({ articles }: { articles: Article[] }) {
+interface MainContentProps {
+  articles: Article[];
+  className?: string;
+}
+
+export default function MainContent({ articles, className }: MainContentProps) {
   return (
-    <main className="space-y-8">
+    <main className={`space-y-8 ${className ?? ''}`}>
       {/* 最新文章区域 */}
       <section>
-      <h2 className="section-title text-gray-800 dark:text-gray-100 font-semibold flex items-center gap-2">
-        <span className="text-xl">📄</span>
-        日志更新
-      </h2>
+        <h2 className="section-title text-gray-800 dark:text-gray-100 font-semibold flex items-center gap-2">
+          <span className="text-xl">📄</span>
+          日志更新
+        </h2>
 
         <ul className="space-y-8">
           {articles.map((article, idx) => (

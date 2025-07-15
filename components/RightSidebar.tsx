@@ -4,18 +4,19 @@ import TechStackCard from './TechStackCard';
 interface RightSidebarProps {
   tags: string[];
   recommends: string[];
+  className?: string;
 }
 
 /**
  * 右侧边栏组件，显示个人信息、技术栈、热门标签
  */
-export default function RightSidebar({ tags, recommends }: RightSidebarProps) {
+export default function RightSidebar({ tags, recommends, className }: RightSidebarProps) {
   const cardClass = "bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-6 animate-fadeInUp animate-scaleIn transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl";
 
   return (
-    <aside className="lg:w-64 w-full space-y-6">
+    <aside className={`lg:w-64 w-full space-y-6 ${className ?? ''}`}>
       {/* 个人信息卡片 */}
-      <div className="flex flex-col items-center justify-center text-center bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-6 animate-fadeInUp animate-scaleIn transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl">
+      <div className={cardClass}>
         <Image
           className="avatarImg mb-3"
           src="/avatar.jpg"
