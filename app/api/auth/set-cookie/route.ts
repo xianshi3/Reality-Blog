@@ -3,7 +3,7 @@ import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export async function POST(req: Request) {
-  const cookieStore = await cookies(); // 这里加 await
+  const cookieStore = await cookies();
 
   // 创建响应对象，后续写 cookie
   const response = NextResponse.json({ message: 'Cookie 设置成功' });
