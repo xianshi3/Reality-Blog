@@ -27,11 +27,17 @@ export default function EditArticle() {
   }, [id]);
 
   const handleUpdate = async () => {
-    if (!form) return;
+    if (!form || saving) return;
+    if (!form.title) {
+      alert("标题不能为空");
+      return;
+    }
 
     setSaving(true);
+
     const { id: _id, ...updateData } = form;
     const { error } = await supabase.from("articles").update(updateData).eq("id", id);
+
     setSaving(false);
 
     if (error) {
@@ -43,6 +49,14 @@ export default function EditArticle() {
 
   const handleBack = () => {
     router.push("/admin");
+  };
+
+  const insertCodeBlock = () => {
+    const codeBlockTemplate = "\n```js\n// 这里写代码\n```\n";
+    setForm((f: any) => ({
+      ...f,
+      content: (f.content || "") + codeBlockTemplate,
+    }));
   };
 
   if (loading || !form) {
@@ -62,6 +76,16 @@ export default function EditArticle() {
       <div className="edit-container" style={{ paddingTop: "3rem" }}>
         <h2 className="edit-title">编辑文章</h2>
 
+        {/* 插入代码块按钮 */}
+        <button
+          type="button"
+          onClick={insertCodeBlock}
+          className="edit-button mb-4"
+          style={{ backgroundColor: "#10b981" }} // 绿色按钮
+        >
+          插入代码块
+        </button>
+
         <input
           className="edit-input"
           value={form.title || ""}
@@ -69,16 +93,48 @@ export default function EditArticle() {
           placeholder="文章标题"
         />
 
+        <input
+          className="edit-input"
+          value={form.summary || ""}
+          onChange={(e) => setForm({ ...form, summary: e.target.value })}
+          placeholder="文章摘要"
+        />
+
         <textarea
           className="edit-textarea"
           value={form.content || ""}
           onChange={(e) => setForm({ ...form, content: e.target.value })}
-          placeholder="文章内容"
+          placeholder="文章内容（支持 Markdown）"
         />
 
-        <button onClick={handleUpdate} disabled={saving} className="edit-button">
+        <input
+          className="edit-input"
+          value={form.category || ""}
+          onChange={(e) => setForm({ ...form, category: e.target.value })}
+          placeholder="分类"
+        />
+
+        <input
+          className="edit-input"
+          value={form.tags || ""}
+          onChange={(e) => setForm({ ...form, tags: e.target.value })}
+          placeholder="标签（逗号分隔）"
+        />
+
+        <input
+          className="edit-input"
+          type="date"
+          value={form.date || ""}
+          onChange={(e) => setForm({ ...form, date: e.target.value })}
+        />
+
+        <button
+          onClick={handleUpdate}
+          disabled={saving}
+          className="edit-button mt-4"
+        >
           {saving && <div className="spinner" />}
-          {saving ? "保存中..." : "保存"}
+          {saving ? "保存中..." : "保存修改"}
         </button>
       </div>
     </>

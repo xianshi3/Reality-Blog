@@ -110,3 +110,12 @@
 .edit-back-button:hover {
   color: #1d4ed8; /* blue-700 */
 }
+
+
+.edit-button.insert-code {
+  background-color: #10b981; /* green-500 */
+}
+
+.edit-button.insert-code:hover {
+  background-color: #059669; /* green-600 */
+}
