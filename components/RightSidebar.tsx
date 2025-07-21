@@ -16,9 +16,9 @@ export default function RightSidebar({ tags, recommends, className }: RightSideb
   return (
     <aside className={`lg:w-64 w-full space-y-6 ${className ?? ''}`}>
       {/* 个人信息卡片 */}
-      <div className={cardClass}>
+      <div className={cardClass + " flex flex-col items-center text-center"}>
         <Image
-          className="avatarImg mb-3"
+          className="avatarImg mb-3 rounded-full mx-auto"
           src="/avatar.jpg"
           alt="头像"
           width={96}
@@ -26,7 +26,7 @@ export default function RightSidebar({ tags, recommends, className }: RightSideb
           priority
         />
         <h1 className="text-xl font-bold text-gray-800 dark:text-white mb-1">Reality</h1>
-        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-[200px]">
+        <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
           Full Stack Developer
         </p>
       </div>
