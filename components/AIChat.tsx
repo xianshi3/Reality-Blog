@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Message } from "../types/message";
 
+// 用户和 AI 的头像组件
 const AVATAR = {
   user: (
     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold shadow">
@@ -17,6 +18,7 @@ const AVATAR = {
   ),
 };
 
+// 消息气泡组件（左为 AI，右为用户）
 const MessageBubble = ({ message }: { message: Message }) => (
   <div
     className={`flex gap-3 animate-message-in ${
@@ -39,6 +41,7 @@ const MessageBubble = ({ message }: { message: Message }) => (
   </div>
 );
 
+// 聊天顶部栏（包含全屏和关闭按钮）
 const ChatHeader = ({
   onFullscreen,
   onClose,
@@ -54,16 +57,16 @@ const ChatHeader = ({
     </span>
     <div className="flex gap-2">
       <button
-        className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 text-xl font-bold transition"
         onClick={onFullscreen}
         aria-label="全屏"
+        className="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400 text-xl font-bold transition"
       >
         全屏
       </button>
       <button
-        className="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 text-xl font-bold transition"
         onClick={onClose}
         aria-label="关闭"
+        className="text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400 text-xl font-bold transition"
       >
         ×
       </button>
@@ -71,6 +74,7 @@ const ChatHeader = ({
   </div>
 );
 
+// 聊天输入框组件
 const ChatInput = ({
   value,
   onChange,
@@ -84,9 +88,8 @@ const ChatInput = ({
 }) => (
   <div className="flex items-center gap-2 px-4 py-3 border-t border-[#e5e7eb] dark:border-[#374151] bg-white dark:bg-[#23272f]">
     <input
-      className="flex-1 border border-[#e5e7eb] rounded-lg px-4 py-2 text-sm
-                 focus:outline-none focus:ring-2 focus:ring-blue-400
-                 dark:border-[#374151] dark:bg-[#23272f] dark:text-[#f3f4f6] transition-shadow shadow-inner"
+      className="flex-1 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 transition-shadow shadow-inner
+                 border-[#e5e7eb] dark:border-[#374151] dark:bg-[#23272f] dark:text-[#f3f4f6]"
       placeholder="请输入你的问题..."
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -94,34 +97,18 @@ const ChatInput = ({
       disabled={loading}
     />
     <button
-      className="bg-white text-[#111827] border border-[#e5e7eb] rounded-lg px-4 py-2 font-medium shadow-sm
-                hover:bg-[#f8fafc] active:bg-[#e0e7ef] disabled:opacity-50 disabled:cursor-not-allowed
-                dark:bg-[#23272f] dark:text-[#f3f4f6] dark:border-[#374151] dark:hover:bg-[#2a2f3a] dark:active:bg-[#1c1f24]
-                transition duration-200 ease-in-out"
+      className="bg-white text-[#111827] border rounded-lg px-4 py-2 font-medium shadow-sm transition
+                 hover:bg-[#f8fafc] active:bg-[#e0e7ef] disabled:opacity-50
+                 dark:bg-[#23272f] dark:text-[#f3f4f6] dark:border-[#374151] dark:hover:bg-[#2a2f3a]"
       onClick={onSend}
       disabled={loading}
     >
       {loading ? (
+        // 加载中展示旋转动画
         <span className="inline-flex items-center">
-          <svg
-            className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#111827] dark:text-[#f3f4f6]"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            />
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            />
+          <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
           发送中
         </span>
@@ -132,21 +119,22 @@ const ChatInput = ({
   </div>
 );
 
+// 主组件：AI Chat 悬浮窗口
 export default function AIChat() {
-  const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [open, setOpen] = useState(false); // 控制窗口开关
+  const [messages, setMessages] = useState<Message[]>([]); // 聊天消息列表
+  const [input, setInput] = useState(""); // 用户输入
+  const [loading, setLoading] = useState(false); // 是否正在加载
+  const messagesEndRef = useRef<HTMLDivElement>(null); // 用于滚动到底部
+  const chatContainerRef = useRef<HTMLDivElement>(null); // 用于检测点击外部关闭窗口
   const router = useRouter();
 
+  // 每当消息更新时自动滚动到底部
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // 点击外部时关闭聊天窗口
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -163,6 +151,7 @@ export default function AIChat() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [open]);
 
+  // 发送消息逻辑
   const handleSend = useCallback(async () => {
     if (!input.trim() || loading) return;
 
@@ -192,6 +181,7 @@ export default function AIChat() {
     }
   }, [input, loading, messages]);
 
+  // 全屏按钮：跳转至全屏页面并传递消息记录
   const handleFullscreen = useCallback(() => {
     const queryParams = new URLSearchParams();
     queryParams.set("messages", JSON.stringify(messages));
@@ -200,41 +190,33 @@ export default function AIChat() {
 
   return (
     <div className="fixed bottom-6 left-6 z-50">
+      {/* 悬浮按钮 */}
       <button
-        className="w-14 h-14 flex items-center justify-center rounded-2xl 
-                   shadow-lg text-2xl hover:scale-110 transition-all duration-200 
-                   active:scale-95 text-gray-800 dark:text-white hover:bg-white/50 dark:hover:bg-[#2c2f3a]"
         onClick={() => setOpen((prev) => !prev)}
         aria-label="打开AI Chat"
+        className="w-14 h-14 flex items-center justify-center rounded-2xl shadow-lg text-2xl hover:scale-110 active:scale-95 transition"
       >
-        <span className="text-gradient font-extrabold tracking-wide select-none">
-          LLM
-        </span>
+        <span className="text-gradient font-extrabold tracking-wide select-none">LLM</span>
       </button>
 
+      {/* 弹出聊天窗口 */}
       {open && (
         <div
           ref={chatContainerRef}
-          className="fixed bottom-24 left-6 w-[380px] max-w-[calc(100vw-48px)] flex flex-col rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700
-                     bg-gradient-to-br from-white to-gray-50 dark:from-[#1c1f24] dark:to-[#2a2f3a] 
-                     backdrop-blur-xl transition-all duration-300 origin-bottom-left overflow-hidden
-                     animate-chat-fade-in"
+          className="fixed bottom-24 left-6 w-[380px] max-w-[calc(100vw-48px)] flex flex-col rounded-2xl shadow-2xl border overflow-hidden animate-chat-fade-in
+                     bg-gradient-to-br from-white to-gray-50 dark:from-[#1c1f24] dark:to-[#2a2f3a]"
           style={{
             maxHeight: "calc(100vh - 120px)",
             height: "min(600px, 70vh)",
           }}
         >
-          <ChatHeader
-            onFullscreen={handleFullscreen}
-            onClose={() => setOpen(false)}
-          />
+          <ChatHeader onFullscreen={handleFullscreen} onClose={() => setOpen(false)} />
 
+          {/* 消息内容区 */}
           <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4 bg-gray-50/50 dark:bg-gray-900/50 scrollbar">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center text-gray-400 text-sm text-center select-none p-8">
-                <div className="text-gradient text-4xl mb-2 font-extrabold tracking-wide">
-                  LLM
-                </div>
+                <div className="text-gradient text-4xl mb-2 font-extrabold tracking-wide">LLM</div>
                 <p>和 AI 聊聊</p>
                 <p className="text-xs mt-2 text-gray-300 dark:text-gray-500">
                   输入你的问题开始对话
@@ -248,12 +230,8 @@ export default function AIChat() {
             <div ref={messagesEndRef} />
           </div>
 
-          <ChatInput
-            value={input}
-            onChange={setInput}
-            onSend={handleSend}
-            loading={loading}
-          />
+          {/* 输入区域 */}
+          <ChatInput value={input} onChange={setInput} onSend={handleSend} loading={loading} />
         </div>
       )}
     </div>
