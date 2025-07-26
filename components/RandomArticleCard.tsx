@@ -3,22 +3,26 @@
 import { useState, useEffect } from "react";
 import type { Article } from "../types/article";
 
+// 定义组件接收的属性类型
 interface RandomArticleCardProps {
-  articles: Article[];
+  articles: Article[];  // 文章数组
 }
 
+// 随机文章卡片组件
 export default function RandomArticleCard({ articles }: RandomArticleCardProps) {
-  const [article, setArticle] = useState<Article | null>(null);
+  const [article, setArticle] = useState<Article | null>(null);  // 当前显示的文章
 
+  // 随机获取一篇文章
   const getRandomArticle = () => {
     if (articles.length === 0) {
-      setArticle(null);
+      setArticle(null);  // 如果没有文章，设为null
       return;
     }
-    const randomIndex = Math.floor(Math.random() * articles.length);
-    setArticle(articles[randomIndex]);
+    const randomIndex = Math.floor(Math.random() * articles.length);  // 生成随机索引
+    setArticle(articles[randomIndex]);  // 设置随机文章
   };
 
+  // 组件加载或文章列表变化时获取随机文章
   useEffect(() => {
     getRandomArticle();
   }, [articles]);
@@ -26,6 +30,7 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
   return (
     <div className="bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 animate-fadeInUp animate-scaleIn
     transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl">
+      {/* 标题和刷新按钮区域 */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">随机日志</h3>
         <button
@@ -36,8 +41,10 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
         </button>
       </div>
 
+      {/* 主要内容区域 - 显示文章或提示信息 */}
       {article ? (
         <>
+          {/* 文章链接（包含标题和摘要） */}
           <a
             href={article.link}
             target="_blank"
@@ -51,6 +58,7 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
               {article.summary || "暂无摘要"}
             </p>
           </a>
+          {/* 文章元信息（分类和日期） */}
           <div className="mt-3 flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
             <span>{article.category || "未分类"}</span>
             <span>
@@ -64,6 +72,7 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
         </>
       ) : (
         <>
+          {/* 没有文章时的提示信息 */}
           <p className="text-gray-500 dark:text-gray-400">暂无推荐文章</p>
           <button
             onClick={getRandomArticle}
