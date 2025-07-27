@@ -337,3 +337,57 @@
     transform: scale(1);
   }
 }
+
+/* 分页导航相关 CSS */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  user-select: none;
+  font-family: var(--font-geist-sans), sans-serif;
+}
+
+.pagination a {
+  padding: 0.5rem 0.9rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  background-color: #e5e7eb;
+  color: #1f2937;
+  text-decoration: none;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.05);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pagination a {
+    background-color: #374151;
+    color: #d1d5db;
+    box-shadow: none;
+  }
+}
+
+.pagination a:hover:not(.disabled):not(.active) {
+  background-color: #d1d5db;
+  color: #111827;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgb(0 0 0 / 0.1);
+}
+
+.pagination a.active {
+  background-color: #2563eb; /* 蓝色600 */
+  color: white;
+  cursor: default;
+  box-shadow: 0 4px 8px rgb(37 99 235 / 0.5);
+}
+
+.pagination a.disabled {
+  background-color: #9ca3af;
+  color: #6b7280;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+  transform: none;
+}

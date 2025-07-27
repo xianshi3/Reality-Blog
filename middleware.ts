@@ -5,7 +5,10 @@ import type { NextRequest } from 'next/server';
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
 
-  // cookies 实现，支持 getAll 和 setAll
+  // 注入完整请求 URL 到 headers，供 Server Component 获取 searchParams
+  res.headers.set('x-url', req.url);
+
+  // Supabase 认证相关代码
   const cookieStore = {
     getAll() {
       return req.cookies.getAll().map(({ name, value }) => ({ name, value }));
@@ -37,5 +40,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/', '/admin/:path*'],
 };
