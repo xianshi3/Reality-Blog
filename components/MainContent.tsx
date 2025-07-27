@@ -93,17 +93,25 @@ export default function MainContent({
             : "page-transition-exit-active"
         }
       >
+        {/* 遍历每个年份的文章分组 */}
         {years.map((year) => (
           <section key={year}>
+            {/* 年份标题 */}
             <h2 className="section-title text-gray-800 dark:text-gray-100 font-semibold text-xl mt-6">
               📅 {year} 年文章
             </h2>
+
+            {/* 当前年份下的文章列表 */}
             <ul className="space-y-8">
               {groupedArticles[year].map((article) => (
                 <li key={article.link}>
                   <article className="article-item">
+                    {/* 文章链接（包含标题、日期/分类、摘要） */}
                     <a href={article.link} className="article-link" tabIndex={0}>
+                      {/* 文章标题 */}
                       <h3 className="article-title">{article.title}</h3>
+
+                      {/* 文章元信息：日期 + 分类 */}
                       <p className="article-meta">
                         {article.date
                           ? new Date(article.date).toLocaleDateString("zh-CN", {
@@ -113,6 +121,8 @@ export default function MainContent({
                             })
                           : "未知日期"} · {article.category}
                       </p>
+
+                      {/* 文章摘要 */}
                       <p className="article-summary">{article.summary}</p>
                     </a>
                   </article>

@@ -137,13 +137,28 @@
 
 /* 文章摘要 */
 .article-summary {
+  font-size: 0.95rem;
+  line-height: 1.5;
   color: #374151;
+
+  display: -webkit-box;         
+  -webkit-box-orient: vertical;
+
+  -webkit-line-clamp: 5;          /* 限制行数 */
+  line-clamp: 3;                  /* 标准属性，增强兼容性 */
+  overflow: hidden;               /* 隐藏溢出 */
+  text-overflow: ellipsis;        /* 显示省略号 */
+
+  white-space: normal;            /* 允许换行 */
+  max-width: 100%;                /* 容器宽度 */
 }
+
 @media (prefers-color-scheme: dark) {
   .article-summary {
-    color: #9ca3af;
+    color: #cbd5e1; /* 更亮一点的灰色，便于在深色背景下阅读 */
   }
 }
+
 
 /* ======= 关于我区域 ======= */
 .about-section {
