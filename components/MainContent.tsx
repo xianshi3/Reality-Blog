@@ -16,25 +16,19 @@ export default function MainContent({
   currentPage = 1,
   totalPages = 1,
 }: MainContentProps) {
-  // 动画状态管理，记录当前显示页码和动画阶段
   const [displayPage, setDisplayPage] = useState(currentPage);
   const [transitionStage, setTransitionStage] = useState<"enter" | "exit">("enter");
 
-  // 当父组件的 currentPage 变更时，触发动画切换
   useEffect(() => {
     if (currentPage === displayPage) return;
-
     setTransitionStage("exit");
-
     const timeout = setTimeout(() => {
       setDisplayPage(currentPage);
       setTransitionStage("enter");
     }, 300);
-
     return () => clearTimeout(timeout);
   }, [currentPage, displayPage]);
 
-  // 按年份分组文章
   const groupedArticles = articles.reduce((acc, article) => {
     const year = new Date(article.date).getFullYear();
     if (!acc[year]) acc[year] = [];
@@ -46,7 +40,6 @@ export default function MainContent({
     .map(Number)
     .sort((a, b) => b - a);
 
-  // 生成页码，最多5个，当前页居中
   function getPageNumbers() {
     const delta = 2;
     let start = Math.max(1, displayPage - delta);
@@ -66,16 +59,11 @@ export default function MainContent({
 
   const pageNumbers = getPageNumbers();
 
-  // 自定义分页点击处理，阻止默认跳转，先平滑滚动到顶部，再更新页码
   function onPageClick(e: React.MouseEvent, page: number) {
     e.preventDefault();
     if (page === currentPage) return;
-
     window.scrollTo({ top: 0, behavior: "smooth" });
-
     setTimeout(() => {
-      // 这里假设父组件通过 URL 或状态控制页码
-      // 你可以改成 router.push(`/?page=${page}`) 或调用父组件回调
       window.location.href = `/?page=${page}`;
     }, 350);
   }
@@ -122,7 +110,6 @@ export default function MainContent({
       </div>
 
       <nav aria-label="分页导航" className="pagination">
-        {/* 上一页 */}
         <a
           href={`/?page=${Math.max(1, currentPage - 1)}`}
           className={currentPage === 1 ? "disabled" : ""}
@@ -133,7 +120,6 @@ export default function MainContent({
           上一页
         </a>
 
-        {/* 数字页码 */}
         {pageNumbers.map((pageNum) => (
           <a
             key={pageNum}
@@ -146,7 +132,6 @@ export default function MainContent({
           </a>
         ))}
 
-        {/* 下一页 */}
         <a
           href={`/?page=${Math.min(totalPages, currentPage + 1)}`}
           className={currentPage === totalPages ? "disabled" : ""}
@@ -158,7 +143,6 @@ export default function MainContent({
         </a>
       </nav>
 
-      {/* 关于我区域 */}
       <aside className="article-section about-section max-w-xl mx-auto">
         <h2>👤 关于我</h2>
         <div className="about-card">

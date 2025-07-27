@@ -10,10 +10,9 @@ import { TAGS, RECOMMENDED_ARTICLES } from '@/constants/sidebar';
 import { createServerSupabase } from '@/lib/supabaseServer';
 import type { Article } from '@/types/article';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 4;
 
 export default async function Home() {
-  // 从 headers 获取完整请求 URL，解析 query 参数
   const headersList = await headers();
   const fullUrl = headersList.get('x-url') || 'http://localhost/';
   const url = new URL(fullUrl);
