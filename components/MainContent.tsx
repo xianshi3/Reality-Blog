@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import type { Article } from "../types/article";
 
+/**
+ * Props 类型定义：MainContent 组件接收文章列表、分页信息和样式类名
+ */
 interface MainContentProps {
   articles: Article[];
   className?: string;
@@ -10,37 +13,48 @@ interface MainContentProps {
   totalPages?: number;
 }
 
+/**
+ * MainContent 组件：用于显示文章列表、分页导航和作者简介
+ */
 export default function MainContent({
   articles,
-  className,
+  className = "",
   currentPage = 1,
   totalPages = 1,
 }: MainContentProps) {
+  // 当前展示的页码（带过渡动画）
   const [displayPage, setDisplayPage] = useState(currentPage);
   const [transitionStage, setTransitionStage] = useState<"enter" | "exit">("enter");
 
+  // 当页码变化时，触发退出动画后再更新展示页面
   useEffect(() => {
-    if (currentPage === displayPage) return;
-    setTransitionStage("exit");
-    const timeout = setTimeout(() => {
-      setDisplayPage(currentPage);
-      setTransitionStage("enter");
-    }, 300);
-    return () => clearTimeout(timeout);
+    if (currentPage !== displayPage) {
+      setTransitionStage("exit");
+      const timeout = setTimeout(() => {
+        setDisplayPage(currentPage);
+        setTransitionStage("enter");
+      }, 300);
+      return () => clearTimeout(timeout);
+    }
   }, [currentPage, displayPage]);
 
-  const groupedArticles = articles.reduce((acc, article) => {
+  // 将文章按年份分组
+  const groupedArticles = articles.reduce<Record<number, Article[]>>((acc, article) => {
     const year = new Date(article.date).getFullYear();
-    if (!acc[year]) acc[year] = [];
+    acc[year] = acc[year] || [];
     acc[year].push(article);
     return acc;
-  }, {} as Record<number, Article[]>);
+  }, {});
 
+  // 获取所有年份并按降序排列
   const years = Object.keys(groupedArticles)
     .map(Number)
     .sort((a, b) => b - a);
 
-  function getPageNumbers() {
+  /**
+   * 获取分页按钮要展示的页码数组（最大展示 5 个）
+   */
+  const getPageNumbers = () => {
     const delta = 2;
     let start = Math.max(1, displayPage - delta);
     let end = Math.min(totalPages, displayPage + delta);
@@ -50,26 +64,27 @@ export default function MainContent({
       else if (end === totalPages) start = Math.max(1, end - 4);
     }
 
-    const pages = [];
-    for (let i = start; i <= end; i++) {
-      pages.push(i);
-    }
-    return pages;
-  }
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
 
   const pageNumbers = getPageNumbers();
 
-  function onPageClick(e: React.MouseEvent, page: number) {
+  /**
+   * 点击分页按钮时滚动到顶部并跳转到对应页
+   */
+  const handlePageClick = (e: React.MouseEvent, page: number) => {
     e.preventDefault();
-    if (page === currentPage) return;
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    setTimeout(() => {
-      window.location.href = `/?page=${page}`;
-    }, 350);
-  }
+    if (page !== currentPage) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setTimeout(() => {
+        window.location.href = `/?page=${page}`;
+      }, 350);
+    }
+  };
 
   return (
-    <main className={`space-y-8 ${className ?? ""}`}>
+    <main className={`space-y-8 ${className}`}>
+      {/* 文章区域（按年份分组） */}
       <div
         key={displayPage}
         className={
@@ -96,8 +111,7 @@ export default function MainContent({
                               month: "short",
                               day: "numeric",
                             })
-                          : "未知日期"}{" "}
-                        · {article.category}
+                          : "未知日期"} · {article.category}
                       </p>
                       <p className="article-summary">{article.summary}</p>
                     </a>
@@ -109,13 +123,14 @@ export default function MainContent({
         ))}
       </div>
 
+      {/* 分页导航区域 */}
       <nav aria-label="分页导航" className="pagination">
         <a
           href={`/?page=${Math.max(1, currentPage - 1)}`}
           className={currentPage === 1 ? "disabled" : ""}
           aria-disabled={currentPage === 1}
           tabIndex={currentPage === 1 ? -1 : 0}
-          onClick={(e) => onPageClick(e, Math.max(1, currentPage - 1))}
+          onClick={(e) => handlePageClick(e, Math.max(1, currentPage - 1))}
         >
           上一页
         </a>
@@ -126,7 +141,7 @@ export default function MainContent({
             href={`/?page=${pageNum}`}
             className={pageNum === currentPage ? "active" : ""}
             aria-current={pageNum === currentPage ? "page" : undefined}
-            onClick={(e) => onPageClick(e, pageNum)}
+            onClick={(e) => handlePageClick(e, pageNum)}
           >
             {pageNum}
           </a>
@@ -137,12 +152,13 @@ export default function MainContent({
           className={currentPage === totalPages ? "disabled" : ""}
           aria-disabled={currentPage === totalPages}
           tabIndex={currentPage === totalPages ? -1 : 0}
-          onClick={(e) => onPageClick(e, Math.min(totalPages, currentPage + 1))}
+          onClick={(e) => handlePageClick(e, Math.min(totalPages, currentPage + 1))}
         >
           下一页
         </a>
       </nav>
 
+      {/* 作者简介卡片 */}
       <aside className="article-section about-section max-w-xl mx-auto">
         <h2>👤 关于我</h2>
         <div className="about-card">
