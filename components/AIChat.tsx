@@ -49,7 +49,7 @@ const ChatHeader = ({
   onFullscreen: () => void;
   onClose: () => void;
 }) => (
-  <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-[#23272f] dark:to-[#23273f] rounded-t-xl border border-gray-200 dark:border-gray-700">
+  <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-[#23272f] dark:to-[#23273f] rounded-t-xl  -gray-200 dark:-gray-700">
     <span className="flex items-center gap-2 font-semibold text-lg">
       <span className="text-xl font-extrabold tracking-wide text-gradient select-none">
         LLM
@@ -86,10 +86,10 @@ const ChatInput = ({
   onSend: () => void;
   loading: boolean;
 }) => (
-  <div className="flex items-center gap-2 px-4 py-3 border-t border-[#e5e7eb] dark:border-[#374151] bg-white dark:bg-[#23272f]">
+  <div className="flex items-center gap-2 px-4 py-3 -t -[#e5e7eb] dark:-[#374151] bg-white dark:bg-[#23272f]">
     <input
-      className="flex-1 border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 transition-shadow shadow-inner
-                 border-[#e5e7eb] dark:border-[#374151] dark:bg-[#23272f] dark:text-[#f3f4f6]"
+      className="flex-1  rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 transition-shadow shadow-inner
+                 -[#e5e7eb] dark:-[#374151] dark:bg-[#23272f] dark:text-[#f3f4f6]"
       placeholder="请输入你的问题..."
       value={value}
       onChange={(e) => onChange(e.target.value)}
@@ -97,9 +97,9 @@ const ChatInput = ({
       disabled={loading}
     />
     <button
-      className="bg-white text-[#111827] border rounded-lg px-4 py-2 font-medium shadow-sm transition
+      className="bg-white text-[#111827]  rounded-lg px-4 py-2 font-medium shadow-sm transition
                  hover:bg-[#f8fafc] active:bg-[#e0e7ef] disabled:opacity-50
-                 dark:bg-[#23272f] dark:text-[#f3f4f6] dark:border-[#374151] dark:hover:bg-[#2a2f3a]"
+                 dark:bg-[#23272f] dark:text-[#f3f4f6] dark:-[#374151] dark:hover:bg-[#2a2f3a]"
       onClick={onSend}
       disabled={loading}
     >
@@ -203,7 +203,7 @@ export default function AIChat() {
       {open && (
         <div
           ref={chatContainerRef}
-          className="fixed bottom-24 left-6 w-[380px] max-w-[calc(100vw-48px)] flex flex-col rounded-2xl shadow-2xl border overflow-hidden animate-chat-fade-in
+          className="fixed bottom-24 left-6 w-[380px] max-w-[calc(100vw-48px)] flex flex-col rounded-2xl shadow-2xl  overflow-hidden animate-chat-fade-in
                      bg-gradient-to-br from-white to-gray-50 dark:from-[#1c1f24] dark:to-[#2a2f3a]"
           style={{
             maxHeight: "calc(100vh - 120px)",
