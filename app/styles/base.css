@@ -1,13 +1,15 @@
-@import "tailwindcss";
+@import "tailwindcss"; /* 引入 Tailwind CSS */
 
+/* 优化字体渲染 */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* 自定义文本渐变工具类 */
 @layer utilities {
   .text-gradient {
-    background-image: linear-gradient(to right, black, #4b5563, #9ca3af);
+    background-image: linear-gradient(to right, black, #4b5563, #9ca3af); /* 渐变色 */
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -15,17 +17,19 @@ body {
   }
 }
 
+/* 全局变量：浅色模式下的配色 */
 :root {
-  --like-bg: #f3f4f6;        /* 类似全局背景灰白 #f3f4f6 */
-  --like-bg-hover: #e5e7eb;  /* 比较浅的灰色hover */
+  --like-bg: #f3f4f6;        /* 全局背景灰白 */
+  --like-bg-hover: #e5e7eb;  /* 浅灰色 hover */
   --like-border: #d1d5db;    /* 边框颜色 */
   --like-text: #374151;      /* 文字颜色 */
   --like-active-bg: #fce7f3; /* 点赞后背景，淡粉色 */
-  --like-active-border: #f9a8d4;
-  --like-active-text: #db2777; /* 粉色 */
-  --like-shadow: rgba(244, 114, 182, 0.3);
+  --like-active-border: #f9a8d4; /* 点赞后边框 */
+  --like-active-text: #db2777; /* 点赞后文字，粉色 */
+  --like-shadow: rgba(244, 114, 182, 0.3); /* 点赞后阴影 */
 }
 
+/* 深色模式下的配色变量 */
 @media (prefers-color-scheme: dark) {
   :root {
     --like-bg: #23272f;
@@ -39,22 +43,10 @@ body {
   }
 }
 
-
-/* 深色模式文字色彩优化（用于 prose 文章内容） */
+/* 深色模式下的文章正文颜色 */
 @media (prefers-color-scheme: dark) {
-  .prose,
-  .prose p,
-  .prose li,
-  .prose span,
-  .prose strong,
-  .prose em,
-  .prose blockquote,
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4,
-  .prose h5,
-  .prose h6 {
-    color: #d1d5db !important;
+  .prose {
+    --text-primary-color: #d1d5db; /* 文章正文文字色 */
+    color: var(--text-primary-color) !important;
   }
 }
