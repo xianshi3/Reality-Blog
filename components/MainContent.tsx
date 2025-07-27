@@ -3,21 +3,22 @@
 import { useEffect, useState } from "react";
 import type { Article } from "../types/article";
 
-// 每页显示文章数，需和服务端保持一致
+// 每页显示的文章数量，需要和服务端保持一致
 const PAGE_SIZE = 4;
 
 /**
- * Props 类型定义：MainContent 组件接收文章列表、分页信息和样式类名
+ * MainContent 组件属性类型定义
  */
 interface MainContentProps {
-  articles: Article[];
-  className?: string;
-  currentPage?: number;
-  totalPages?: number;
+  articles: Article[];           // 当前页的文章列表
+  className?: string;            // 额外的样式类名
+  currentPage?: number;          // 当前页码，默认1
+  totalPages?: number;           // 总页数，默认1
 }
 
 /**
- * MainContent 组件：用于显示文章列表、分页导航和作者简介
+ * MainContent 组件
+ * 显示文章列表（按年份分组），带分页导航和作者简介
  */
 export default function MainContent({
   articles,
@@ -25,23 +26,23 @@ export default function MainContent({
   currentPage = 1,
   totalPages = 1,
 }: MainContentProps) {
-  // 当前展示的页码（带过渡动画）
+  // 用于实现分页切换时的过渡动画
   const [displayPage, setDisplayPage] = useState(currentPage);
   const [transitionStage, setTransitionStage] = useState<"enter" | "exit">("enter");
 
-  // 当页码变化时，触发退出动画后再更新展示页面
+  // 监听 currentPage 变化，实现分页切换动画
   useEffect(() => {
     if (currentPage !== displayPage) {
-      setTransitionStage("exit");
+      setTransitionStage("exit"); // 先触发退出动画
       const timeout = setTimeout(() => {
-        setDisplayPage(currentPage);
-        setTransitionStage("enter");
+        setDisplayPage(currentPage); // 更新显示的页码
+        setTransitionStage("enter"); // 触发进入动画
       }, 300);
       return () => clearTimeout(timeout);
     }
   }, [currentPage, displayPage]);
 
-  // 将文章按年份分组，方便按年份展示
+  // 将文章按年份分组，方便分年展示
   const groupedArticles = articles.reduce<Record<number, Article[]>>((acc, article) => {
     const year = new Date(article.date).getFullYear();
     acc[year] = acc[year] || [];
@@ -49,19 +50,20 @@ export default function MainContent({
     return acc;
   }, {});
 
-  // 获取所有年份并按降序排列，最新年份在前
+  // 获取所有年份，降序排列（最新年份排前面）
   const years = Object.keys(groupedArticles)
     .map(Number)
     .sort((a, b) => b - a);
 
   /**
-   * 获取分页按钮要展示的页码数组（最大展示 5 个）
+   * 计算分页按钮显示的页码数组，最多显示5个页码
    */
   const getPageNumbers = () => {
-    const delta = 2;
+    const delta = 2; // 当前页前后各显示几个页码
     let start = Math.max(1, displayPage - delta);
     let end = Math.min(totalPages, displayPage + delta);
 
+    // 保证页码总数为5（或者不足5时尽量补足）
     if (end - start < 4) {
       if (start === 1) end = Math.min(totalPages, start + 4);
       else if (end === totalPages) start = Math.max(1, end - 4);
@@ -73,7 +75,8 @@ export default function MainContent({
   const pageNumbers = getPageNumbers();
 
   /**
-   * 点击分页按钮时滚动到顶部并跳转到对应页
+   * 点击分页按钮事件处理
+   * 滚动页面顶部，并跳转到对应页码（刷新页面）
    */
   const handlePageClick = (e: React.MouseEvent, page: number) => {
     e.preventDefault();
@@ -87,7 +90,7 @@ export default function MainContent({
 
   return (
     <main className={`space-y-8 ${className}`}>
-      {/* 文章区域（按年份分组） */}
+      {/* 文章列表容器，切换分页时触发动画 */}
       <div
         key={displayPage}
         className={
@@ -96,7 +99,7 @@ export default function MainContent({
             : "page-transition-exit-active"
         }
       >
-        {/* 遍历每个年份的文章分组 */}
+        {/* 按年份分组渲染文章 */}
         {years.map((year) => (
           <section key={year}>
             {/* 年份标题 */}
@@ -104,17 +107,16 @@ export default function MainContent({
               📅 {year} 年文章
             </h2>
 
-            {/* 当前年份下的文章列表 */}
             <ul className="space-y-8">
+              {/* 渲染该年份下的文章列表 */}
               {groupedArticles[year].map((article) => (
                 <li key={article.link}>
                   <article className="article-item">
-                    {/* 文章链接（包含标题、日期/分类、摘要） */}
                     <a href={article.link} className="article-link" tabIndex={0}>
                       {/* 文章标题 */}
                       <h3 className="article-title">{article.title}</h3>
 
-                      {/* 文章元信息：日期 + 分类 */}
+                      {/* 文章元信息：发布日期和分类 */}
                       <p className="article-meta">
                         {article.date
                           ? new Date(article.date).toLocaleDateString("zh-CN", {
@@ -127,6 +129,16 @@ export default function MainContent({
 
                       {/* 文章摘要 */}
                       <p className="article-summary">{article.summary}</p>
+
+                      {/* 如果有封面图片则显示，放在文本下面 */}
+                      {article.image_url && (
+                        <img
+                          src={article.image_url}
+                          alt={`文章封面 - ${article.title}`}
+                          className="article-image mt-4 mx-auto"
+                          loading="lazy"
+                        />
+                      )}
                     </a>
                   </article>
                 </li>
@@ -136,10 +148,10 @@ export default function MainContent({
         ))}
       </div>
 
-      {/* 分页导航区域：只有文章数达到 PAGE_SIZE 且总页数大于1时才显示 */}
+      {/* 分页导航：只有当文章数达到每页最大数且总页数大于1时显示 */}
       {articles.length === PAGE_SIZE && totalPages > 1 ? (
         <nav aria-label="分页导航" className="pagination">
-          {/* 只有当前页大于1时显示“上一页”按钮 */}
+          {/* 上一页按钮，当前页大于1时显示 */}
           {currentPage > 1 && (
             <a
               href={`/?page=${currentPage - 1}`}
@@ -150,7 +162,7 @@ export default function MainContent({
             </a>
           )}
 
-          {/* 页码按钮 */}
+          {/* 数字页码按钮 */}
           {pageNumbers.map((pageNum) => (
             <a
               key={pageNum}
@@ -163,7 +175,7 @@ export default function MainContent({
             </a>
           ))}
 
-          {/* 只有当前页小于总页数时显示“下一页”按钮 */}
+          {/* 下一页按钮，当前页小于总页数时显示 */}
           {currentPage < totalPages && (
             <a
               href={`/?page=${currentPage + 1}`}
@@ -175,7 +187,7 @@ export default function MainContent({
           )}
         </nav>
       ) : (
-        /* 文章数少于 PAGE_SIZE 时显示无更多文章提示 */
+        /* 文章不足每页最大数时显示无更多文章提示 */
         <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
           — 无更多文章 —
         </p>

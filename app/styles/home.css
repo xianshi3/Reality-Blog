@@ -159,6 +159,13 @@
   }
 }
 
+.article-image {
+  border-radius: 0.5rem;
+  object-fit: contain; /* 保持完整显示，比例不变 */
+  max-width: 100%;     /* 限制最大宽度不超过容器 */
+  max-height: 300px;   /* 限制最大高度，避免图片太高撑破布局 */
+  display: block;      /* 让图片独占一行 */
+}
 
 /* ======= 关于我区域 ======= */
 .about-section {

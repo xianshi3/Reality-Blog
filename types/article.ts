@@ -8,6 +8,7 @@ export interface Article {
   tags?: string[];
   link: string;
   likes?: number;
+  image_url?: string;
 }
 
 export default Article;
