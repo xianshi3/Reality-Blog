@@ -3,6 +3,9 @@
 import { useEffect, useState } from "react";
 import type { Article } from "../types/article";
 
+// 每页显示文章数，需和服务端保持一致
+const PAGE_SIZE = 4;
+
 /**
  * Props 类型定义：MainContent 组件接收文章列表、分页信息和样式类名
  */
@@ -38,7 +41,7 @@ export default function MainContent({
     }
   }, [currentPage, displayPage]);
 
-  // 将文章按年份分组
+  // 将文章按年份分组，方便按年份展示
   const groupedArticles = articles.reduce<Record<number, Article[]>>((acc, article) => {
     const year = new Date(article.date).getFullYear();
     acc[year] = acc[year] || [];
@@ -46,7 +49,7 @@ export default function MainContent({
     return acc;
   }, {});
 
-  // 获取所有年份并按降序排列
+  // 获取所有年份并按降序排列，最新年份在前
   const years = Object.keys(groupedArticles)
     .map(Number)
     .sort((a, b) => b - a);
@@ -133,40 +136,50 @@ export default function MainContent({
         ))}
       </div>
 
-      {/* 分页导航区域 */}
-      <nav aria-label="分页导航" className="pagination">
-        <a
-          href={`/?page=${Math.max(1, currentPage - 1)}`}
-          className={currentPage === 1 ? "disabled" : ""}
-          aria-disabled={currentPage === 1}
-          tabIndex={currentPage === 1 ? -1 : 0}
-          onClick={(e) => handlePageClick(e, Math.max(1, currentPage - 1))}
-        >
-          上一页
-        </a>
+      {/* 分页导航区域：只有文章数达到 PAGE_SIZE 且总页数大于1时才显示 */}
+      {articles.length === PAGE_SIZE && totalPages > 1 ? (
+        <nav aria-label="分页导航" className="pagination">
+          {/* 只有当前页大于1时显示“上一页”按钮 */}
+          {currentPage > 1 && (
+            <a
+              href={`/?page=${currentPage - 1}`}
+              onClick={(e) => handlePageClick(e, currentPage - 1)}
+              tabIndex={0}
+            >
+              上一页
+            </a>
+          )}
 
-        {pageNumbers.map((pageNum) => (
-          <a
-            key={pageNum}
-            href={`/?page=${pageNum}`}
-            className={pageNum === currentPage ? "active" : ""}
-            aria-current={pageNum === currentPage ? "page" : undefined}
-            onClick={(e) => handlePageClick(e, pageNum)}
-          >
-            {pageNum}
-          </a>
-        ))}
+          {/* 页码按钮 */}
+          {pageNumbers.map((pageNum) => (
+            <a
+              key={pageNum}
+              href={`/?page=${pageNum}`}
+              className={pageNum === currentPage ? "active" : ""}
+              aria-current={pageNum === currentPage ? "page" : undefined}
+              onClick={(e) => handlePageClick(e, pageNum)}
+            >
+              {pageNum}
+            </a>
+          ))}
 
-        <a
-          href={`/?page=${Math.min(totalPages, currentPage + 1)}`}
-          className={currentPage === totalPages ? "disabled" : ""}
-          aria-disabled={currentPage === totalPages}
-          tabIndex={currentPage === totalPages ? -1 : 0}
-          onClick={(e) => handlePageClick(e, Math.min(totalPages, currentPage + 1))}
-        >
-          下一页
-        </a>
-      </nav>
+          {/* 只有当前页小于总页数时显示“下一页”按钮 */}
+          {currentPage < totalPages && (
+            <a
+              href={`/?page=${currentPage + 1}`}
+              onClick={(e) => handlePageClick(e, currentPage + 1)}
+              tabIndex={0}
+            >
+              下一页
+            </a>
+          )}
+        </nav>
+      ) : (
+        /* 文章数少于 PAGE_SIZE 时显示无更多文章提示 */
+        <p className="text-center text-gray-500 dark:text-gray-400 mt-6">
+          — 无更多文章 —
+        </p>
+      )}
 
       {/* 作者简介卡片 */}
       <aside className="article-section about-section max-w-xl mx-auto">
