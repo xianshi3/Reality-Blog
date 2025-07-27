@@ -42,13 +42,20 @@ export default function MainContent({
     }
   }, [currentPage, displayPage]);
 
-  // 将文章按年份分组，方便分年展示
+  // 将文章按年份分组，方便分年展示，并对每个年份的文章按日期倒序排序，最新文章显示在前
   const groupedArticles = articles.reduce<Record<number, Article[]>>((acc, article) => {
     const year = new Date(article.date).getFullYear();
     acc[year] = acc[year] || [];
     acc[year].push(article);
     return acc;
   }, {});
+
+  // 对每个年份下的文章按日期倒序排序（最新文章排前面）
+  for (const year in groupedArticles) {
+    groupedArticles[year].sort(
+      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+  }
 
   // 获取所有年份，降序排列（最新年份排前面）
   const years = Object.keys(groupedArticles)

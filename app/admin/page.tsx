@@ -40,6 +40,9 @@ export default async function AdminPage() {
         <Link href="/admin/create" className="admin-create-btn">
           ➕ 新建文章
         </Link>
+        <Link href="/admin/images" className="admin-create-btn mt-4 block">
+          🖼️ 管理封面图片
+        </Link>
 
         <ul className="admin-list">
           {articles?.length ? (
