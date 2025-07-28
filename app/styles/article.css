@@ -117,7 +117,7 @@
   }
 }
 
-article-toc {
+.article-toc {
   position: fixed;
   top: 6rem;
   right: 10rem;
