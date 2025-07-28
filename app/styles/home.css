@@ -26,6 +26,26 @@
   position: relative;
 }
 
+/* ======= 首页主内容容器 ======= */
+.container-home {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 75rem;           /* 最大宽度，居中显示 */
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  gap: 1.5rem;                /* 区块间距 */
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+@media (min-width: 1024px) {
+  .container-home {
+    flex-direction: row;      /* 大屏幕下横向排列 */
+  }
+}
+
 /* 头像样式 */
 .avatarImg {
   border-radius: 9999px;
