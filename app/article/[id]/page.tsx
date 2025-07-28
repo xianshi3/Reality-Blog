@@ -4,6 +4,7 @@ import LikeButton from '../../../components/LikeButton';
 import ReadingProgress from '../../../components/ReadingProgress';
 import { createServerSupabase } from '../../../lib/supabaseServer';
 import ArticleContent from '@/components/ArticleContent';
+import ArticleToc from '@/components/ArticleToc';
 import AIChat from '../../../components/AIChat';
 import ReturnHome from '../../../components/ReturnHome';
 
@@ -31,7 +32,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   };
 
   const currentYear = new Date().getFullYear();
-
   const formattedDate = article.date
     ? new Date(article.date).toLocaleDateString('zh-CN', {
         year: 'numeric',
@@ -41,41 +41,45 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
     : '未知日期';
 
   return (
-    <div className="article-page-container relative">
+    <div className="article-page-container">
       <ReadingProgress />
-
       <ReturnHome />
 
-      <main className="article-container">
-        <article className="article-content animate-fadeInUp">
-          <h1 className="article-title">{article.title}</h1>
+      <div className="article-container">
+        <main className="article-page-main">
+          <article className="article-content">
+            <h1 className="article-page-title">{article.title}</h1>
 
-          <div className="article-meta">
-            <span>{formattedDate}</span>
-            <span>·</span>
-            <span>{article.category}</span>
-          </div>
-
-          {article.summary && (
-            <div className="article-summary">{article.summary}</div>
-          )}
-
-          <ArticleContent content={article.content ?? ''} />
-
-          <div className="tag-like-container">
-            <div>
-              {article.tags?.map((tag) => (
-                <span key={tag} className="tag">
-                  #{tag}
-                </span>
-              ))}
+            <div className="article-page-meta">
+              <span>{formattedDate}</span>
+              <span>·</span>
+              <span>{article.category}</span>
             </div>
-            <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
-          </div>
-        </article>
-      </main>
 
-      <div className="fixed bottom-4 left-4 z-50 w-[350px] max-w-[90vw] pointer-events-auto">
+            {article.summary && <div className="article-page-summary">{article.summary}</div>}
+
+            <ArticleContent content={article.content ?? ''} />
+
+            <div className="tag-like-container">
+              <div className="tag-list">
+                {article.tags?.map((tag) => (
+                  <span key={tag} className="tag">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+
+              <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
+            </div>
+          </article>
+        </main>
+      </div>
+
+      <aside className="article-toc">
+        <ArticleToc content={article.content ?? ''} />
+      </aside>
+
+      <div className="fixed-ai-chat">
         <AIChat />
       </div>
 

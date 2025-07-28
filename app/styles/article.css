@@ -1,12 +1,12 @@
 .article-page-container {
   min-height: 100vh;
+  background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef);
+  padding: 1rem;
+  font-family: var(--font-geist-sans), sans-serif;
+
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: var(--font-geist-sans), sans-serif;
-  background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef);
-  padding: 0 1rem;
-  position: relative;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,34 +15,48 @@
   }
 }
 
-.article-page-container .article-container {
+.article-container {
   width: 100%;
-  max-width: 100ch;
-  margin: 3rem auto 4rem;
-  flex: 1 1 auto;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
-.article-page-container .article-content {
+.article-page-main {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 文章主体样式 */
+.article-content {
   background-color: #fff;
   border-radius: 1.5rem;
   padding: 2.5rem 3rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+  margin-bottom: 4rem; /* 增加底部间距，拉开和 Footer 的距离 */
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -4px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   animation: fadeInUp 0.8s ease-out;
 }
 
-.article-page-container .article-content:hover {
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.08);
+.article-content:hover {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.08);
   transform: scale(1.02);
 }
 
 @media (prefers-color-scheme: dark) {
-  .article-page-container .article-content {
+  .article-content {
     background-color: #23272f;
   }
 }
 
-.article-page-container .article-title {
+.article-page-title {
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
@@ -50,24 +64,18 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .article-page-container .article-title {
+  .article-page-title {
     color: #fff;
   }
 }
 
-.article-page-container .article-meta {
+.article-page-meta {
   font-size: 0.9rem;
   color: #6b7280;
   margin-bottom: 1.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .article-page-container .article-meta {
-    color: #9ca3af;
-  }
-}
-
-.article-page-container .article-summary {
+.article-page-summary {
   font-size: 1.125rem;
   color: #374151;
   background-color: #f3f4f6;
@@ -78,13 +86,13 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .article-page-container .article-summary {
+  .article-page-summary {
     background-color: #1f2937;
     color: #d1d5db;
   }
 }
 
-.article-page-container .tag-like-container {
+.tag-like-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -93,7 +101,7 @@
   margin-top: 2.5rem;
 }
 
-.article-page-container .tag-like-container .tag {
+.tag-like-container .tag {
   background-color: #e5e7eb;
   color: #1f2937;
   padding: 0.3rem 0.9rem;
@@ -103,13 +111,62 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .article-page-container .tag-like-container .tag {
+  .tag-like-container .tag {
     background-color: #374151;
     color: #d1d5db;
   }
 }
 
-/* 优化后的返回首页按钮样式 */
+article-toc {
+  position: fixed;
+  top: 6rem;
+  right: 10rem;
+  width: 260px;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: #f8fafc; /* 默认文字色，深色模式下面会覆盖 */
+  box-sizing: border-box;
+  z-index: 50;
+
+  /* 浅色模式背景 */
+  background-color: rgb(255, 255, 255);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+}
+
+/* 深色模式背景和文字色 */
+@media (prefers-color-scheme: dark) {
+  .article-toc {
+    background-color: rgba(50, 50, 60, 0.5);
+    color: #d1d5db;
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+  }
+}
+
+/* 小屏幕修改：目录变成文章下方块状元素，宽度100%，定位改为static */
+@media (max-width: 1824px) {
+  .article-toc {
+    position: static !important;
+    width: 100% !important;
+    max-height: none !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    color: inherit !important;
+    overflow: visible !important;
+    margin-top: 2rem;
+  }
+
+  .article-page-main {
+    max-width: 100%;
+    margin-right: 0; /* 确保无右侧留白 */
+  }
+}
 
 .article-page-container .return-home {
   position: fixed;
