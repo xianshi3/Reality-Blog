@@ -42,11 +42,8 @@ export default function ArticleItem({
         </span>
       </div>
 
-      <div className="flex gap-2">
-        <Link
-          href={`/admin/edit/${article.id}`}
-          className="admin-edit-link"
-        >
+      <div className="admin-btns">
+        <Link href={`/admin/edit/${article.id}`} className="admin-edit-link">
           编辑
         </Link>
         <button
