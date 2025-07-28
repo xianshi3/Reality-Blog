@@ -25,16 +25,6 @@
   flex: 1 1 auto;
 }
 
-/* 文章具体内容区域，白色背景，圆角，内边距，阴影 */
-.article-page-container .article-content {
-  background-color: #fff;
-  border-radius: 1.5rem;
-  padding: 2.5rem 3rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-  animation: fadeInUp 0.8s ease-out; /* 进入动画 */
-}
-
 /* 页面主内容最大宽度及水平居中 */
 .article-page-main {
   max-width: 1000px;
