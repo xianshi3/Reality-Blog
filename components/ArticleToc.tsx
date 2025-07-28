@@ -9,32 +9,26 @@ interface TocItem {
 }
 
 interface Props {
-  content: string;
   className?: string;
 }
 
-const slugify = (text: string) =>
-  text.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^\w\-]/g, "");
-
-export default function ArticleToc({ content, className }: Props) {
+export default function ArticleToc({ className }: Props) {
   const [tocItems, setTocItems] = useState<TocItem[]>([]);
 
   useEffect(() => {
-    const lines = content.split("\n");
-    const headings: TocItem[] = [];
+    // 选择文章内所有 h1~h6 有 id 的标题元素
+    const headingElements = Array.from(
+      document.querySelectorAll('article.article-content h1[id], article.article-content h2[id], article.article-content h3[id], article.article-content h4[id], article.article-content h5[id], article.article-content h6[id]')
+    );
 
-    lines.forEach((line) => {
-      const match = /^(#{1,6})\s+(.*)/.exec(line);
-      if (match) {
-        const level = match[1].length;
-        const text = match[2].trim();
-        const id = slugify(text);
-        headings.push({ id, text, level });
-      }
-    });
+    const newTocItems = headingElements.map((el) => ({
+      id: el.id,
+      text: el.textContent ?? "",
+      level: Number(el.tagName.substring(1)), // h1 -> 1, h2 -> 2
+    }));
 
-    setTocItems(headings);
-  }, [content]);
+    setTocItems(newTocItems);
+  }, []);
 
   if (tocItems.length === 0) return null;
 
@@ -50,7 +44,7 @@ export default function ArticleToc({ content, className }: Props) {
                 e.preventDefault();
                 const target = document.getElementById(item.id);
                 if (target) {
-                  const topOffset = 80; // 如果有固定导航栏，请调整这里
+                  const topOffset = 80; // 固定导航栏高度
                   const elementPosition = target.getBoundingClientRect().top;
                   const offsetPosition = window.scrollY + elementPosition - topOffset;
 

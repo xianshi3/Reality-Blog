@@ -76,7 +76,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       </div>
 
       <aside className="article-toc">
-        <ArticleToc content={article.content ?? ''} />
+        <ArticleToc />
       </aside>
 
       <div className="fixed-ai-chat">
