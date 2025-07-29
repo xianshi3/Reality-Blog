@@ -1,0 +1,130 @@
+/* 确保背景铺满全屏 */
+.create-bg {
+  min-height: 100vh;        /* 视口高度 */
+  background-color: #f9fafb; /* 浅灰白背景，可以换成你项目主色 */
+  padding: 2rem;             /* 32px */
+  display: flex;
+  flex-direction: column;
+  max-width: 1120px;         /* 最大宽度，居中用 */
+  margin: 0 auto;            /* 水平居中 */
+  color: #111827;            /* 深灰文字色 */
+  font-family: 'Inter', sans-serif;
+}
+
+/* 返回按钮 */
+.create-back-button {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #3b82f6; /* Tailwind蓝500 */
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.create-back-button:hover {
+  text-decoration: underline;
+  color: #2563eb; /* Tailwind蓝600 */
+}
+
+/* 图片容器样式 */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+  gap: 1.5rem; /* 24px */
+  margin-top: 1rem;
+}
+
+/* 单张图片卡片 */
+.image-card {
+  position: relative;
+  background-color: #fff;
+  border-radius: 0.5rem; /* 8px */
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  overflow: hidden;
+  padding: 0.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.image-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 15px rgb(0 0 0 / 0.15);
+}
+
+.image-card img {
+  width: 100%;
+  height: 144px; /* 36 * 4 */
+  object-fit: cover;
+  border-radius: 0.375rem; /* 6px */
+}
+
+.image-info {
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+
+.image-title {
+  font-weight: 600;
+  font-size: 0.875rem; /* 14px */
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  user-select: text;
+  color: #111827;
+}
+
+.image-size {
+  font-size: 0.75rem; /* 12px */
+  color: #6b7280; /* gray-500 */
+  margin-top: 0.25rem;
+  user-select: text;
+}
+
+/* 删除按钮 */
+.delete-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background-color: #dc2626; /* red-600 */
+  color: white;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  opacity: 1;
+}
+
+/* 加载动画文字 */
+.loading-text {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+/* 无图片提示 */
+.no-images {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 1.125rem; /* 18px */
+  font-weight: 300;
+  animation: fadeIn 0.6s ease forwards;
+  margin-top: 3rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

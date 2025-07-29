@@ -23,7 +23,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/60 supports-backdrop-blur:bg-white/60 backdrop-blur-lg shadow-lg z-50 dark:bg-gray-900/60 dark:supports-backdrop-blur:bg-gray-900/60">
-      <div className="container mx-auto flex justify-between items-center py-3 px-4 sm:py-4 sm:px-6">
+      <div className="container  mx-auto flex justify-between items-center py-3 px-4 sm:py-4 sm:px-6">
         {/* Logo */}
         <Link href="/" className="text-xl sm:text-2xl font-extrabold text-gray-800 dark:text-white drop-shadow-lg">
           Reality Blog

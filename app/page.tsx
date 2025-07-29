@@ -62,7 +62,7 @@ export default async function Home() {
       <Header />
 
       {/* 主体区域：左侧栏 + 文章内容 + 右侧栏 */}
-      <main className="container mx-auto flex flex-col lg:flex-row w-full max-w-6xl px-3 gap-6 py-10">
+      <main className="container-home">
         <LeftSidebar className="w-60 flex-shrink-0" articles={articles} />
         <MainContent
           className="flex-1 min-w-0"

@@ -26,6 +26,26 @@
   position: relative;
 }
 
+/* ======= 首页主内容容器 ======= */
+.container-home {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 75rem;           /* 最大宽度，居中显示 */
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  gap: 1.5rem;                /* 区块间距 */
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+@media (min-width: 1024px) {
+  .container-home {
+    flex-direction: row;      /* 大屏幕下横向排列 */
+  }
+}
+
 /* 头像样式 */
 .avatarImg {
   border-radius: 9999px;
@@ -125,13 +145,14 @@
 
 /* 文章元信息 */
 .article-meta {
-  font-size: 0.875rem;
-  color: #4b5563;
-  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 0.6rem;
 }
+
 @media (prefers-color-scheme: dark) {
   .article-meta {
-    color: #d1d5db;
+    color: #9ca3af;
   }
 }
 
@@ -143,12 +164,10 @@
 
   display: -webkit-box;         
   -webkit-box-orient: vertical;
-
-  -webkit-line-clamp: 5;          /* 限制行数 */
+  -webkit-line-clamp: 2;          /* 限制行数 */
   line-clamp: 3;                  /* 标准属性，增强兼容性 */
   overflow: hidden;               /* 隐藏溢出 */
   text-overflow: ellipsis;        /* 显示省略号 */
-
   white-space: normal;            /* 允许换行 */
   max-width: 100%;                /* 容器宽度 */
 }
@@ -159,6 +178,13 @@
   }
 }
 
+.article-image {
+  border-radius: 0.5rem;
+  object-fit: contain; /* 保持完整显示，比例不变 */
+  max-width: 100%;     /* 限制最大宽度不超过容器 */
+  max-height: 300px;   /* 限制最大高度，避免图片太高撑破布局 */
+  display: block;      /* 让图片独占一行 */
+}
 
 /* ======= 关于我区域 ======= */
 .about-section {

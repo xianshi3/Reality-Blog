@@ -6,6 +6,12 @@
   padding: 2rem;
 }
 
+@media (max-width: 640px) {
+  .admin-bg {
+    padding: 1rem;
+  }
+}
+
 .admin-card {
   background: #ffffff;
   border-radius: 1.5rem;
@@ -13,10 +19,15 @@
   padding: 3rem 2rem;
   transition: box-shadow 0.3s ease;
   animation: slide-up 0.5s ease both;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
-.admin-card:hover {
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.06);
+@media (max-width: 640px) {
+  .admin-card {
+    padding: 2rem 1rem;
+    border-radius: 1rem;
+  }
 }
 
 /* 标题 */
@@ -26,6 +37,15 @@
   margin-bottom: 2.5rem;
   color: #111827;
   letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 640px) {
+  .admin-title {
+    justify-content: center;
+    font-size: 1.75rem;
+  }
 }
 
 .admin-emoji {
@@ -44,12 +64,24 @@
   margin-bottom: 2rem;
   transition: all 0.25s ease;
   font-size: 1rem;
+  text-align: center;
+  user-select: none;
+  cursor: pointer;
 }
 
 .admin-create-btn:hover {
   background: linear-gradient(90deg, #2563eb, #7c3aed);
   transform: translateY(-2px) scale(1.03);
   box-shadow: 0 6px 14px rgba(99, 102, 241, 0.2);
+}
+
+@media (max-width: 640px) {
+  .admin-create-btn {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 0.8rem 0;
+    border-radius: 0.75rem;
+  }
 }
 
 /* 列表 */
@@ -59,6 +91,7 @@
   margin: 0;
 }
 
+/* 列表项 */
 .admin-list-item {
   display: flex;
   justify-content: space-between;
@@ -76,6 +109,15 @@
   transform: translateY(-2px);
 }
 
+@media (max-width: 640px) {
+  .admin-list-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+}
+
+/* 文章标题 */
 .admin-article-title {
   font-weight: 600;
   color: #1f2937;
@@ -89,40 +131,65 @@
   color: #9ca3af;
 }
 
-/* 编辑 + 删除按钮 */
+/* 编辑 + 删除按钮容器 */
 .admin-btns {
   display: flex;
   gap: 0.5rem;
 }
 
-.admin-edit-link,
-.admin-delete-btn {
+@media (max-width: 640px) {
+  .admin-btns {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+
+  .admin-edit-link,
+  .admin-delete-btn {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* 编辑按钮 */
+.admin-edit-link {
   font-size: 0.88rem;
   font-weight: 600;
   padding: 0.4rem 0.9rem;
   border-radius: 0.5rem;
   transition: all 0.2s ease;
   text-decoration: none;
-}
-
-.admin-edit-link {
   color: #4f46e5;
   background: #e0e7ff;
 }
+
 .admin-edit-link:hover {
   background: #6366f1;
   color: white;
 }
 
+/* 删除按钮 */
 .admin-delete-btn {
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
   color: #dc2626;
   background: #fee2e2;
   border: none;
   cursor: pointer;
 }
+
 .admin-delete-btn:hover {
   background: #ef4444;
   color: white;
+}
+
+.admin-delete-btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* 空提示 */
@@ -133,6 +200,7 @@
   padding: 3rem 0;
   animation: fade-in 0.7s ease both;
 }
+
 .admin-empty-icon {
   font-size: 2.4rem;
   animation: bounce 1.4s infinite;
@@ -140,18 +208,49 @@
 
 /* 动画 */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-up {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.admin-btn-row {
+  display: flex;
+  justify-content: space-between; /* 两边对齐 */
+  max-width: 480px; /* 你可以调整最大宽度 */
+  margin-bottom: 2rem;
+  gap: 1rem; /* 两按钮之间留点空隙 */
+}
+
+/* 保持按钮原样，只要它们能自适应宽度 */
+.admin-create-btn {
+  flex: 1; /* 让按钮占满等宽 */
+  text-align: center;
 }
 
 /* 删除按钮 loading 动画 */
@@ -162,11 +261,6 @@
   width: 1rem;
   height: 1rem;
   animation: spin 0.6s linear infinite;
-}
-
-.admin-delete-btn[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 @keyframes spin {

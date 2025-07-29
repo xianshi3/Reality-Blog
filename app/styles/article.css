@@ -1,73 +1,89 @@
+/* 整个文章页面容器，最小高度撑满视口，高度100vh */
 .article-page-container {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: var(--font-geist-sans), sans-serif;
-  background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef);
+  flex-direction: column; /* 垂直排列子元素 */
+  align-items: center;    /* 水平居中子元素 */
+  font-family: var(--font-geist-sans), sans-serif; /* 统一字体 */
+  background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef); /* 浅色渐变背景 */
   padding: 0 1rem;
   position: relative;
 }
 
+/* 深色模式背景渐变替换 */
 @media (prefers-color-scheme: dark) {
   .article-page-container {
     background-image: linear-gradient(to bottom right, #18181b, #23272f);
   }
 }
 
+/* 文章内容整体容器，限制最大宽度，居中，带上下边距 */
 .article-page-container .article-container {
   width: 100%;
-  max-width: 100ch;
+  max-width: 100ch;  /* 最大字符宽度 */
   margin: 3rem auto 4rem;
   flex: 1 1 auto;
 }
 
-.article-page-container .article-content {
+/* 页面主内容最大宽度及水平居中 */
+.article-page-main {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 文章主体样式，增加底部间距拉开 Footer */
+.article-content {
   background-color: #fff;
   border-radius: 1.5rem;
   padding: 2.5rem 3rem;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+  margin-bottom: 4rem;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -4px rgba(0, 0, 0, 0.05);
   transition: box-shadow 0.3s ease, transform 0.3s ease;
   animation: fadeInUp 0.8s ease-out;
 }
 
-.article-page-container .article-content:hover {
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.08);
+/* 文章主体悬浮效果，阴影加深并稍微放大 */
+.article-content:hover {
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.08);
   transform: scale(1.02);
 }
 
+/* 深色模式下文章内容背景调整 */
 @media (prefers-color-scheme: dark) {
-  .article-page-container .article-content {
+  .article-content {
     background-color: #23272f;
   }
 }
 
-.article-page-container .article-title {
+/* 文章标题，较大字体，加粗，下边距 */
+.article-page-title {
   font-size: 2.5rem;
   font-weight: 800;
   margin-bottom: 1rem;
   color: #111827;
 }
 
+/* 深色模式标题字体颜色调整 */
 @media (prefers-color-scheme: dark) {
-  .article-page-container .article-title {
+  .article-page-title {
     color: #fff;
   }
 }
 
-.article-page-container .article-meta {
+/* 文章元信息，如作者、时间，较小字体，灰色 */
+.article-page-meta {
   font-size: 0.9rem;
   color: #6b7280;
   margin-bottom: 1.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .article-page-container .article-meta {
-    color: #9ca3af;
-  }
-}
-
-.article-page-container .article-summary {
+/* 文章摘要样式，浅灰背景，圆角，内边距 */
+.article-page-summary {
   font-size: 1.125rem;
   color: #374151;
   background-color: #f3f4f6;
@@ -77,14 +93,16 @@
   line-height: 1.6;
 }
 
+/* 深色模式摘要背景和文字颜色调整 */
 @media (prefers-color-scheme: dark) {
-  .article-page-container .article-summary {
+  .article-page-summary {
     background-color: #1f2937;
     color: #d1d5db;
   }
 }
 
-.article-page-container .tag-like-container {
+/* 标签和点赞容器，横向排列，左右分散，允许换行 */
+.tag-like-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -93,24 +111,78 @@
   margin-top: 2.5rem;
 }
 
-.article-page-container .tag-like-container .tag {
+/* 标签样式，圆形背景，颜色区分，字体加粗 */
+.tag-like-container .tag {
   background-color: #e5e7eb;
   color: #1f2937;
   padding: 0.3rem 0.9rem;
   font-weight: 600;
-  border-radius: 9999px;
-  user-select: none;
+  border-radius: 9999px; /* pill形状 */
+  user-select: none;     /* 禁止选中 */
 }
 
+/* 深色模式标签背景和文字颜色 */
 @media (prefers-color-scheme: dark) {
-  .article-page-container .tag-like-container .tag {
+  .tag-like-container .tag {
     background-color: #374151;
     color: #d1d5db;
   }
 }
 
-/* 优化后的返回首页按钮样式 */
+/* 文章目录固定在右侧，带滚动条，半透明背景和模糊 */
+.article-toc {
+  position: fixed;
+  top: 6rem;
+  right: 10rem;
+  width: 260px;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  padding: 1rem;
+  border-radius: 1rem;
+  color: #f8fafc; /* 默认文字色，深色模式覆盖 */
+  box-sizing: border-box;
+  z-index: 50;
 
+  /* 浅色模式半透明背景和毛玻璃效果 */
+  background-color: rgb(255, 255, 255);
+  backdrop-filter: saturate(180%) blur(10px);
+  -webkit-backdrop-filter: saturate(180%) blur(10px);
+}
+
+/* 深色模式目录背景和文字颜色调整 */
+@media (prefers-color-scheme: dark) {
+  .article-toc {
+    background-color: rgba(50, 50, 60, 0.5);
+    color: #d1d5db;
+    backdrop-filter: saturate(180%) blur(10px);
+    -webkit-backdrop-filter: saturate(180%) blur(10px);
+  }
+}
+
+/* 小屏幕下目录改为文章下方，宽度100%，取消固定定位和背景 */
+@media (max-width: 1824px) {
+  .article-toc {
+    position: static !important;
+    width: 100% !important;
+    max-height: none !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    color: inherit !important;
+    overflow: visible !important;
+    margin-top: 2rem;
+  }
+
+  /* 主体宽度全屏，移除右边距 */
+  .article-page-main {
+    max-width: 100%;
+    margin-right: 0;
+  }
+}
+
+/* 返回首页按钮，固定在页面左上角，带模糊和半透明背景 */
 .article-page-container .return-home {
   position: fixed;
   top: calc(env(safe-area-inset-top, 1rem) + 0.75rem);
@@ -133,18 +205,19 @@
   user-select: none;
 }
 
+/* 悬浮时加深背景 */
 .article-page-container .return-home:hover {
   background-color: rgba(255 255 255 / 0.8);
 }
 
-/* 隐藏时的样式 */
+/* 隐藏时样式，透明且不可点击，向上偏移 */
 .return-home.hidden {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-10px);
 }
 
-/* 深色模式调整 */
+/* 深色模式返回首页按钮背景和文字颜色 */
 @media (prefers-color-scheme: dark) {
   .article-page-container .return-home {
     background-color: rgba(31 41 55 / 0.6);
