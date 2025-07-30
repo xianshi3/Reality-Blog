@@ -7,6 +7,15 @@ const nextConfig = {
       // allowedOrigins: ["https://example.com"],
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "ivkxjxonuvzrarjxtnhk.supabase.co",  // 你的 Supabase 域名
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

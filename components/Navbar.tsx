@@ -86,7 +86,6 @@ export default function Navbar() {
               { label: "首页", href: "/" },
               { label: "分类", href: "/category" },
               { label: "AI Chat", href: "/ai-chat/fullscreen" },
-              { label: "联系我", href: "/contact" },
             ].map(({ label, href }) => (
               <li key={href}>
                 <Link
