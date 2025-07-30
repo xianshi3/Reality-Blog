@@ -1,10 +1,10 @@
-/* 继承html和body的背景和字体 */
+/* ===== 基础继承及主题 ===== */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background: #f8fafc; /* 和首页浅色背景一致 */
-  color: #1f2937;       /* 主页正文色 */
+  background: #f8fafc;
+  color: #1f2937;
   font-family: var(--font-geist-sans), sans-serif;
 }
 
@@ -15,19 +15,19 @@ html, body {
   }
 }
 
-/* 页面整体容器，给导航条预留高度 */
+/* 页面整体容器 */
 .category-page-container {
   min-height: 100vh;
-  background: transparent; /* 用body背景 */
+  background: transparent;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 3.5rem; /* 导航条高度，和首页一致 */
+  padding-top: 3.5rem;
 }
 
-/* 主体内容容器，最大宽度与首页一致，padding和间距参考首页 */
+/* 主体内容容器 */
 .category-container {
-  max-width: 75rem; /* 首页container-home的max-width */
+  max-width: 75rem;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -37,27 +37,34 @@ html, body {
   gap: 3rem;
 }
 
-/* 分类卡片，背景色和首页文章卡片保持统一 */
+/* 分类卡片 */
 .category-card {
-  background-color: #fff; /* 首页文章卡片白色背景 */
+  background-color: #fff;
   border-radius: 1rem;
   padding: 2rem;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-  transition: box-shadow 0.3s ease;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.05),
+    0 4px 6px -4px rgb(0 0 0 / 0.05);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  animation: fadeInDown 0.5s ease forwards;
 }
-
 .category-card:hover {
-  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.08);
+  box-shadow:
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.08);
+  transform: translateY(-4px);
 }
 
 @media (prefers-color-scheme: dark) {
   .category-card {
-    background-color: #23272f; /* 首页深色模式卡片背景 */
+    background-color: #23272f;
     box-shadow: 0 12px 24px rgb(0 0 0 / 0.3);
   }
 }
 
-/* 分类标题，和首页section-title一致 */
+/* 分类标题 */
 .category-header-title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -66,8 +73,9 @@ html, body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  opacity: 0;
+  animation: fadeInDown 0.6s ease forwards;
 }
-
 @media (prefers-color-scheme: dark) {
   .category-header-title {
     color: #f3f4f6;
@@ -79,10 +87,10 @@ html, body {
   width: 0.5rem;
   height: 1.5rem;
   border-radius: 0.25rem;
-  background: #2563eb; /* 首页蓝色600 */
+  background: #2563eb;
 }
 
-/* 文章网格，和首页文章列表类似的排列 */
+/* 文章网格 */
 .category-articles-grid {
   width: 100%;
   display: grid;
@@ -90,43 +98,31 @@ html, body {
   gap: 1.5rem 1.5rem;
 }
 
-/* 单个文章卡片样式，参考首页 article-item */
+/* 文章卡片 */
 .article-card {
   background-color: #fefefe;
   border-radius: 0.75rem;
   overflow: hidden;
   box-shadow: 0 6px 12px rgb(0 0 0 / 0.04);
-  transition: box-shadow 0.25s ease, transform 0.25s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   color: inherit;
   text-decoration: none;
   display: flex;
   flex-direction: column;
+  animation: scaleIn 0.5s ease forwards;
+  cursor: pointer;
 }
-
 .article-card:hover {
-  box-shadow: 0 20px 25px rgb(0 0 0 / 0.1);
-  transform: scale(1.02);
+  box-shadow: 0 25px 35px rgb(0 0 0 / 0.15);
+  transform: scale(1.04) translateY(-3px);
 }
 
 @media (prefers-color-scheme: dark) {
   .article-card {
     background-color: #23272f;
     box-shadow: 0 6px 12px rgb(0 0 0 / 0.2);
-  }
-}
-
-/* 文章图片 */
-.article-image {
-  width: 100%;
-  height: 160px;
-  object-fit: cover;
-  border-bottom: 1px solid #e5e7eb;
-  transition: filter 0.3s ease;
-}
-
-@media (prefers-color-scheme: dark) {
-  .article-image {
-    border-color: #374151;
   }
 }
 
@@ -140,8 +136,8 @@ html, body {
   align-items: center;
   justify-content: center;
   font-size: 0.875rem;
+  user-select: none;
 }
-
 @media (prefers-color-scheme: dark) {
   .article-image-placeholder {
     background-color: #374151;
@@ -150,33 +146,34 @@ html, body {
 }
 
 /* 文章标题 */
-.article-title {
+.category-article-title {
   font-size: 1.125rem;
   font-weight: 700;
   color: #111827;
   margin: 1rem;
   margin-bottom: 0.5rem;
   flex-grow: 0;
+  user-select: none;
 }
-
 @media (prefers-color-scheme: dark) {
-  .article-title {
+  .category-article-title {
     color: #fff;
   }
 }
 
 /* 文章摘要 */
-.article-summary {
+.category-article-summary {
   overflow: hidden;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  /* 未来可能支持的标准属性，作为补充（非必须） */
-  line-clamp: 2; /* 目前多数浏览器不识别 */
+  line-clamp: 2;
+  margin: 0 1rem 1rem 1rem;
+  color: #4b5563;
+  user-select: none;
 }
-
 @media (prefers-color-scheme: dark) {
-  .article-summary {
+  .category-article-summary {
     color: #cbd5e1;
   }
 }
@@ -185,5 +182,106 @@ html, body {
 @media (max-width: 640px) {
   .category-articles-grid {
     grid-template-columns: 1fr !important;
+  }
+}
+
+/* 分类筛选按钮区 */
+.category-filter-container {
+  max-width: 75rem;
+  margin: 0 auto 2rem;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  border-radius: 15px;
+  position: sticky;
+  top: 5.9rem;
+  background-color: #f8fafc;
+  z-index: 140;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .category-filter-container {
+    background-color: #18181b;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.6);
+  }
+}
+
+/* 筛选按钮 */
+.category-filter-btn {
+  background: #e5e7eb;
+  border: none;
+  border-radius: 15px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #374151;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.15s ease;
+  user-select: none;
+  box-shadow:
+    0 2px 5px rgb(0 0 0 / 0.05);
+}
+.category-filter-btn:hover {
+  background: #2563eb;
+  color: white;
+  transform: scale(1.05);
+}
+.category-filter-btn:active {
+  transform: scale(0.95);
+}
+.category-filter-btn.active {
+  background: #2563eb;
+  color: white;
+  box-shadow:
+    0 6px 12px rgb(37 99 235 / 0.5);
+  transform: scale(1.1);
+}
+
+@media (prefers-color-scheme: dark) {
+  .category-filter-btn {
+    background: #374151;
+    color: #d1d5db;
+    box-shadow:
+      0 2px 5px rgb(0 0 0 / 0.1);
+  }
+  .category-filter-btn:hover {
+    background: #3b82f6;
+    color: #f9fafb;
+    transform: scale(1.05);
+  }
+  .category-filter-btn.active {
+    background: #3b82f6;
+    color: #f9fafb;
+    box-shadow:
+      0 6px 12px rgb(59 130 246 / 0.6);
+    transform: scale(1.1);
+  }
+}
+
+/* 动画定义 */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
