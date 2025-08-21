@@ -4,7 +4,12 @@
   display: flex;
   flex-direction: column; /* 垂直排列子元素 */
   align-items: center;    /* 水平居中子元素 */
-  font-family: var(--font-geist-sans), sans-serif; /* 统一字体 */
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 统一字体 */
+  line-height: 1.75;      /* 舒适的阅读行高 */
+  letter-spacing: 0.02em; /* 微调字间距 */
+  font-size: 1rem;
+  color: #111827;
   background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef); /* 浅色渐变背景 */
   padding: 0 1rem;
   position: relative;
@@ -14,25 +19,26 @@
 @media (prefers-color-scheme: dark) {
   .article-page-container {
     background-image: linear-gradient(to bottom right, #18181b, #23272f);
+    color: #e5e7eb;
   }
 }
 
-/* 文章内容整体容器，限制最大宽度，居中，带上下边距 */
+/* 文章内容整体容器 */
 .article-page-container .article-container {
   width: 100%;
-  max-width: 100ch;  /* 最大字符宽度 */
+  max-width: 100ch;
   margin: 3rem auto 4rem;
   flex: 1 1 auto;
 }
 
-/* 页面主内容最大宽度及水平居中 */
+/* 页面主内容最大宽度 */
 .article-page-main {
-  max-width: 1000px;
+  max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* 文章主体样式，增加底部间距拉开 Footer */
+/* 文章主体样式 */
 .article-content {
   background-color: #fff;
   border-radius: 1.5rem;
@@ -45,7 +51,6 @@
   animation: fadeInUp 0.8s ease-out;
 }
 
-/* 文章主体悬浮效果，阴影加深并稍微放大 */
 .article-content:hover {
   box-shadow:
     0 20px 25px -5px rgba(0, 0, 0, 0.1),
@@ -53,47 +58,119 @@
   transform: scale(1.02);
 }
 
-/* 深色模式下文章内容背景调整 */
 @media (prefers-color-scheme: dark) {
   .article-content {
     background-color: #23272f;
   }
 }
 
-/* 文章标题，较大字体，加粗，下边距 */
+/* 标题层级优化 */
+.article-content h1,
 .article-page-title {
   font-size: 2.5rem;
   font-weight: 800;
-  margin-bottom: 1rem;
+  margin-bottom: 1.2rem;
+  line-height: 1.2;
   color: #111827;
 }
 
-/* 深色模式标题字体颜色调整 */
 @media (prefers-color-scheme: dark) {
-  .article-page-title {
+  .article-page-title,
+  .article-content h1 {
     color: #fff;
   }
 }
 
-/* 文章元信息，如作者、时间，较小字体，灰色 */
-.article-page-meta {
-  font-size: 0.9rem;
-  color: #6b7280;
-  margin-bottom: 1.5rem;
+.article-content h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 2.2rem 0 1rem;
+  line-height: 1.3;
 }
 
-/* 文章摘要样式，浅灰背景，圆角，内边距 */
+.article-content h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 1.8rem 0 0.8rem;
+}
+
+.article-content h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 1.2rem 0 0.6rem;
+}
+
+/* 正文段落 */
+.article-content p {
+  font-size: 1.05rem;
+  margin: 1rem 0;
+  line-height: 1.75;
+}
+
+/* 列表 */
+.article-content ul,
+.article-content ol {
+  margin: 1.2rem 0 1.2rem 1.5rem;
+  padding: 0;
+}
+
+.article-content li {
+  margin: 0.4rem 0;
+  line-height: 1.7;
+}
+
+/* 引用块 */
+.article-content blockquote {
+  border-left: 4px solid #3b82f6;
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  color: #374151;
+  font-style: italic;
+}
+
+@media (prefers-color-scheme: dark) {
+  .article-content blockquote {
+    color: #9ca3af;
+    border-left-color: #60a5fa;
+  }
+}
+
+/* 行内代码 */
+.article-content code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  background: #f3f4f6;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .article-content code {
+    background: #1f2937;
+    color: #f9fafb;
+  }
+}
+
+/* 元信息（时间、分类） */
+.article-page-meta {
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.01em;
+}
+
+/* 摘要 */
 .article-page-summary {
-  font-size: 1.125rem;
+  font-size: 1.15rem;
   color: #374151;
   background-color: #f3f4f6;
   border-radius: 1rem;
   padding: 1rem 1.5rem;
   margin-bottom: 2rem;
-  line-height: 1.6;
+  line-height: 1.8;
 }
 
-/* 深色模式摘要背景和文字颜色调整 */
 @media (prefers-color-scheme: dark) {
   .article-page-summary {
     background-color: #1f2937;
@@ -101,7 +178,7 @@
   }
 }
 
-/* 标签和点赞容器，横向排列，左右分散，允许换行 */
+/* 标签和点赞容器 */
 .tag-like-container {
   display: flex;
   justify-content: space-between;
@@ -111,17 +188,17 @@
   margin-top: 2.5rem;
 }
 
-/* 标签样式，圆形背景，颜色区分，字体加粗 */
 .tag-like-container .tag {
   background-color: #e5e7eb;
   color: #1f2937;
   padding: 0.3rem 0.9rem;
-  font-weight: 600;
-  border-radius: 9999px; /* pill形状 */
-  user-select: none;     /* 禁止选中 */
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border-radius: 9999px;
+  user-select: none;
 }
 
-/* 深色模式标签背景和文字颜色 */
 @media (prefers-color-scheme: dark) {
   .tag-like-container .tag {
     background-color: #374151;
@@ -129,7 +206,7 @@
   }
 }
 
-/* 文章目录固定在右侧，带滚动条，半透明背景和模糊 */
+/* 文章目录 */
 .article-toc {
   position: fixed;
   top: 6rem;
@@ -139,17 +216,14 @@
   overflow-y: auto;
   padding: 1rem;
   border-radius: 1rem;
-  color: #f8fafc; /* 默认文字色，深色模式覆盖 */
+  color: #f8fafc;
   box-sizing: border-box;
   z-index: 50;
-
-  /* 浅色模式半透明背景和毛玻璃效果 */
   background-color: rgb(255, 255, 255);
   backdrop-filter: saturate(180%) blur(10px);
   -webkit-backdrop-filter: saturate(180%) blur(10px);
 }
 
-/* 深色模式目录背景和文字颜色调整 */
 @media (prefers-color-scheme: dark) {
   .article-toc {
     background-color: rgba(50, 50, 60, 0.5);
@@ -159,7 +233,7 @@
   }
 }
 
-/* 小屏幕下目录改为文章下方，宽度100%，取消固定定位和背景 */
+/* 小屏幕下目录移到底部 */
 @media (max-width: 1824px) {
   .article-toc {
     position: static !important;
@@ -175,14 +249,13 @@
     margin-top: 2rem;
   }
 
-  /* 主体宽度全屏，移除右边距 */
   .article-page-main {
     max-width: 100%;
     margin-right: 0;
   }
 }
 
-/* 返回首页按钮，固定在页面左上角，带模糊和半透明背景 */
+/* 返回首页按钮 */
 .article-page-container .return-home {
   position: fixed;
   top: calc(env(safe-area-inset-top, 1rem) + 0.75rem);
@@ -205,19 +278,16 @@
   user-select: none;
 }
 
-/* 悬浮时加深背景 */
 .article-page-container .return-home:hover {
   background-color: rgba(255 255 255 / 0.8);
 }
 
-/* 隐藏时样式，透明且不可点击，向上偏移 */
 .return-home.hidden {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-10px);
 }
 
-/* 深色模式返回首页按钮背景和文字颜色 */
 @media (prefers-color-scheme: dark) {
   .article-page-container .return-home {
     background-color: rgba(31 41 55 / 0.6);

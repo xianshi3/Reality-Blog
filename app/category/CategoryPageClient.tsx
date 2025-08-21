@@ -88,8 +88,8 @@ export default function CategoryPageClient({ articles }: Props) {
                     <div className="article-image-placeholder">无封面图</div>
                   )}
 
-                  <h3 className=".category-article-title">{article.title}</h3>
-                  <p className=".category-article-summary">{article.summary}</p>
+                  <h3 className="category-article-title">{article.title}</h3>
+                  <p className="category-article-summary">{article.summary}</p>
                 </Link>
               ))}
             </div>
