@@ -40,11 +40,23 @@
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
 }
+
 @media (min-width: 1024px) {
   .container-home {
     flex-direction: row;      /* 大屏幕下横向排列 */
   }
+
+  /* 左侧栏右边增加间距 */
+  .container-home > :first-child {
+    margin-right: 0.5rem; 
+  }
+
+  /* 右侧栏左边增加间距 */
+  .container-home > :last-child {
+    margin-left: 0.5rem; 
+  }
 }
+
 
 /* 首页标题 */
 .home-title {

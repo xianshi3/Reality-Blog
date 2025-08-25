@@ -212,25 +212,6 @@ export default function MainContent({
           — 无更多文章 —
         </p>
       )}
-
-      {/* 作者简介卡片 */}
-      <aside className="article-section about-section max-w-xl mx-auto">
-        <h2>👤 关于我</h2>
-        <div className="about-card">
-          <div className="about-author">
-            <div className="emoji" aria-label="程序员emoji" role="img">
-              🧑‍💻
-            </div>
-            <div className="about-name">
-              <p className="name">Reality</p>
-              <p className="role">全栈开发者 · 技术爱好者</p>
-            </div>
-          </div>
-          <p className="about-description">
-            👋 你好，我是 Reality，一名热爱技术与生活的开发者，喜欢构建有趣的产品与工具。本博客记录我的开发笔记，欢迎常来看看！
-          </p>
-        </div>
-      </aside>
     </main>
   );
 }
