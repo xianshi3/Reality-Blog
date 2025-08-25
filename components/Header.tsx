@@ -19,11 +19,12 @@ export default function Header() {
         <Navbar />
       </div>
 
-      {/* 视差背景区：响应式居中，圆角动画 */}
-      <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
-        <div className="overflow-hidden rounded-3xl shadow-xl animate-fadeInDown transition-transform duration-700 ease-in-out hover:scale-105 sm:hover:scale-100">
-          <ParallaxSection backgroundImage="/parallax-bg.jpg" />
-        </div>
+      {/* 视差背景区   更新：删除了圆角 rounded-3xl */}
+      <div className="overflow-hidden shadow-xl animate-fadeInDown transition-transform duration-700 ease-in-out hover:scale-105 sm:hover:scale-100">
+        <ParallaxSection 
+          backgroundImage="/parallax-bg.jpg" 
+          height={500} 
+        />
       </div>
     </>
   );

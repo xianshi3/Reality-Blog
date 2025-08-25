@@ -14,7 +14,7 @@ export default function LeftSidebar({ articles, className }: LeftSidebarProps) {
     'transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl';
 
   return (
-    <aside className={`lg:w-1/4 w-full space-y-6 animate-fadeInUp delay-100 ${className ?? ''}`}>
+    <aside className={`lg:w-64 w-full space-y-6 ${className ?? ''}`}>
       <NavCard />
 
       <div className={`${cardBaseClass} ${cardHoverClass}`}>
@@ -28,3 +28,4 @@ export default function LeftSidebar({ articles, className }: LeftSidebarProps) {
     </aside>
   );
 }
+
