@@ -114,43 +114,56 @@ export default function MainContent({
               📅 {year} 年文章
             </h2>
 
-            <ul className="space-y-8">
-              {/* 渲染该年份下的文章列表 */}
-              {groupedArticles[year].map((article) => (
-                <li key={article.link}>
-                  <article className="article-item">
-                    <a href={article.link} className="article-link" tabIndex={0}>
-                      {/* 文章标题 */}
-                      <h3 className="article-title">{article.title}</h3>
-
-                      {/* 文章元信息：发布日期和分类 */}
-                      <p className="article-meta">
-                        {article.date
-                          ? new Date(article.date).toLocaleDateString("zh-CN", {
-                              year: "numeric",
-                              month: "short",
-                              day: "numeric",
-                            })
-                          : "未知日期"} · {article.category}
-                      </p>
-
-                      {/* 文章摘要 */}
-                      <p className="article-summary">{article.summary}</p>
-
-                      {/* 如果有封面图片则显示，放在文本下面 */}
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {groupedArticles[year].map((article) => (
+                  <li key={article.link} className="flex">
+                    <a
+                      href={article.link}
+                      className="article-item flex flex-col h-full w-full overflow-hidden"
+                    >
+                      {/* 封面图 */}
                       {article.image_url && (
-                        <img
-                          src={article.image_url}
-                          alt={`文章封面 - ${article.title}`}
-                          className="article-image mt-4 mx-auto"
-                          loading="lazy"
-                        />
+                        <div className="relative h-48 md:h-56 w-full overflow-hidden rounded-xl">
+                          <img
+                            src={article.image_url}
+                            alt={article.title}
+                            className="article-image w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-xl"></div>
+                        </div>
                       )}
+
+                      {/* 文章内容 */}
+                      <div className="flex flex-col flex-1 mt-4">
+                        {/* 标题 */}
+                        <h3 className="article-title mb-2">{article.title}</h3>
+
+                        {/* 摘要 */}
+                        <p className="article-summary mb-4">{article.summary}</p>
+
+                        {/* 底部信息条 */}
+                        <div className="mt-auto flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
+                          <span>
+                            {article.date
+                              ? new Date(article.date).toLocaleDateString("zh-CN", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })
+                              : "未知日期"}
+                          </span>
+                          <span className="px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-blue-600 dark:text-blue-300">
+                            {article.category}
+                          </span>
+                        </div>
+                      </div>
                     </a>
-                  </article>
-                </li>
-              ))}
-            </ul>
+                  </li>
+                ))}
+              </ul>
+
+
           </section>
         ))}
       </div>

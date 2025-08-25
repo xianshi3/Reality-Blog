@@ -33,7 +33,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 75rem;           /* 最大宽度，居中显示 */
+  max-width: 90rem;           /* 最大宽度，居中显示 */
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   gap: 1.5rem;                /* 区块间距 */
@@ -44,15 +44,6 @@
   .container-home {
     flex-direction: row;      /* 大屏幕下横向排列 */
   }
-}
-
-/* 头像样式 */
-.avatarImg {
-  border-radius: 9999px;
-  border: 4px solid #fff;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
-  margin-bottom: 1rem;
-  animation: scaleUp 0.5s ease-out;
 }
 
 /* 首页标题 */
