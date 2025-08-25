@@ -128,6 +128,10 @@ export default function ParallaxSection({
       className="relative overflow-hidden group transition-all duration-500"
       style={{
         height: isMobile ? 300 : height,
+        width: "110vw",      // 撑满宽度
+        marginLeft: "-5vw",    // 左右均匀超出
+        marginRight: "-5vw",
+        // maxWidth: "100%",    // 防止超出屏幕
         transform: isHovered && !isMobile 
           ? `perspective(1000px) rotateX(${mouseTiltY}deg) rotateY(${-mouseTiltX}deg) scale(1.01)` 
           : "none",
