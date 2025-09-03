@@ -245,7 +245,11 @@
     border-radius: 0 !important;
     color: inherit !important;
     overflow: visible !important;
-    margin-top: 2rem;
+    margin-bottom: 4rem;
+
+    /* 新增：让目录内容居中 */
+    display: flex;
+    justify-content: center;
   }
 
   .article-page-main {

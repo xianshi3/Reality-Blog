@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import Navbar from "@/components/Navbar";
 import "./category.css";
+import Footer from '@/components/Footer';
 
 interface Props {
   articles: Article[];
@@ -96,6 +97,7 @@ export default function CategoryPageClient({ articles }: Props) {
           </section>
         ))}
       </main>
+      <Footer currentYear={new Date().getFullYear()} />
     </div>
   );
 }
