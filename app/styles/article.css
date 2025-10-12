@@ -302,3 +302,58 @@
     background-color: rgba(31 41 55 / 0.8);
   }
 }
+
+/* 手机端优化字体和代码块显示 */
+@media (max-width: 600px) {
+  .article-content {
+    padding: 1.2rem 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .article-content h1,
+  .article-page-title {
+    font-size: 1.6rem;
+  }
+
+  .article-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .article-content h3 {
+    font-size: 1rem;
+  }
+
+  .article-content h4 {
+    font-size: 0.95rem;
+  }
+
+  .article-content pre,
+  .prose pre {
+    font-size: 0.85rem;
+    max-width: 100vw;
+    overflow-x: auto;
+    border-radius: 0.7rem;
+    margin: 0.7rem 0;
+  }
+
+  .article-content code,
+  .prose code {
+    font-size: 0.85rem;
+    word-break: break-all;
+    white-space: pre-wrap;
+  }
+}
+
+/* 代码块横向滚动且不溢出 */
+.article-content pre,
+.prose pre {
+  overflow-x: auto;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* 让 Markdown 渲染内容自适应 */
+.prose {
+  word-break: break-word;
+  max-width: 100%;
+}
