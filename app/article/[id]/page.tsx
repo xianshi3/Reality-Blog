@@ -96,7 +96,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
             {/* 标签 & 点赞 */}
             <div className="tag-like-container">
               <div className="tag-list">
-                {article.tags?.map((tag) => (
+                {(Array.isArray(article.tags) ? article.tags : typeof article.tags === 'string' ? article.tags.split(',') : []).map((tag) => (
                   <span key={tag} className="tag">
                     #{tag}
                   </span>
