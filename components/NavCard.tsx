@@ -86,14 +86,17 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
       </div>
 
       {/* 搜索框组件 */}
-      <ArticleSearch
-      value={search}
-      onChange={setSearch}
-      isOpen={isOpen}
-      articles={articles}        // 传入文章列表
-      onSelect={(article) => {
-        window.location.href = article.link; // 点击跳转到文章
-      }}/>
+      <div className="mb-4"> {/* 增加底部间距 */}
+        <ArticleSearch
+          value={search}
+          onChange={setSearch}
+          isOpen={isOpen}
+          articles={articles}
+          onSelect={(article) => {
+            window.location.href = article.link; // 点击跳转到文章
+          }}
+        />
+      </div>
 
       {/* 导航列表 */}
       <ul
