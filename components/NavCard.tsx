@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ArticleSearch from "./ArticleSearch";
+import type { Article } from "../types/article";
 
 interface NavLink {
   href: string;
@@ -18,9 +19,10 @@ const NAV_LINKS: NavLink[] = [
 
 interface NavCardProps {
   className?: string;
+  articles: Article[];
 }
 
-export default function NavCard({ className = "" }: NavCardProps) {
+export default function NavCard({ className = "", articles }: NavCardProps) {
   const [isOpen, setIsOpen] = useState(true);
   const [search, setSearch] = useState("");
   const [activeHref, setActiveHref] = useState<string>("");
@@ -84,7 +86,14 @@ export default function NavCard({ className = "" }: NavCardProps) {
       </div>
 
       {/* 搜索框组件 */}
-      <ArticleSearch value={search} onChange={setSearch} isOpen={isOpen} placeholder="搜索" />
+      <ArticleSearch
+      value={search}
+      onChange={setSearch}
+      isOpen={isOpen}
+      articles={articles}        // 传入文章列表
+      onSelect={(article) => {
+        window.location.href = article.link; // 点击跳转到文章
+      }}/>
 
       {/* 导航列表 */}
       <ul
