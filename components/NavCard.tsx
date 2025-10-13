@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import ArticleSearch from "./ArticleSearch";
 
 interface NavLink {
   href: string;
@@ -82,20 +83,8 @@ export default function NavCard({ className = "" }: NavCardProps) {
         )}
       </div>
 
-      {/* 搜索框 */}
-      <div
-        className={`overflow-hidden transition-all duration-500 ${
-          isOpen ? "max-h-20 opacity-100 mb-4" : "max-h-0 opacity-0 mb-0"
-        }`}
-      >
-        <input
-          type="text"
-          placeholder="搜索导航..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full p-2 rounded-lg bg-gray-100 dark:bg-[#2a2f3a] text-gray-800 dark:text-gray-200 text-sm border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:focus:ring-gray-600 transition-all duration-200"
-        />
-      </div>
+      {/* 搜索框组件 */}
+      <ArticleSearch value={search} onChange={setSearch} isOpen={isOpen} placeholder="搜索" />
 
       {/* 导航列表 */}
       <ul
