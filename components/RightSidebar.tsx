@@ -37,11 +37,6 @@ export default function RightSidebar({
           Full Stack Developer
         </p>
 
-        {/* 签名 */}
-        <p className="italic text-xs text-gray-500 dark:text-gray-400 mt-2">
-          “Code the future, live the dream.”
-        </p>
-
         {/* 社交链接 */}
         <div className="flex gap-3 mt-4">
           <a
