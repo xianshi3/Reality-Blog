@@ -15,7 +15,7 @@ export default function LeftSidebar({ articles, className }: LeftSidebarProps) {
 
   return (
     <aside className={`lg:w-64 w-full space-y-6 ${className ?? ''}`}>
-      <NavCard />
+      <NavCard articles={articles} />
 
       <div className={`${cardBaseClass} ${cardHoverClass}`}>
         <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3">公告</h3>
