@@ -7,140 +7,139 @@ export default function FullscreenChat() {
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const queryMessages = new URLSearchParams(window.location.search).get("messages");
-    queryMessages && setMessages(JSON.parse(queryMessages) || []);
+    const q = new URLSearchParams(window.location.search).get("messages");
+    if (q) setMessages(JSON.parse(q));
   }, []);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
 
-  const handleSend = async () => {
+  const handleSend = () => {
     if (!input.trim() || loading) return;
-
-    setLoading(true);
-    const userMessage = { role: "user", content: input };
-    const newMessages = [...messages, userMessage];
-
-    setMessages(newMessages);
+    const userMsg = { role: "user", content: input };
+    const newMsgs = [...messages, userMsg];
+    setMessages(newMsgs);
     setInput("");
-
+    setLoading(true);
     setTimeout(() => {
       setMessages([
-        ...newMessages,
-        {
-          role: "assistant",
-          content: `AI 回复: ${input}`,
-        },
+        ...newMsgs,
+        { role: "assistant", content: `AI 回答：${userMsg.content} 🤖` },
       ]);
       setLoading(false);
     }, 1000);
   };
 
   return (
-    <div className="gpt-root">
-      {/* 顶部栏 */}
-      <header className="gpt-header">
-        <div className="gpt-header-inner">
+    <div className="desktop-chat-layout">
+      {/* 左侧导航栏 */}
+      <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
+        <div className="sidebar-header">
+          <h2>🤖 AI 助手</h2>
           <button
-            onClick={() => window.history.back()}
-            className="gpt-header-back"
-            aria-label="返回"
+            className="toggle-btn"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-            </svg>
+            {sidebarOpen ? "⟨" : "⟩"}
           </button>
-          <h1 className="gpt-header-title">AI 对话</h1>
         </div>
-      </header>
 
-      {/* 聊天内容 */}
-      <main className="gpt-chat-main">
-        <div className="gpt-chat-list">
-          {messages.length === 0 ? (
-            <div className="gpt-chat-empty animate-fade-in">
-              <div className="gpt-chat-empty-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                </svg>
+        <nav className="sidebar-nav">
+          <button className="nav-item active">💬 新对话</button>
+          <button className="nav-item">🧠 Prompt 预设</button>
+          <button className="nav-item">📜 历史记录</button>
+          <button className="nav-item">⚙️ 设置</button>
+        </nav>
+      </aside>
+
+      {/* 中间主聊天区 */}
+      <div className="chat-main">
+        <header className="chat-topbar">
+          <h1>AI 聊天助手</h1>
+          {/* 返回首页按钮 */}
+          <button
+            className="back-home-btn"
+            onClick={() => window.location.href = "/"}  // 这里可以替换为你的博客首页URL
+          >
+            返回首页
+          </button>
+        </header>
+
+        <main className="chat-body">
+          <div className="chat-inner">
+            {messages.length === 0 ? (
+              <div className="chat-empty">
+                <div className="icon">💬</div>
+                <h2>开始与 AI 对话</h2>
+                <p>例如：帮我写一段文案、分析一篇文章、写段代码</p>
               </div>
-              <p className="gpt-chat-empty-tip">和 AI 聊聊技术、生活或任何问题吧！</p>
-              <p className="gpt-chat-empty-desc">在下方输入框开始对话</p>
-            </div>
-          ) : (
-            messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`gpt-chat-message ${msg.role} animate-slide-in`}
-                style={{ animationDelay: `${idx * 60}ms`, animationFillMode: "backwards" }}
-              >
-                <div className="gpt-chat-avatar">
-                  {msg.role === "user" ? (
-                    <div className="gpt-chat-avatar-user">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  ) : (
-                    <div className="gpt-chat-avatar-ai">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-                <div className="gpt-chat-bubble">
-                  <div className="gpt-chat-bubble-inner">{msg.content}</div>
-                  <div className="gpt-chat-meta">
-                    {msg.role === "user" ? "你" : "AI助手"} · {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+            ) : (
+              messages.map((msg, i) => (
+                <div key={i} className={`msg ${msg.role}`}>
+                  <div className="avatar">
+                    {msg.role === "user" ? "🧑" : "🤖"}
+                  </div>
+                  <div className="bubble">
+                    <p>{msg.content}</p>
                   </div>
                 </div>
-              </div>
-            ))
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-      </main>
-
-      {/* 输入栏 */}
-      <footer className="gpt-chat-footer">
-        <form
-          className="gpt-chat-inputbar"
-          onSubmit={e => {
-            e.preventDefault();
-            handleSend();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="输入你的问题..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={loading}
-            autoFocus
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            aria-label="发送"
-          >
-            {loading ? (
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-              </svg>
+              ))
             )}
-          </button>
-        </form>
-      </footer>
+
+            {loading && (
+              <div className="msg assistant">
+                <div className="avatar">🤖</div>
+                <div className="bubble typing">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+            )}
+            <div ref={endRef} />
+          </div>
+        </main>
+
+        {/* 底部毛玻璃输入栏 */}
+        <footer className="chat-footer">
+          <form
+            className="chat-input"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
+          >
+            <input
+              type="text"
+              placeholder="输入你的问题..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              disabled={loading}
+            />
+            <button type="submit" disabled={loading}>
+              {loading ? "..." : "发送"}
+            </button>
+          </form>
+        </footer>
+      </div>
+
+      {/* 右侧可扩展区域 */}
+      <aside className="right-panel">
+        <div className="hint-card">
+          <h3>💡 提示</h3>
+          <p>你可以试试：</p>
+          <ul>
+            <li>生成一段励志语录</li>
+            <li>帮我写一段产品介绍</li>
+            <li>分析一篇新闻内容</li>
+          </ul>
+        </div>
+      </aside>
     </div>
   );
 }
