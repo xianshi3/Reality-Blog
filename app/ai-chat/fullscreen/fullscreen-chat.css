@@ -1,26 +1,87 @@
 :root {
-  --bg: #f5f7fa;
-  --text: #1e1e1f;
-  --sidebar: #ffffffc9;
+  /* 页面背景（渐变）*/
+  --bg-start: #f8fafc;
+  --bg-end: #e0e7ef;
+  --page-bg: linear-gradient(to bottom right, var(--bg-start), var(--bg-end));
+  --bg: var(--page-bg);
+
+  /* 文字与辅助色 */
+  --text: #111827;        /* 主文字色 */
+  --text-dark: #0f1724;   /* 深色文本（用于卡片上的深色文本） */
+  --text-light: #6b7280;  /* 次要 / 侧栏文本 */
+  --muted: #6b7280;
+  --muted-2: #4b5563;
+
+  /* 卡片 / 面板 */
+  --card: #ffffff;        /* 面板背景 */
+  --card-shadow: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
   --border: #e5e7eb;
-  --card: #ffffff;
+
+  /* 主题色 */
   --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+
+  /* 侧栏 / 毛玻璃 */
+  --sidebar: rgba(255,255,255,0.9);
+  --blur: blur(20px);
+
+  /* 气泡颜色 */
   --user-bubble: #2563eb;
   --ai-bubble: #f3f4f6;
-  --blur: blur(20px);
+
+  /* 标签 & 分页 */
+  --tag-bg: #e5e7eb;
+  --tag-color: #1f2937;
+  --pagination-bg: #e5e7eb;
+  --pagination-color: #1f2937;
+
+  /* 页脚边线 */
+  --footer-border: #e5e7eb;
 }
 
-/* 优化字体渲染 */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
+/* 深色模式变量覆盖（更中性、低蓝） */
 @media (prefers-color-scheme: dark) {
   :root {
-   /* 这里需要重新更新 */
+    --bg-start: #0b0f14;
+    --bg-end: #12161b;
+    --page-bg: linear-gradient(to bottom right, var(--bg-start), var(--bg-end));
+    --bg: var(--page-bg);
+
+    /* 文字与辅助色 */
+    --text: #e6eef8;
+    --text-dark: #e6eef8;
+    --text-light: #cbd5dc; /* 更中性的侧栏文字 */
+    --muted: #9ca3af;
+    --muted-2: #d1d5db;
+
+    /* 面板 / 卡片 */
+    --card: #0f1720;        /* 面板背景（暗） */
+    --card-shadow: none;
+    --border: #23272f;      /* 边框使用暗色系，避免高饱和蓝 */
+
+    /* 主题色（不那么蓝，较中性） */
+    --primary: #6b7280;     /* 主交互色改为石板灰 */
+    --primary-dark: #4b5563;/* 悬浮 / 深色主色 */
+
+    /* 侧栏 / 毛玻璃 */
+    --sidebar: rgba(12,14,18,0.6);
+    --blur: blur(10px);
+
+    /* 气泡颜色（用户气泡不强烈蓝以免过度突出） */
+    --user-bubble: #374151; /* 暗石板色，便于识别但不那么蓝 */
+    --ai-bubble: #0b1320;
+
+    /* 标签 & 分页 */
+    --tag-bg: #23272f;
+    --tag-color: #d1d5db;
+    --pagination-bg: #23272f;
+    --pagination-color: #d1d5db;
+
+    /* 页脚边线 */
+    --footer-border: #23272f;
   }
 }
+
 /* 深色模式下的文章正文颜色 */
 @media (prefers-color-scheme: dark) {
   .prose {
@@ -49,6 +110,7 @@ body {
   flex-direction: column;
   transition: all 0.3s ease;
   height: 100%;
+  color: var(--text-light);
 }
 
 .sidebar.closed {
@@ -74,18 +136,20 @@ body {
   text-align: left;
   padding: 0.8rem 1.2rem;
   color: var(--text);
-  opacity: 0.8;
+  opacity: 0.9;
   cursor: pointer;
   transition: background 0.2s, opacity 0.2s;
+  border-radius: 0.5rem;
 }
 
 .nav-item:hover {
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.04);
   opacity: 1;
 }
 
 .nav-item.active {
   background: var(--primary);
+  color: white;
   border-radius: 0.5rem;
   margin: 0.3rem 0.8rem;
 }
@@ -97,6 +161,7 @@ body {
   backdrop-filter: var(--blur);
   padding: 1.2rem;
   height: 100%;
+  color: var(--text);
 }
 
 .hint-card {
@@ -104,7 +169,8 @@ body {
   border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 1rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--card-shadow);
+  color: var(--text);
 }
 
 .hint-card h3 {
@@ -114,7 +180,7 @@ body {
 .hint-card ul {
   list-style: disc;
   margin-left: 1.5rem;
-  color: #6b7280;
+  color: var(--muted);
 }
 
 /* 中间聊天区 */
@@ -123,6 +189,7 @@ body {
   flex-direction: column;
   overflow: hidden;
   flex: 1;
+  color: var(--text);
 }
 
 .chat-topbar {
@@ -133,6 +200,7 @@ body {
   padding: 1rem;
   background: var(--card);
   border-bottom: 1px solid var(--border);
+  color: var(--text);
 }
 
 .chat-body {
@@ -159,6 +227,7 @@ body {
   display: flex;
   gap: 12px;
   margin-bottom: 16px;
+  color: var(--text);
 }
 
 .msg.user {
@@ -169,21 +238,27 @@ body {
   font-size: 2rem;
 }
 
+/* 公共气泡样式 */
 .bubble {
   background: var(--card);
   padding: 1rem 1.5rem;
   border-radius: 1rem;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
   max-width: 70%;
+  color: var(--text);
+  word-break: break-word;
 }
 
+/* 用户气泡 */
 .msg.user .bubble {
   background: var(--user-bubble);
   color: white;
 }
 
+/* AI 气泡 */
 .msg.assistant .bubble {
   background: var(--ai-bubble);
+  color: var(--text);
 }
 
 /* 底部输入栏 */
@@ -193,6 +268,7 @@ body {
   border-top: 1px solid var(--border);
   position: sticky;
   bottom: 0;
+  color: var(--text);
 }
 
 .chat-input {
@@ -206,18 +282,26 @@ body {
   padding: 0.8rem;
   border: 1px solid var(--border);
   border-radius: 1rem;
-  background: var(--bg);
-  color: var(--text-dark); /* 输入框内文字的颜色 */
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+/* 聚焦环改为中性石板色，避免强蓝 */
+.chat-input input:focus {
+  box-shadow: 0 0 0 3px rgba(75,85,99,0.12); /* 基于 #4b5563 */
+  border-color: rgba(75,85,99,0.6);
 }
 
 /* 修复placeholder的颜色兼容深色和浅色模式 */
 .chat-input input::placeholder {
-  color: var(--text-dark); /* 默认深色文字 */
+  color: var(--muted);
 }
 
 @media (prefers-color-scheme: dark) {
   .chat-input input::placeholder {
-    color: var(--text-light); /* 深色模式下使用浅色提示文字 */
+    color: var(--muted);
   }
 }
 
@@ -236,18 +320,62 @@ body {
   cursor: not-allowed;
 }
 
+/* 悬停使用 --primary-dark（不那么蓝） */
 .chat-input button:not(:disabled):hover {
-  background: #1d4ed8;
+  background: var(--primary-dark);
 }
-
 
 /* 改善背景对比，确保气泡消息清晰 */
 .msg .bubble {
   background: var(--card);
-  color: var(--text-dark); /* 确保消息内容与背景有良好的对比 */
+  color: var(--text); /* 确保消息内容与背景有良好的对比 */
 }
 
-/* 侧边栏和按钮的字体 */
+/* 侧边栏和按钮的字体（覆盖更具体的规则） */
 .sidebar, .sidebar-header h2, .nav-item {
-  color: var(--text-light); /* 侧边栏的文本 */
+  color: var(--text-light);
+}
+
+/* 助手正在输入的动画气泡（保留简单样式） */
+.bubble.typing {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  background: var(--ai-bubble);
+  padding: 0.6rem 0.9rem;
+}
+.bubble.typing span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+.bubble.typing span:nth-child(2) { animation-delay: 0.15s; }
+.bubble.typing span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.2; transform: translateY(0); }
+  40% { opacity: 1; transform: translateY(-3px); }
+}
+
+/* 保持可访问的对比：当使用纯黑/白背景时的跌代 */
+@media (prefers-color-scheme: dark) {
+  .nav-item:hover {
+    background: rgba(255,255,255,0.03);
+  }
+  .nav-item {
+    color: var(--text);
+  }
+
+  /* typing 小点在深色下用浅色，增强可视性 */
+  .bubble.typing span {
+    background: rgba(255,255,255,0.18);
+  }
+}
+
+/* 小调整，避免变量缺失导致样式断裂 */
+:root, :root * {
+  box-sizing: border-box;
 }
