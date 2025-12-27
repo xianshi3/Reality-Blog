@@ -50,7 +50,7 @@
     /* 文字与辅助色 */
     --text: #e6eef8;
     --text-dark: #e6eef8;
-    --text-light: #cbd5dc; /* 更中性的侧栏文字 */
+    --text-light: #cbd5dc; /* 更中性的侧侧文字 */
     --muted: #9ca3af;
     --muted-2: #d1d5db;
 
@@ -60,7 +60,7 @@
     --border: #23272f;      /* 边框使用暗色系，避免高饱和蓝 */
 
     /* 主题色（不那么蓝，较中性） */
-    --primary: #6b7280;     /* 主交互色改为石板灰 */
+    --primary: #6b7280;     /* 主交互色为石板灰 */
     --primary-dark: #4b5563;/* 悬浮 / 深色主色 */
 
     /* 侧栏 / 毛玻璃 */
@@ -134,7 +134,7 @@
   background: none;
   border: none;
   text-align: left;
-  padding: 0.8rem 1.2rem;
+  padding: 0.2rem 1.2rem;
   color: var(--text);
   opacity: 0.9;
   cursor: pointer;
@@ -344,6 +344,7 @@
   background: var(--ai-bubble);
   padding: 0.6rem 0.9rem;
 }
+
 .bubble.typing span {
   display: inline-block;
   width: 6px;
@@ -352,6 +353,7 @@
   border-radius: 50%;
   animation: blink 1s infinite;
 }
+
 .bubble.typing span:nth-child(2) { animation-delay: 0.15s; }
 .bubble.typing span:nth-child(3) { animation-delay: 0.3s; }
 
@@ -360,11 +362,12 @@
   40% { opacity: 1; transform: translateY(-3px); }
 }
 
-/* 保持可访问的对比：当使用纯黑/白背景时的跌代 */
+/* 改善背景对比：当使用纯黑/白背景时的跌代 */
 @media (prefers-color-scheme: dark) {
   .nav-item:hover {
     background: rgba(255,255,255,0.03);
   }
+
   .nav-item {
     color: var(--text);
   }
@@ -378,4 +381,95 @@
 /* 小调整，避免变量缺失导致样式断裂 */
 :root, :root * {
   box-sizing: border-box;
+}
+
+/* 移动设备通用设置 */
+@media (max-width: 767px) {
+  .desktop-chat-layout {
+    grid-template-columns: 1fr; /* 单列布局 */
+    grid-template-rows: auto 1fr auto; /* 顶部栏、聊天区、底部栏 */
+    padding: 0.5rem; /* 减少内边距 */
+  }
+
+  .sidebar {
+    width: 100%; /* 侧边栏全屏显示 */
+    border-right: none; /* 去掉右侧边框 */
+    border-bottom: 1px solid var(--border); /* 添加底部边框 */
+  }
+
+  .sidebar.closed {
+    display: none; /* 关闭状态下隐藏侧边栏 */
+  }
+
+  .sidebar-header {
+    padding: 0.8rem; /* 减少内边距 */
+  }
+
+  .chat-topbar {
+    height: auto; /* 自动高度 */
+    padding: 0.8rem; /* 减少内边距 */
+  }
+
+  .chat-body {
+    padding: 0.5rem; /* 减少内边距 */
+  }
+
+  .chat-empty {
+    padding: 1rem; /* 减少内边距 */
+  }
+
+  .chat-footer {
+    padding: 0.8rem; /* 减少内边距 */
+  }
+
+  .chat-input input {
+    padding: 0.6rem; /* 减少内边距 */
+  }
+
+  .chat-input button {
+    padding: 0.6rem 1rem; /* 减少内边距 */
+  }
+
+  .msg {
+    flex-direction: column; /* 消息垂直排列 */
+  }
+
+  .msg.user {
+    flex-direction: column-reverse; /* 用户消息反向排列 */
+  }
+
+  .bubble {
+    max-width: 90%; /* 气泡宽度适应屏幕 */
+  }
+
+  .hint-card {
+    margin-bottom: 1rem; /* 增加间距 */
+  }
+}
+
+/* 更小的屏幕进一步调整 */
+@media (max-width: 480px) {
+  .chat-input input {
+    font-size: 1rem; /* 减小字体大小 */
+  }
+
+  .chat-input button {
+    font-size: 1rem; /* 减小字体大小 */
+  }
+
+  .bubble {
+    padding: 0.8rem 1rem; /* 减少内边距 */
+  }
+
+  .sidebar-header {
+    padding: 0.6rem; /* 进一步减少内边距 */
+  }
+
+  .chat-topbar {
+    padding: 0.6rem; /* 进一步减少内边距 */
+  }
+
+  .chat-footer {
+    padding: 0.6rem; /* 进一步减少内边距 */
+  }
 }
