@@ -232,7 +232,7 @@ export default function ParallaxSection({
             </div>
             <span className="text-xs text-white/80 mt-2 whitespace-nowrap bg-black/30 px-2 py-1 rounded-md backdrop-blur-sm transition-all duration-500"
                   style={{ opacity: Math.sqrt(mouseOffset.x ** 2 + mouseOffset.y ** 2) * 2 }}>
-              探索更多
+              Reality Blog
             </span>
           </div>
         </div>

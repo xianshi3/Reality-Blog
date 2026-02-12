@@ -59,14 +59,14 @@ export default function RightSidebar({
             target="_blank"
             className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-blue-800 transition"
           >
-            {/* Twitter SVG */}
+            {/* X SVG */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
               viewBox="0 0 24 24"
+              fill="currentColor"
               className="w-5 h-5"
             >
-              <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 22.4.36a9 9 0 0 1-2.84 1.1A4.52 4.52 0 0 0 16.5 0c-2.66 0-4.8 2.15-4.8 4.8 0 .38.05.75.13 1.1A12.8 12.8 0 0 1 1.64.9a4.82 4.82 0 0 0-.65 2.42c0 1.66.84 3.13 2.13 3.98a4.54 4.54 0 0 1-2.17-.6v.06c0 2.32 1.64 4.26 3.8 4.7a4.6 4.6 0 0 1-2.16.08c.61 1.9 2.38 3.28 4.48 3.32A9.1 9.1 0 0 1 0 19.54a12.8 12.8 0 0 0 6.92 2.03c8.3 0 12.84-6.9 12.84-12.85 0-.2 0-.39-.01-.58A9.2 9.2 0 0 0 23 3z" />
+              <path d="M18.244 2H21.5l-7.61 8.7L22 22h-6.406l-5.01-6.55L4.9 22H1.64l8.14-9.3L2 2h6.594l4.53 5.98L18.244 2zm-1.12 18h1.773L7.03 3.88H5.18L17.124 20z" />
             </svg>
           </a>
         </div>
