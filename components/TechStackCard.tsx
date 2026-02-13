@@ -54,26 +54,27 @@ export default function TechStackCard() {
       className="
         bg-white dark:bg-[#23272f]
         rounded-2xl
-        shadow-lg
-        transition-all duration-300 ease-in-out
-        hover:scale-[1.02]
-        hover:-translate-y-1
-        hover:shadow-xl
+        shadow-md dark:shadow-black/40
+        hover:shadow-xl dark:hover:shadow-black/60
+        transition-all duration-300
+        hover:scale-[1.02] hover:-translate-y-1
+        border border-transparent dark:border-gray-700/50
         overflow-hidden
-        max-w-md
-        mx-auto
+        max-w-md mx-auto
       "
     >
       {/* Header */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-5 flex flex-col gap-4 text-left group"
+        className="w-full block px-6 py-5 text-left group"
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+        <div className="flex items-center w-full">
+          {/* 左侧 */}
+          <div className="flex items-center gap-3 flex-1 min-w-0">
             <FiCpu
               className={`
-                text-lg transition-all duration-300
+                w-5 h-5 flex-shrink-0
+                transition-all duration-300
                 ${isOpen ? "text-blue-500 scale-110" : "text-gray-500"}
               `}
             />
@@ -81,10 +82,10 @@ export default function TechStackCard() {
             <span
               className={`
                 text-base font-semibold tracking-wide
-                transition-all duration-300
+                transition-colors duration-300
                 ${
                   isOpen
-                    ? "text-blue-600 dark:text-blue-400 translate-x-1"
+                    ? "text-blue-600 dark:text-blue-400"
                     : "text-gray-800 dark:text-gray-100"
                 }
               `}
@@ -93,24 +94,29 @@ export default function TechStackCard() {
             </span>
           </div>
 
-          <FiChevronDown
-            className={`
-              transition-all duration-300 text-gray-400
-              ${isOpen ? "rotate-180 text-blue-500" : ""}
-            `}
-          />
+          {/* 右侧箭头（绝对稳定写法） */}
+          <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 ml-4">
+            <FiChevronDown
+              className={`
+                w-4 h-4 block
+                transition-transform duration-300 ease-in-out
+                origin-center
+                text-gray-400
+                ${isOpen ? "rotate-180 text-blue-500" : ""}
+              `}
+            />
+          </div>
         </div>
 
         {/* 折叠图标预览 */}
         {!isOpen && (
-          <div className="flex gap-4 flex-wrap opacity-80">
+          <div className="flex gap-4 flex-wrap opacity-80 mt-4">
             {previewIcons.map((tech, i) => (
               <div
                 key={i}
                 className="
                   text-xl
-                  text-gray-500
-                  dark:text-gray-400
+                  text-gray-500 dark:text-gray-400
                   transition-transform duration-300
                   group-hover:scale-110
                 "
@@ -126,23 +132,23 @@ export default function TechStackCard() {
       <div
         className={`
           transition-all duration-500 ease-in-out overflow-hidden
-          ${isOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}
+          ${isOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"}
         `}
       >
         <div className="px-6 pb-6">
           {/* Tabs */}
-          <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mb-6">
+          <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700/60 mb-6">
             {(["frontend", "backend", "devops"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`
-                  flex-1 py-3 text-sm font-medium border-b-2
+                  flex-1 py-3 text-sm font-medium relative
                   transition-all duration-300
                   ${
                     activeTab === tab
-                      ? "border-blue-500 text-blue-600 dark:text-blue-400 scale-105"
-                      : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-[1.03]"
+                      ? "text-blue-600 dark:text-blue-400"
+                      : "text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
                   }
                 `}
               >
@@ -151,6 +157,18 @@ export default function TechStackCard() {
                   : tab === "backend"
                   ? "后端"
                   : "运维"}
+
+                <span
+                  className={`
+                    absolute left-0 bottom-0 h-[2px] w-full
+                    transition-all duration-300
+                    ${
+                      activeTab === tab
+                        ? "bg-blue-500 opacity-100"
+                        : "opacity-0"
+                    }
+                  `}
+                />
               </button>
             ))}
           </div>
@@ -159,48 +177,23 @@ export default function TechStackCard() {
           <ul className="space-y-6">
             {techStack[activeTab].map((tech) => (
               <li key={tech.name} className="group">
-                <div className="flex items-center justify-between mb-2 cursor-pointer">
+                <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                    <span
-                      className="
-                        text-lg
-                        transition-all duration-300
-                        group-hover:scale-110
-                        group-hover:text-blue-500
-                      "
-                    >
+                    <span className="text-lg transition-all duration-300 group-hover:scale-110 group-hover:text-blue-500">
                       {tech.icon}
                     </span>
-
-                    <span
-                      className="
-                        font-medium text-sm
-                        transition-colors duration-300
-                        group-hover:text-blue-500
-                        dark:group-hover:text-blue-400
-                      "
-                    >
+                    <span className="font-medium text-sm group-hover:text-blue-500 dark:group-hover:text-blue-400">
                       {tech.name}
                     </span>
                   </div>
-
-                  <span
-                    className="
-                      text-xs text-gray-500 dark:text-gray-400
-                      transition-colors duration-300
-                      group-hover:text-blue-500
-                    "
-                  >
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
                     {tech.level}%
                   </span>
                 </div>
 
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                   <div
-                    className="
-                      bg-blue-500 h-2 rounded-full
-                      transition-all duration-1000 ease-out
-                    "
+                    className="bg-blue-500 h-2 rounded-full transition-all duration-1000 ease-out"
                     style={{
                       width: isOpen ? `${tech.level}%` : "0%",
                     }}
