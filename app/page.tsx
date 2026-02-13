@@ -78,7 +78,7 @@ export default async function Home() {
       </main>
 
       {/* 底部固定 AI 聊天组件 */}
-      <div className="fixed bottom-4 left-4 z-50 w-[350px] max-w-[90vw] pointer-events-auto">
+      <div className="fixed bottom-4 left-4 right-4 sm:right-auto z-50 max-w-[350px] w-full sm:w-[350px]">
         <AIChat />
       </div>
 
