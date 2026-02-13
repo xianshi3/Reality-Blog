@@ -55,8 +55,10 @@ export default function TechStackCard() {
         bg-white dark:bg-[#23272f]
         rounded-2xl
         shadow-lg
+        transition-all duration-300 ease-in-out
+        hover:scale-[1.02]
+        hover:-translate-y-1
         hover:shadow-xl
-        transition-all duration-300
         overflow-hidden
         max-w-md
         mx-auto
@@ -99,7 +101,7 @@ export default function TechStackCard() {
           />
         </div>
 
-        {/* 折叠时图标预览 */}
+        {/* 折叠图标预览 */}
         {!isOpen && (
           <div className="flex gap-4 flex-wrap opacity-80">
             {previewIcons.map((tech, i) => (
@@ -110,7 +112,7 @@ export default function TechStackCard() {
                   text-gray-500
                   dark:text-gray-400
                   transition-transform duration-300
-                  group-hover:scale-105
+                  group-hover:scale-110
                 "
               >
                 {tech.icon}
@@ -135,11 +137,12 @@ export default function TechStackCard() {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`
-                  flex-1 py-3 text-sm font-medium border-b-2 transition-all duration-300
+                  flex-1 py-3 text-sm font-medium border-b-2
+                  transition-all duration-300
                   ${
                     activeTab === tab
-                      ? "border-blue-500 text-blue-600 dark:text-blue-400"
-                      : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                      ? "border-blue-500 text-blue-600 dark:text-blue-400 scale-105"
+                      : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:scale-[1.03]"
                   }
                 `}
               >
@@ -153,24 +156,51 @@ export default function TechStackCard() {
           </div>
 
           {/* 技术列表 */}
-          <ul className="space-y-5">
+          <ul className="space-y-6">
             {techStack[activeTab].map((tech) => (
-              <li key={tech.name}>
-                <div className="flex items-center justify-between mb-2">
+              <li key={tech.name} className="group">
+                <div className="flex items-center justify-between mb-2 cursor-pointer">
                   <div className="flex items-center gap-3 text-gray-700 dark:text-gray-300">
-                    <span className="text-lg">{tech.icon}</span>
-                    <span className="font-medium text-sm">
+                    <span
+                      className="
+                        text-lg
+                        transition-all duration-300
+                        group-hover:scale-110
+                        group-hover:text-blue-500
+                      "
+                    >
+                      {tech.icon}
+                    </span>
+
+                    <span
+                      className="
+                        font-medium text-sm
+                        transition-colors duration-300
+                        group-hover:text-blue-500
+                        dark:group-hover:text-blue-400
+                      "
+                    >
                       {tech.name}
                     </span>
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
+
+                  <span
+                    className="
+                      text-xs text-gray-500 dark:text-gray-400
+                      transition-colors duration-300
+                      group-hover:text-blue-500
+                    "
+                  >
                     {tech.level}%
                   </span>
                 </div>
 
                 <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
                   <div
-                    className="bg-blue-500 h-2 rounded-full transition-all duration-1000 ease-out"
+                    className="
+                      bg-blue-500 h-2 rounded-full
+                      transition-all duration-1000 ease-out
+                    "
                     style={{
                       width: isOpen ? `${tech.level}%` : "0%",
                     }}
