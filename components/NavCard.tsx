@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { FiHome, FiGrid, FiMessageSquare, FiInfo } from "react-icons/fi"; // react-icons
 import ArticleSearch from "./ArticleSearch";
 import type { Article } from "../types/article";
 
@@ -11,10 +12,10 @@ interface NavLink {
 }
 
 const NAV_LINKS: NavLink[] = [
-  { href: "/", icon: <span>⌂</span>, label: "首页", description: "博客首页" },
-  { href: "/category", icon: <span>▤</span>, label: "分类", description: "文章分类" },
-  { href: "/ai-chat/fullscreen", icon: <span>✉</span>, label: "AI Chat", description: "LLM" },
-  { href: "/about", icon: <span>⚙</span>, label: "关于", description: "关于博客" },
+  { href: "/", icon: <FiHome />, label: "首页", description: "博客首页" },
+  { href: "/category", icon: <FiGrid />, label: "分类", description: "文章分类" },
+  { href: "/ai-chat/fullscreen", icon: <FiMessageSquare />, label: "AI Chat", description: "智能对话" },
+  { href: "/about", icon: <FiInfo />, label: "关于", description: "关于博客" },
 ];
 
 interface NavCardProps {
@@ -29,20 +30,18 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-  // 检测屏幕宽度并自动设置折叠状态
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
-      setIsOpen(!mobile); // PC 展开，手机折叠
+      setIsOpen(!mobile);
     };
     handleResize();
-    setIsReady(true); // 已检测完，允许渲染
+    setIsReady(true);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 获取当前路径（高亮）
   useEffect(() => {
     if (typeof window !== "undefined") {
       setActiveHref(window.location.pathname);
@@ -56,44 +55,48 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
   );
 
   const cardBaseClass =
-    "bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-4 sm:p-5 animate-fadeInUp animate-scaleIn";
+    "bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 sm:p-6 animate-fadeInUp animate-scaleIn";
   const cardHoverClass =
     "transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl";
 
-  // 在没准备好前不渲染，避免闪烁
   if (!isReady) return null;
 
   return (
     <div className={`${cardBaseClass} ${cardHoverClass} ${className}`}>
       {/* 标题 + 折叠按钮 */}
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">导航</h3>
-        {isMobile && (
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="flex justify-center items-center w-9 h-9 rounded-full bg-gray-100 dark:bg-[#2a2f3a] hover:bg-gray-200 dark:hover:bg-[#333844] transition-all duration-300 shadow-sm"
-            aria-label="展开/折叠导航"
-          >
-            <span
-              className={`text-xl text-gray-700 dark:text-gray-300 transform transition-transform duration-300 ${
-                isOpen ? "rotate-45" : "rotate-0"
-              }`}
-            >
-              {isOpen ? "×" : "☰"}
-            </span>
-          </button>
-        )}
+      <div className="flex justify-between items-center mb-5">
+  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 tracking-wide flex items-center">
+    {/* 导航标题图标 */}
+    <FiGrid className="mr-2 text-xl text-gray-700 dark:text-gray-300" />
+    导航
+  </h3>
+
+  {isMobile && (
+    <button
+      onClick={() => setIsOpen(!isOpen)}
+      className="flex justify-center items-center w-10 h-10 rounded-full bg-gray-100 dark:bg-[#2a2f3a] hover:bg-gray-200 dark:hover:bg-[#333844] transition-all duration-300 shadow-sm"
+      aria-label="展开/折叠导航"
+    >
+      <span
+        className={`text-xl text-gray-700 dark:text-gray-300 transform transition-transform duration-300 ${
+          isOpen ? "rotate-45" : "rotate-0"
+        }`}
+      >
+        {isOpen ? "×" : "☰"}
+      </span>
+    </button>
+  )}
       </div>
 
-      {/* 搜索框组件 */}
-      <div className="mb-4"> {/* 增加底部间距 */}
+      {/* 搜索框 */}
+      <div className="mb-5">
         <ArticleSearch
           value={search}
           onChange={setSearch}
           isOpen={isOpen}
           articles={articles}
           onSelect={(article) => {
-            window.location.href = article.link; // 点击跳转到文章
+            window.location.href = article.link;
           }}
         />
       </div>
@@ -115,13 +118,14 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
                     : "bg-white dark:bg-[#23272f] hover:bg-gray-100 dark:hover:bg-[#2a2f3a]"
                 }`}
               >
+                {/* 导航图标 */}
                 <span
-                  className="mr-3 text-2xl flex justify-center items-center w-8 h-8 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transform transition-transform duration-300 group-hover:scale-110"
+                  className="mr-4 text-2xl flex justify-center items-center w-10 h-10 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 transform transition-transform duration-300 group-hover:scale-110"
                 >
                   {icon}
                 </span>
 
-                <div>
+                <div className="flex flex-col">
                   <div className="font-semibold text-gray-900 dark:text-gray-100">{label}</div>
                   {description && (
                     <p className="text-xs text-gray-600 dark:text-gray-400 mt-1 leading-tight">

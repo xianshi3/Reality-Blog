@@ -3,6 +3,14 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
+import {
+  FiCpu,
+  FiHome,
+  FiGrid,
+  FiMessageSquare,
+  FiMenu,
+  FiX,
+} from "react-icons/fi";
 
 export default function Navbar() {
   const [isDark, setIsDark] = useState(false);
@@ -19,88 +27,116 @@ export default function Navbar() {
     localStorage.setItem("theme", isDark ? "dark" : "light");
   }, [isDark]);
 
-  const toggleTheme = () => setIsDark(prev => !prev);
+  const navItems = [
+    { label: "首页", href: "/", icon: <FiHome size={16} /> },
+    { label: "分类", href: "/category", icon: <FiGrid size={16} /> },
+    { label: "AI Chat", href: "/ai-chat/fullscreen", icon: <FiMessageSquare size={16} /> },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white/60 supports-backdrop-blur:bg-white/60 backdrop-blur-lg shadow-lg z-50 dark:bg-gray-900/60 dark:supports-backdrop-blur:bg-gray-900/60">
-      <div className="container  mx-auto flex justify-between items-center py-3 px-4 sm:py-4 sm:px-6">
+      <div className="container mx-auto flex justify-between items-center py-3 px-4 sm:py-4 sm:px-6">
+        
         {/* Logo */}
-        <Link href="/" className="text-xl sm:text-2xl font-extrabold text-gray-800 dark:text-white drop-shadow-lg">
-          Reality Blog
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-xl sm:text-2xl font-extrabold text-gray-800 dark:text-white"
+        >
+          <span className="tracking-wide">Reality Blog</span>
         </Link>
 
-        {/* 导航区域 */}
+        {/* 右侧区域 */}
         <div className="flex items-center space-x-4 sm:space-x-8">
-          {/* 桌面导航链接 */}
-        <ul className="hidden md:flex space-x-6">
-          {[
-            { label: "首页", href: "/" },
-            { label: "分类", href: "/category" },
-            { label: "AI Chat", href: "/ai-chat/fullscreen" },
-          ].map(({ label, href }) => (
-            <li key={href}>
-              <Link
-                href={href}
-                className="
-                  text-sm sm:text-base font-semibold
-                  text-gray-900 dark:text-white
-                  hover:text-black
-                dark:hover:bg-blue-900/50
-                  drop-shadow-sm
-                  rounded-lg
-                  px-3 py-2
-                  transition
-                  duration-300
-                  transform
-                  hover:scale-105
-                  hover:shadow-lg
-                  block
-                "
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
 
+          {/* 桌面导航 */}
+          <ul className="hidden md:flex space-x-6">
+            {navItems.map(({ label, href, icon }) => (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className="
+                    group relative flex items-center gap-2
+                    text-sm sm:text-base font-medium
+                    text-gray-800 dark:text-gray-200
+                    px-3 py-2 rounded-lg
+                    transition-all duration-300
+                    hover:bg-white/40 dark:hover:bg-white/5
+                  "
+                >
+                  <span className="text-gray-500 group-hover:text-blue-500 transition-colors duration-300">
+                    {icon}
+                  </span>
 
-          {/* 主题切换按钮 */}
+                  {label}
+
+                  {/* 底部滑动线 */}
+                  <span
+                    className="
+                      absolute left-0 -bottom-1 h-[2px] w-0
+                      bg-blue-500
+                      transition-all duration-300
+                      group-hover:w-full
+                    "
+                  />
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          {/* 主题切换 */}
           <ThemeToggle />
 
           {/* 移动端菜单按钮 */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden flex items-center justify-center px-2 py-1 sm:px-3 sm:py-2 rounded-lg text-gray-800 dark:text-white hover:text-gray-600 
-            dark:hover:text-gray-300 transition-colors duration-200 text-sm sm:text-base"
+            className="
+              md:hidden
+              flex items-center justify-center
+              rounded-lg
+              p-2
+              text-gray-800 dark:text-white
+              hover:bg-white/30 dark:hover:bg-white/10
+              transition-all duration-300
+            "
           >
-            菜单
+            {isMenuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
           </button>
         </div>
       </div>
 
       {/* 移动端菜单 */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm shadow-lg absolute top-14 sm:top-16 left-0 right-0 z-50 py-3 px-4">
-          <ul className="space-y-2 sm:space-y-4">
-            {[
-              { label: "首页", href: "/" },
-              { label: "分类", href: "/category" },
-              { label: "AI Chat", href: "/ai-chat/fullscreen" },
-            ].map(({ label, href }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-sm sm:text-base font-medium text-gray-800 dark:text-white hover:text-gray-600 
-                  dark:hover:text-gray-300 transition-colors duration-200 block px-2 sm:px-3 py-1 sm:py-2 rounded-lg hover:bg-white/20"
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+      <div
+        className={`
+          md:hidden absolute left-0 right-0 z-50
+          transition-all duration-300 overflow-hidden
+          ${
+            isMenuOpen
+              ? "max-h-96 opacity-100"
+              : "max-h-0 opacity-0"
+          }
+        `}
+      >
+        <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-lg py-4 px-6 space-y-3">
+          {navItems.map(({ label, href, icon }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setIsMenuOpen(false)}
+              className="
+                flex items-center gap-3
+                text-sm font-medium
+                text-gray-800 dark:text-white
+                px-3 py-2 rounded-lg
+                hover:bg-white/40 dark:hover:bg-white/10
+                transition-all duration-300
+              "
+            >
+              <span className="text-gray-500">{icon}</span>
+              {label}
+            </Link>
+          ))}
         </div>
-      )}
+      </div>
     </nav>
   );
 }

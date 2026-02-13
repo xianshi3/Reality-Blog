@@ -6,7 +6,6 @@ import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
 import AIChat from '@/components/AIChat';
 import ErrorDisplay from '@/components/ErrorDisplay';
-import { TAGS, RECOMMENDED_ARTICLES } from '@/constants/sidebar';
 import { createServerSupabase } from '@/lib/supabaseServer';
 import type { Article } from '@/types/article';
 
@@ -72,13 +71,12 @@ export default async function Home() {
         />
         <RightSidebar
           className="w-60 flex-shrink-0"
-          tags={TAGS}
-          recommends={RECOMMENDED_ARTICLES}
+          articles={articles}
         />
       </main>
 
       {/* 底部固定 AI 聊天组件 */}
-      <div className="fixed bottom-4 left-4 z-50 w-[350px] max-w-[90vw] pointer-events-auto">
+      <div className="fixed bottom-4 left-4 right-4 sm:right-auto z-50 max-w-[350px] w-full sm:w-[350px]">
         <AIChat />
       </div>
 
