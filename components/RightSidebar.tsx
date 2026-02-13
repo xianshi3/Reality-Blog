@@ -2,17 +2,17 @@
 
 import Image from "next/image";
 import TechStackCard from "./TechStackCard";
-import { FaUser, FaHashtag, FaGithub, FaXTwitter } from "react-icons/fa6";
+import TagCard from "./TagCard";
+import { FaUser, FaGithub, FaXTwitter } from "react-icons/fa6";
+import type { Article } from "@/types/article";
 
 interface RightSidebarProps {
-  tags: string[];
-  recommends: string[];
+  articles: Article[]; 
   className?: string;
 }
 
 export default function RightSidebar({
-  tags,
-  recommends,
+  articles,
   className,
 }: RightSidebarProps) {
   const cardClass =
@@ -24,7 +24,6 @@ export default function RightSidebar({
       {/* 个人信息卡片 */}
       <div className={`${cardClass} flex flex-col items-center text-center`}>
 
-        {/* 头像区域 */}
         <div className="mb-4">
           <Image
             src="/avatar.png"
@@ -38,21 +37,17 @@ export default function RightSidebar({
           />
         </div>
 
-        {/* 名字 */}
         <h1 className="flex items-center gap-2 text-xl font-bold text-gray-800 dark:text-white">
           <FaUser className="text-base opacity-80" />
           Reality
         </h1>
 
-        {/* 描述 */}
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           Full Stack Developer
         </p>
 
-        {/* 分割线 */}
         <div className="w-full h-px bg-gray-200 dark:bg-gray-700 my-4" />
 
-        {/* 社交链接 */}
         <div className="flex justify-center gap-4">
           <a
             href="https://github.com/xianshi3"
@@ -72,27 +67,12 @@ export default function RightSidebar({
         </div>
       </div>
 
-      {/* 技术栈卡片 */}
+      {/* 技术栈 */}
       <TechStackCard />
 
-      {/* 标签卡片 */}
-      <div className={cardClass}>
-        <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-white mb-4">
-          <FaHashtag className="text-sm opacity-80" />
-          标签
-        </h3>
+      {/* 标签组件 */}
+      <TagCard articles={articles} />
 
-        <div className="flex flex-wrap gap-2">
-          {tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className="px-3 py-1 text-sm font-semibold rounded-full bg-gray-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-800 transition cursor-pointer"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
-      </div>
     </aside>
   );
 }

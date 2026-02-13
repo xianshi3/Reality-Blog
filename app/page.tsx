@@ -6,7 +6,6 @@ import RightSidebar from '@/components/RightSidebar';
 import Footer from '@/components/Footer';
 import AIChat from '@/components/AIChat';
 import ErrorDisplay from '@/components/ErrorDisplay';
-import { TAGS, RECOMMENDED_ARTICLES } from '@/constants/sidebar';
 import { createServerSupabase } from '@/lib/supabaseServer';
 import type { Article } from '@/types/article';
 
@@ -72,8 +71,7 @@ export default async function Home() {
         />
         <RightSidebar
           className="w-60 flex-shrink-0"
-          tags={TAGS}
-          recommends={RECOMMENDED_ARTICLES}
+          articles={articles}
         />
       </main>
 
