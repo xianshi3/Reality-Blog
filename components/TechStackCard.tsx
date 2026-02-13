@@ -54,13 +54,14 @@ export default function TechStackCard() {
       className="
         bg-white dark:bg-[#23272f]
         rounded-2xl
-        shadow-md dark:shadow-black/40
-        hover:shadow-xl dark:hover:shadow-black/60
-        transition-all duration-300
-        hover:scale-[1.02] hover:-translate-y-1
-        border border-transparent dark:border-gray-700/50
+        shadow-lg
+        transition-all duration-300 ease-in-out
+        hover:scale-[1.02]
+        hover:-translate-y-1
+        hover:shadow-xl
         overflow-hidden
-        max-w-md mx-auto
+        max-w-md
+        mx-auto
       "
     >
       {/* Header */}
