@@ -62,7 +62,11 @@ export default async function Home() {
 
       {/* 主体区域：左侧栏 + 文章内容 + 右侧栏 */}
       <main className="container-home">
-        <LeftSidebar className="w-60 flex-shrink-0" articles={articles} />
+        <LeftSidebar
+          className="w-60 flex-shrink-0"
+          articles={articles}
+          totalCount={count ?? 0}
+        />
         <MainContent
           className="flex-1 min-w-0"
           articles={articles}

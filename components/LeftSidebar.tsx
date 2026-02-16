@@ -1,31 +1,31 @@
-import RandomArticleCard from './RandomArticleCard';
-import NavCard from './NavCard';
-import type { Article } from '../types/article';
+"use client";
+
+import RandomArticleCard from "./RandomArticleCard";
+import NavCard from "./NavCard";
+import AnnouncementCard from "./AnnouncementCard";
+import type { Article } from "../types/article";
 
 interface LeftSidebarProps {
   articles: Article[];
+  totalCount: number;
   className?: string;
 }
 
-export default function LeftSidebar({ articles, className }: LeftSidebarProps) {
-  const cardBaseClass =
-    'bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 animate-fadeInUp animate-scaleIn';
-  const cardHoverClass =
-    'transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl';
-
+export default function LeftSidebar({
+  articles,
+  totalCount,
+  className,
+}: LeftSidebarProps) {
   return (
-    <aside className={`lg:w-64 w-full space-y-6 ${className ?? ''}`}>
+    <aside className={`lg:w-64 w-full space-y-6 ${className ?? ""}`}>
+      {/* 导航卡片 */}
       <NavCard articles={articles} />
 
-      <div className={`${cardBaseClass} ${cardHoverClass}`}>
-        <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 mb-3">公告</h3>
-        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-          目前我会在有空闲时间更新网站，内容还在持续完善中
-        </p>
-      </div>
+      {/* 公告卡片 */}
+      <AnnouncementCard totalCount={totalCount} />
 
+      {/* 随机文章卡片 */}
       <RandomArticleCard articles={articles} />
     </aside>
   );
 }
-
