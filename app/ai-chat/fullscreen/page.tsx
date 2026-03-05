@@ -8,9 +8,10 @@ import "highlight.js/styles/github.css";
 import "./fullscreen-chat.css";
 
 // 图标
-import { HiOutlineHome, HiOutlineSparkles } from "react-icons/hi";
+import { HiOutlineHome, HiOutlineSparkles, HiPaperClip } from "react-icons/hi";
 import { IoSend, IoStop } from "react-icons/io5";
 import { RiRobot2Line, RiUserLine } from "react-icons/ri";
+import { BsEmojiSmile } from "react-icons/bs";
 
 type Message = {
   role: "user" | "assistant";
@@ -27,8 +28,16 @@ export default function FullscreenChat() {
   const [error, setError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatAreaRef = useRef<HTMLDivElement>(null);
+
+  // 自动调整文本框高度
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+    }
+  }, [input]);
 
   // 自动滚动到底部
   const scrollToBottom = useCallback(() => {
@@ -43,7 +52,7 @@ export default function FullscreenChat() {
 
   // 自动聚焦输入框
   useEffect(() => {
-    inputRef.current?.focus();
+    textareaRef.current?.focus();
   }, []);
 
   const handleSend = useCallback(async () => {
@@ -66,6 +75,11 @@ export default function FullscreenChat() {
     setMessages(prev => [...prev, userMsg, assistantMsg]);
     setInput("");
     setLoading(true);
+
+    // 重置文本框高度
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
 
     try {
       const res = await fetch("/api/chat", {
@@ -106,7 +120,7 @@ export default function FullscreenChat() {
       setMessages(prev => prev.filter(msg => msg.id !== assistantMsg.id));
     } finally {
       setLoading(false);
-      inputRef.current?.focus();
+      textareaRef.current?.focus();
     }
   }, [input, loading, messages]);
 
@@ -115,6 +129,11 @@ export default function FullscreenChat() {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  // 停止生成
+  const handleStop = () => {
+    setLoading(false);
   };
 
   return (
@@ -189,33 +208,44 @@ export default function FullscreenChat() {
 
       <div className="input-area">
         <div className="input-container">
-          <input
-            ref={inputRef}
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="输入消息..."
-            disabled={loading}
-            className="chat-input"
-          />
-          {loading ? (
-            <button onClick={() => setLoading(false)} className="stop-btn" title="停止生成">
-              <IoStop />
+          <div className="input-wrapper">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="输入消息... (Shift + Enter 换行)"
+              disabled={loading}
+              className="chat-input"
+              rows={1}
+            />
+          </div>
+          <div className="button-group">
+            <button className="action-btn" title="表情" disabled={loading}>
+              <BsEmojiSmile />
             </button>
-          ) : (
-            <button
-              onClick={handleSend}
-              disabled={!input.trim()}
-              className="send-btn"
-              title="发送 (Enter)"
-            >
-              <IoSend />
+            <button className="action-btn" title="附件" disabled={loading}>
+              <HiPaperClip />
             </button>
-          )}
+            {loading ? (
+              <button onClick={handleStop} className="stop-btn" title="停止生成">
+                <IoStop />
+              </button>
+            ) : (
+              <button
+                onClick={handleSend}
+                disabled={!input.trim()}
+                className="send-btn"
+                title="发送 (Enter)"
+              >
+                <IoSend />
+              </button>
+            )}
+          </div>
         </div>
         <div className="input-hint">
-          {loading ? 'AI 正在思考...' : 'Enter 发送'}
+          <span>{loading ? 'AI 正在思考... 点击红色按钮停止' : 'Enter 发送 · Shift + Enter 换行'}</span>
+          {input.length > 0 && <span className="char-count">{input.length}</span>}
         </div>
       </div>
     </div>
