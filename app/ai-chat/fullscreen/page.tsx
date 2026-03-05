@@ -9,7 +9,7 @@ import "./fullscreen-chat.css";
 
 // 图标
 import { HiOutlineHome, HiOutlineSparkles } from "react-icons/hi";
-import { IoSend } from "react-icons/io5";
+import { IoSend, IoStop } from "react-icons/io5";
 import { RiRobot2Line, RiUserLine } from "react-icons/ri";
 
 type Message = {
@@ -24,6 +24,7 @@ export default function FullscreenChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -48,6 +49,8 @@ export default function FullscreenChat() {
   const handleSend = useCallback(async () => {
     if (!input.trim() || loading) return;
 
+    setError(null);
+
     const userMsg: Message = {
       role: "user",
       content: input.trim(),
@@ -68,9 +71,15 @@ export default function FullscreenChat() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [...messages, userMsg] }),
+        body: JSON.stringify({ 
+          messages: [...messages, userMsg].map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
       });
 
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       if (!res.body) throw new Error("No response body");
 
       const reader = res.body.getReader();
@@ -91,9 +100,10 @@ export default function FullscreenChat() {
           )
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error:", error);
-      // 可以在这里添加错误提示
+      setError(error.message || "发送失败，请重试");
+      setMessages(prev => prev.filter(msg => msg.id !== assistantMsg.id));
     } finally {
       setLoading(false);
       inputRef.current?.focus();
@@ -109,7 +119,6 @@ export default function FullscreenChat() {
 
   return (
     <div className="app">
-      {/* 顶部导航 */}
       <header className="header">
         <div className="header-left">
           <HiOutlineSparkles className="header-icon" />
@@ -118,16 +127,12 @@ export default function FullscreenChat() {
             {loading ? '思考中...' : '在线'}
           </span>
         </div>
-        <button
-          className="header-home"
-          onClick={() => window.location.href = "/"}
-        >
+        <button className="header-home" onClick={() => window.location.href = "/"}>
           <HiOutlineHome />
           <span>首页</span>
         </button>
       </header>
 
-      {/* 聊天区域 */}
       <main className="chat-area" ref={chatAreaRef}>
         <div className="messages-container">
           {messages.length === 0 ? (
@@ -170,11 +175,18 @@ export default function FullscreenChat() {
               </div>
             ))
           )}
+          
+          {error && (
+            <div className="error-message">
+              <span>{error}</span>
+              <button onClick={() => setError(null)} className="error-close">×</button>
+            </div>
+          )}
+          
           <div ref={messagesEndRef} />
         </div>
       </main>
 
-      {/* 底部输入区 - DeepSeek风格 */}
       <div className="input-area">
         <div className="input-container">
           <input
@@ -187,17 +199,23 @@ export default function FullscreenChat() {
             disabled={loading}
             className="chat-input"
           />
-          <button
-            onClick={handleSend}
-            disabled={!input.trim() || loading}
-            className="send-btn"
-            title="发送 (Enter)"
-          >
-            <IoSend />
-          </button>
+          {loading ? (
+            <button onClick={() => setLoading(false)} className="stop-btn" title="停止生成">
+              <IoStop />
+            </button>
+          ) : (
+            <button
+              onClick={handleSend}
+              disabled={!input.trim()}
+              className="send-btn"
+              title="发送 (Enter)"
+            >
+              <IoSend />
+            </button>
+          )}
         </div>
         <div className="input-hint">
-          Enter 发送
+          {loading ? 'AI 正在思考...' : 'Enter 发送'}
         </div>
       </div>
     </div>
