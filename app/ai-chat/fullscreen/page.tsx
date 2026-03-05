@@ -1,172 +1,205 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github-dark.css";
-
+import "highlight.js/styles/github.css";
 import "./fullscreen-chat.css";
+
+// 图标
+import { HiOutlineHome, HiOutlineSparkles } from "react-icons/hi";
+import { IoSend } from "react-icons/io5";
+import { RiRobot2Line, RiUserLine } from "react-icons/ri";
 
 type Message = {
   role: "user" | "assistant";
   content: string;
+  id: string;
 };
+
+const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
 export default function FullscreenChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const endRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const chatAreaRef = useRef<HTMLDivElement>(null);
+
+  // 自动滚动到底部
+  const scrollToBottom = useCallback(() => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+    }
+  }, []);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
 
-  const handleSend = async () => {
+  // 自动聚焦输入框
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, []);
+
+  const handleSend = useCallback(async () => {
     if (!input.trim() || loading) return;
 
     const userMsg: Message = {
       role: "user",
-      content: input,
+      content: input.trim(),
+      id: generateId(),
     };
 
-    const newMessages = [...messages, userMsg];
+    const assistantMsg: Message = {
+      role: "assistant",
+      content: "",
+      id: generateId(),
+    };
 
-    setMessages([...newMessages, { role: "assistant", content: "" }]);
+    setMessages(prev => [...prev, userMsg, assistantMsg]);
     setInput("");
     setLoading(true);
 
-    const res = await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ messages: newMessages }),
-    });
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: [...messages, userMsg] }),
+      });
 
-    const reader = res.body?.getReader();
-    const decoder = new TextDecoder();
+      if (!res.body) throw new Error("No response body");
 
-    let aiText = "";
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let aiText = "";
 
-    while (true) {
-      const { done, value } = await reader!.read();
-      if (done) break;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
 
-      const chunk = decoder.decode(value);
+        aiText += decoder.decode(value, { stream: true });
 
-      aiText += chunk;
-
-      setMessages([
-        ...newMessages,
-        {
-          role: "assistant",
-          content: aiText,
-        },
-      ]);
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === assistantMsg.id
+              ? { ...msg, content: aiText }
+              : msg
+          )
+        );
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      // 可以在这里添加错误提示
+    } finally {
+      setLoading(false);
+      inputRef.current?.focus();
     }
+  }, [input, loading, messages]);
 
-    setLoading(false);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   };
 
   return (
-    <div className="desktop-chat-layout">
+    <div className="app">
+      {/* 顶部导航 */}
+      <header className="header">
+        <div className="header-left">
+          <HiOutlineSparkles className="header-icon" />
+          <h1 className="header-title">AI 助手</h1>
+          <span className={`header-status ${loading ? 'thinking' : ''}`}>
+            {loading ? '思考中...' : '在线'}
+          </span>
+        </div>
+        <button
+          className="header-home"
+          onClick={() => window.location.href = "/"}
+        >
+          <HiOutlineHome />
+          <span>首页</span>
+        </button>
+      </header>
 
-      <div className="chat-main">
-
-        <header className="chat-topbar">
-          <h1>AI Chat</h1>
-
-          <button
-            className="back-home-btn"
-            onClick={() => (window.location.href = "/")}
-          >
-            返回首页
-          </button>
-        </header>
-
-        <main className="chat-body">
-
-          <div className="chat-inner">
-
-            {messages.length === 0 && (
-              <div className="chat-empty">
-                <div className="icon">💬</div>
-                <h2>开始与 AI 对话</h2>
-                <p>例如：写一个 React 组件</p>
+      {/* 聊天区域 */}
+      <main className="chat-area" ref={chatAreaRef}>
+        <div className="messages-container">
+          {messages.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">
+                <HiOutlineSparkles />
               </div>
-            )}
-
-            {messages.map((msg, i) => (
-              <div key={i} className={`msg ${msg.role}`}>
-
-                <div className="avatar">
-                  {msg.role === "user" ? "🧑" : "🤖"}
+              <h2>开始新的对话</h2>
+              <p>输入消息，开始与AI助手交流</p>
+            </div>
+          ) : (
+            messages.map((msg) => (
+              <div key={msg.id} className={`message-item ${msg.role}`}>
+                <div className="message-avatar">
+                  {msg.role === 'user' ? <RiUserLine /> : <RiRobot2Line />}
                 </div>
-
-                <div className="bubble">
-                  {msg.role === "assistant" ? (
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      rehypePlugins={[rehypeHighlight]}
-                    >
-                      {msg.content}
-                    </ReactMarkdown>
-                  ) : (
-                    <p>{msg.content}</p>
-                  )}
+                <div className="message-content">
+                  <div className="message-sender">
+                    {msg.role === 'user' ? '你' : 'AI助手'}
+                  </div>
+                  <div className="message-bubble">
+                    {msg.role === 'assistant' && msg.content === '' ? (
+                      <div className="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    ) : msg.role === 'assistant' ? (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeHighlight]}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    ) : (
+                      <p>{msg.content}</p>
+                    )}
+                  </div>
                 </div>
-
               </div>
-            ))}
+            ))
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </main>
 
-            {loading && (
-              <div className="msg assistant">
-                <div className="avatar">🤖</div>
-                <div className="bubble typing">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              </div>
-            )}
-
-            <div ref={endRef} />
-
-          </div>
-
-        </main>
-
-        <footer className="chat-footer">
-
-          <form
+      {/* 底部输入区 - DeepSeek风格 */}
+      <div className="input-area">
+        <div className="input-container">
+          <input
+            ref={inputRef}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="输入消息..."
+            disabled={loading}
             className="chat-input"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSend();
-            }}
+          />
+          <button
+            onClick={handleSend}
+            disabled={!input.trim() || loading}
+            className="send-btn"
+            title="发送 (Enter)"
           >
-
-            <input
-              type="text"
-              placeholder="输入你的问题..."
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              disabled={loading}
-            />
-
-            <button disabled={loading}>
-              {loading ? "思考中..." : "发送"}
-            </button>
-
-          </form>
-
-        </footer>
-
+            <IoSend />
+          </button>
+        </div>
+        <div className="input-hint">
+          Enter 发送
+        </div>
       </div>
-
     </div>
   );
 }
