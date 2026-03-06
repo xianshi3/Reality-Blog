@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { useSearchParams } from "next/navigation"; // 添加这个导入
+import React, { useState, useRef, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -72,7 +72,8 @@ const CodeBlock = ({ inline, className, children, ...props }: any) => {
   return <code className={className} {...props}>{children}</code>;
 };
 
-export default function FullscreenChat() {
+// 将主要聊天逻辑提取到子组件中
+function ChatContent() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,15 +82,14 @@ export default function FullscreenChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatAreaRef = useRef<HTMLDivElement>(null);
-  const searchParams = useSearchParams(); // 添加这个
+  const searchParams = useSearchParams();
 
-  // 从 URL 参数恢复聊天记录 - 只添加这个功能
+  // 从 URL 参数恢复聊天记录
   useEffect(() => {
     const messagesParam = searchParams.get('messages');
     if (messagesParam) {
       try {
         const parsedMessages = JSON.parse(messagesParam);
-        // 为每条消息添加 id
         const formattedMessages = parsedMessages.map((msg: any) => ({
           ...msg,
           id: generateId(),
@@ -205,7 +205,7 @@ export default function FullscreenChat() {
   };
 
   return (
-    <div className="app">
+    <>
       <header className="header">
         <div className="header-left">
           <div className="header-logo">
@@ -338,6 +338,40 @@ export default function FullscreenChat() {
           )}
         </div>
       </div>
-    </div>
+    </>
+  );
+}
+
+// 主页面组件，用 Suspense 包裹 ChatContent
+export default function FullscreenChat() {
+  return (
+    <Suspense fallback={
+      <div className="app">
+        <header className="header">
+          <div className="header-left">
+            <div className="header-logo">
+              <HiOutlineSparkles className="header-icon" />
+            </div>
+            <h1 className="header-title">AI Chat</h1>
+            <div className="header-status">
+              <span className="status-dot"></span>
+              <span>加载中...</span>
+            </div>
+          </div>
+        </header>
+        <main className="chat-area">
+          <div className="messages-container flex items-center justify-center">
+            <div className="text-center">
+              <div className="empty-icon mx-auto mb-4 animate-pulse">
+                <HiOutlineSparkles className="w-12 h-12 text-gray-400" />
+              </div>
+              <p className="text-gray-500">加载聊天记录...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    }>
+      <ChatContent />
+    </Suspense>
   );
 }
