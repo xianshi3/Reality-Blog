@@ -4,14 +4,15 @@ import React, { useState, useRef, useEffect, useCallback } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import "highlight.js/styles/github.css";
+import "highlight.js/styles/github-dark.css";
 import "./fullscreen-chat.css";
 
 // 图标
 import { HiOutlineHome, HiOutlineSparkles, HiPaperClip } from "react-icons/hi";
 import { IoSend, IoStop } from "react-icons/io5";
 import { RiRobot2Line, RiUserLine } from "react-icons/ri";
-import { BsEmojiSmile } from "react-icons/bs";
+import { BsEmojiSmile, BsClipboard, BsClipboardCheck } from "react-icons/bs";
+import { VscSymbolKeyword } from "react-icons/vsc";
 
 type Message = {
   role: "user" | "assistant";
@@ -20,6 +21,55 @@ type Message = {
 };
 
 const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+// 复制按钮组件
+const CopyButton = ({ text }: { text: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={`copy-button ${copied ? 'copied' : ''}`}
+      title={copied ? "已复制!" : "复制代码"}
+    >
+      {copied ? <BsClipboardCheck /> : <BsClipboard />}
+    </button>
+  );
+};
+
+// 代码块组件
+const CodeBlock = ({ inline, className, children, ...props }: any) => {
+  const match = /language-(\w+)/.exec(className || '');
+  const code = String(children).replace(/\n$/, '');
+  const language = match ? match[1] : 'text';
+
+  if (!inline && match) {
+    return (
+      <div className="code-block-wrapper">
+        <div className="code-header">
+          <span className="code-language">
+            <VscSymbolKeyword />
+            {language}
+          </span>
+          <CopyButton text={code} />
+        </div>
+        <div className="code-block-content">
+          <pre className={`language-${language}`}>
+            <code className={className}>{children}</code>
+          </pre>
+        </div>
+      </div>
+    );
+  }
+
+  return <code className={className} {...props}>{children}</code>;
+};
 
 export default function FullscreenChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -76,7 +126,6 @@ export default function FullscreenChat() {
     setInput("");
     setLoading(true);
 
-    // 重置文本框高度
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
     }
@@ -131,7 +180,6 @@ export default function FullscreenChat() {
     }
   };
 
-  // 停止生成
   const handleStop = () => {
     setLoading(false);
   };
@@ -140,15 +188,18 @@ export default function FullscreenChat() {
     <div className="app">
       <header className="header">
         <div className="header-left">
-          <HiOutlineSparkles className="header-icon" />
-          <h1 className="header-title">Al Chat</h1>
-          <span className={`header-status ${loading ? 'thinking' : ''}`}>
-            {loading ? '思考中...' : '在线'}
-          </span>
+          <div className="header-logo">
+            <HiOutlineSparkles className="header-icon" />
+          </div>
+          <h1 className="header-title">AI Chat</h1>
+          <div className={`header-status ${loading ? 'thinking' : ''}`}>
+            <span className="status-dot"></span>
+            <span>{loading ? '思考中...' : '在线'}</span>
+          </div>
         </div>
         <button className="header-home" onClick={() => window.location.href = "/"}>
           <HiOutlineHome />
-          <span>首页</span>
+          <span>返回首页</span>
         </button>
       </header>
 
@@ -161,16 +212,28 @@ export default function FullscreenChat() {
               </div>
               <h2>开始新的对话</h2>
               <p>输入消息，开始与AI助手交流</p>
+              <div className="empty-suggestions">
+                <button className="suggestion-chip" onClick={() => setInput("你能做什么？")}>你能做什么？</button>
+                <button className="suggestion-chip" onClick={() => setInput("写一首诗")}>写一首诗</button>
+                <button className="suggestion-chip" onClick={() => setInput("解释量子计算")}>解释量子计算</button>
+              </div>
             </div>
           ) : (
-            messages.map((msg) => (
-              <div key={msg.id} className={`message-item ${msg.role}`}>
+            messages.map((msg, index) => (
+              <div 
+                key={msg.id} 
+                className={`message-item ${msg.role}`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
                 <div className="message-avatar">
                   {msg.role === 'user' ? <RiUserLine /> : <RiRobot2Line />}
                 </div>
                 <div className="message-content">
                   <div className="message-sender">
-                    {msg.role === 'user' ? '你' : 'Al Chat'}
+                    {msg.role === 'user' ? '你' : 'AI Chat'}
+                    <span className="message-time">
+                      {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
                   </div>
                   <div className="message-bubble">
                     {msg.role === 'assistant' && msg.content === '' ? (
@@ -183,6 +246,9 @@ export default function FullscreenChat() {
                       <ReactMarkdown
                         remarkPlugins={[remarkGfm]}
                         rehypePlugins={[rehypeHighlight]}
+                        components={{
+                          code: CodeBlock,
+                        }}
                       >
                         {msg.content}
                       </ReactMarkdown>
@@ -245,7 +311,11 @@ export default function FullscreenChat() {
         </div>
         <div className="input-hint">
           <span>{loading ? 'AI 正在思考... 点击红色按钮停止' : 'Enter 发送 · Shift + Enter 换行'}</span>
-          {input.length > 0 && <span className="char-count">{input.length}</span>}
+          {input.length > 0 && (
+            <span className={`char-count ${input.length > 2000 ? 'warning' : ''}`}>
+              {input.length}/2000
+            </span>
+          )}
         </div>
       </div>
     </div>
