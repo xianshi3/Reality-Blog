@@ -141,7 +141,7 @@ export default function FullscreenChat() {
       <header className="header">
         <div className="header-left">
           <HiOutlineSparkles className="header-icon" />
-          <h1 className="header-title">AI 助手</h1>
+          <h1 className="header-title">Al Chat</h1>
           <span className={`header-status ${loading ? 'thinking' : ''}`}>
             {loading ? '思考中...' : '在线'}
           </span>

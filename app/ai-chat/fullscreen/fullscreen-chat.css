@@ -1,19 +1,41 @@
+/* app\ai-chat\fullscreen\fullscreen-chat.css */
 /* ===== 全局变量 ===== */
 :root {
-  --bg-color: #F5F7FA;
-  --surface-color: #FFFFFF;
-  --border-color: #E5E9F0;
-  --text-primary: #2E3440;
-  --text-secondary: #4C566A;
-  --text-tertiary: #8F9BB3;
-  --accent-color: #3B82F6;
-  --accent-light: #EBF5FF;
-  --user-bubble: #3B82F6;
-  --ai-bubble: #FFFFFF;
+  /* 亮色模式 - 使用home页面的配色 */
+  --bg-color: #f8fafc;           /* home背景色 */
+  --surface-color: #FFFFFF;       /* 卡片背景色 */
+  --border-color: #e5e7eb;        /* home边框色 */
+  --text-primary: #111827;        /* home标题色 */
+  --text-secondary: #4b5563;      /* home描述文字色 */
+  --text-tertiary: #6b7280;       /* home元信息色 */
+  --accent-color: #2563eb;        /* home蓝色600 */
+  --accent-light: #e5e7eb;        /* home标签背景色 */
+  --user-bubble: #2563eb;         /* 用户气泡用accent色 */
+  --ai-bubble: #FFFFFF;           /* AI气泡用白色 */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.02);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.08);
   --radius-md: 12px;
   --radius-lg: 20px;
+}
+
+/* 深色模式 - 使用home页面的深色配色 */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #18181b;           /* home深色背景 */
+    --surface-color: #23272f;       /* home卡片深色背景 */
+    --border-color: #374151;        /* 深色边框 */
+    --text-primary: #fff;           /* 深色标题 */
+    --text-secondary: #d1d5db;      /* 深色描述文字 */
+    --text-tertiary: #9ca3af;       /* 深色元信息 */
+    --accent-color: #3b82f6;        /* 深色accent（更亮一些） */
+    --accent-light: #374151;        /* 深色标签背景 */
+    --user-bubble: #3b82f6;         /* 用户气泡用深色accent */
+    --ai-bubble: #23272f;           /* AI气泡用深色卡片背景 */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.3), 0 8px 10px -6px rgba(0,0,0,0.2);
+  }
 }
 
 * {
@@ -43,7 +65,7 @@ body {
 /* ===== 顶部导航 ===== */
 .header {
   height: 64px;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(var(--surface-color-rgb), 0.8);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   display: flex;
@@ -54,6 +76,16 @@ body {
   top: 0;
   z-index: 10;
   flex-shrink: 0;
+}
+
+/* 为backdrop-filter添加RGB变量 */
+:root {
+  --surface-color-rgb: 255, 255, 255;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface-color-rgb: 35, 39, 47;
+  }
 }
 
 .header-left {
@@ -76,7 +108,7 @@ body {
 .header-status {
   font-size: 13px;
   color: var(--text-tertiary);
-  background: var(--bg-color);
+  background: var(--accent-light);
   padding: 4px 10px;
   border-radius: 30px;
 }
@@ -101,7 +133,7 @@ body {
 }
 
 .header-home:hover {
-  background: var(--bg-color);
+  background: var(--accent-light);
   border-color: var(--text-tertiary);
 }
 
@@ -127,7 +159,7 @@ body {
 .message-item {
   display: flex;
   gap: 12px;
-  animation: fadeIn 0.3s ease;
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .message-item.user {
@@ -138,7 +170,7 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 36px;
-  background: var(--bg-color);
+  background: var(--accent-light);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -180,18 +212,22 @@ body {
   font-size: 15px;
   line-height: 1.6;
   word-wrap: break-word;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .message-bubble:hover {
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-hover);
 }
 
 .message-item.user .message-bubble {
   background: var(--user-bubble);
   color: white;
   border: none;
+}
+
+.message-item.user .message-bubble:hover {
+  box-shadow: var(--shadow-hover);
 }
 
 /* ===== Markdown 样式 ===== */
@@ -217,10 +253,12 @@ body {
   background: var(--bg-color);
   padding: 2px 6px;
   border-radius: 4px;
+  color: var(--text-primary);
 }
 
 .message-item.user .message-bubble code {
   background: rgba(255, 255, 255, 0.15);
+  color: white;
 }
 
 .message-bubble p {
@@ -344,19 +382,19 @@ body {
   }
 }
 
-/* ===== 底部输入区 - DeepSeek风格优化版 ===== */
+/* ===== 底部输入区 ===== */
 .input-area {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   background: linear-gradient(to top, 
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 0.95) 50%,
-    rgba(255, 255, 255, 0.8) 100%
+    var(--surface-color) 0%,
+    rgba(var(--surface-color-rgb), 0.95) 50%,
+    rgba(var(--surface-color-rgb), 0.8) 100%
   );
   backdrop-filter: blur(8px);
-  border-top: 1px solid rgba(229, 233, 240, 0.5);
+  border-top: 1px solid var(--border-color);
   padding: 20px 24px 24px;
   z-index: 20;
   box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.02);
@@ -368,17 +406,17 @@ body {
   display: flex;
   align-items: flex-end;
   gap: 12px;
-  background: white;
+  background: var(--surface-color);
   border-radius: 16px;
   border: 1px solid var(--border-color);
   padding: 8px 8px 8px 20px;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  box-shadow: var(--shadow-sm);
 }
 
 .input-container:focus-within {
   border-color: var(--accent-color);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
   transform: translateY(-1px);
 }
 
@@ -461,7 +499,7 @@ body {
 }
 
 .action-btn:hover {
-  background: var(--bg-color);
+  background: var(--accent-light);
   color: var(--text-primary);
 }
 
@@ -480,13 +518,14 @@ body {
   transition: all 0.2s ease;
   padding: 0;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.5);
 }
 
 .send-btn:hover:not(:disabled) {
-  background: #2563EB;
+  background: var(--accent-color);
+  filter: brightness(1.1);
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 12px rgba(37, 99, 235, 0.5);
 }
 
 .send-btn:active:not(:disabled) {
@@ -515,20 +554,20 @@ body {
   transition: all 0.2s ease;
   padding: 0;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.5);
   animation: pulse 2s infinite;
 }
 
 .stop-btn:hover {
   background: #dc2626;
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 6px 12px rgba(239, 68, 68, 0.5);
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); }
-  50% { box-shadow: 0 4px 16px rgba(239, 68, 68, 0.5); }
-  100% { box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3); }
+  0% { box-shadow: 0 4px 8px rgba(239, 68, 68, 0.5); }
+  50% { box-shadow: 0 8px 16px rgba(239, 68, 68, 0.6); }
+  100% { box-shadow: 0 4px 8px rgba(239, 68, 68, 0.5); }
 }
 
 .input-hint {
@@ -573,10 +612,18 @@ body {
   animation: slideIn 0.3s ease;
 }
 
+@media (prefers-color-scheme: dark) {
+  .error-message {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #f87171;
+  }
+}
+
 .error-close {
   background: transparent;
   border: none;
-  color: #dc2626;
+  color: currentColor;
   font-size: 20px;
   cursor: pointer;
   padding: 0 4px;
@@ -599,10 +646,11 @@ body {
   }
 }
 
-@keyframes fadeIn {
+/* 使用home页面的动画 */
+@keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -610,34 +658,53 @@ body {
   }
 }
 
-/* ===== 代码高亮样式 ===== */
+/* ===== 代码高亮样式 - 适配深色模式 ===== */
 .hljs {
   background: transparent !important;
-  color: #2E3440 !important;
+}
+
+:root {
+  --hljs-keyword: #D73A49;
+  --hljs-string: #032F62;
+  --hljs-comment: #6A737D;
+  --hljs-number: #005CC5;
+  --hljs-function: #6F42C1;
+  --hljs-title: #6F42C1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hljs-keyword: #ff7b72;
+    --hljs-string: #a5d6ff;
+    --hljs-comment: #8b949e;
+    --hljs-number: #79c0ff;
+    --hljs-function: #d2a8ff;
+    --hljs-title: #d2a8ff;
+  }
 }
 
 .hljs-keyword {
-  color: #D73A49 !important;
+  color: var(--hljs-keyword) !important;
 }
 
 .hljs-string {
-  color: #032F62 !important;
+  color: var(--hljs-string) !important;
 }
 
 .hljs-comment {
-  color: #6A737D !important;
+  color: var(--hljs-comment) !important;
 }
 
 .hljs-number {
-  color: #005CC5 !important;
+  color: var(--hljs-number) !important;
 }
 
 .hljs-function {
-  color: #6F42C1 !important;
+  color: var(--hljs-function) !important;
 }
 
 .hljs-title {
-  color: #6F42C1 !important;
+  color: var(--hljs-title) !important;
 }
 
 /* ===== 响应式设计 ===== */
