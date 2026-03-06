@@ -6,7 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
-import "./fullscreen-chat.css";
+import styles from "./fullscreen-chat.module.css";
 
 // 图标
 import { HiOutlineHome, HiOutlineSparkles, HiPaperClip } from "react-icons/hi";
@@ -36,7 +36,7 @@ const CopyButton = ({ text }: { text: string }) => {
   return (
     <button
       onClick={handleCopy}
-      className={`copy-button ${copied ? 'copied' : ''}`}
+      className={`${styles.copyButton} ${copied ? styles.copied : ''}`}
       title={copied ? "已复制!" : "复制代码"}
     >
       {copied ? <BsClipboardCheck /> : <BsClipboard />}
@@ -52,15 +52,15 @@ const CodeBlock = ({ inline, className, children, ...props }: any) => {
 
   if (!inline && match) {
     return (
-      <div className="code-block-wrapper">
-        <div className="code-header">
-          <span className="code-language">
+      <div className={styles.codeBlockWrapper}>
+        <div className={styles.codeHeader}>
+          <span className={styles.codeLanguage}>
             <VscSymbolKeyword />
             {language}
           </span>
           <CopyButton text={code} />
         </div>
-        <div className="code-block-content">
+        <div className={styles.codeBlockContent}>
           <pre className={`language-${language}`}>
             <code className={className}>{children}</code>
           </pre>
@@ -204,60 +204,64 @@ function ChatContent() {
     setLoading(false);
   };
 
+  const handleBackToHome = () => {
+    window.location.href = '/';
+  };
+
   return (
-    <>
-      <header className="header">
-        <div className="header-left">
-          <div className="header-logo">
-            <HiOutlineSparkles className="header-icon" />
+    <div className={styles.app}> {/* 确保根元素有 app 类 */}
+      <header className={styles.header}>
+        <div className={styles.headerLeft}>
+          <div className={styles.headerLogo}>
+            <HiOutlineSparkles className={styles.headerIcon} />
           </div>
-          <h1 className="header-title">AI Chat</h1>
-          <div className={`header-status ${loading ? 'thinking' : ''}`}>
-            <span className="status-dot"></span>
+          <h1 className={styles.headerTitle}>AI Chat</h1>
+          <div className={`${styles.headerStatus} ${loading ? styles.thinking : ''}`}>
+            <span className={styles.statusDot}></span>
             <span>{loading ? '思考中...' : '在线'}</span>
           </div>
         </div>
-        <button className="header-home" onClick={() => window.location.href = "/"}>
+        <button className={styles.headerHome} onClick={handleBackToHome}>
           <HiOutlineHome />
           <span>返回首页</span>
         </button>
       </header>
 
-      <main className="chat-area" ref={chatAreaRef}>
-        <div className="messages-container">
+      <main className={styles.chatArea} ref={chatAreaRef}>
+        <div className={styles.messagesContainer}>
           {messages.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon">
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>
                 <HiOutlineSparkles />
               </div>
               <h2>开始新的对话</h2>
               <p>输入消息，开始与AI助手交流</p>
-              <div className="empty-suggestions">
-                <button className="suggestion-chip" onClick={() => setInput("你能做什么？")}>你能做什么？</button>
-                <button className="suggestion-chip" onClick={() => setInput("写一首诗")}>写一首诗</button>
-                <button className="suggestion-chip" onClick={() => setInput("解释量子计算")}>解释量子计算</button>
+              <div className={styles.emptySuggestions}>
+                <button className={styles.suggestionChip} onClick={() => setInput("你能做什么？")}>你能做什么？</button>
+                <button className={styles.suggestionChip} onClick={() => setInput("写一首诗")}>写一首诗</button>
+                <button className={styles.suggestionChip} onClick={() => setInput("解释量子计算")}>解释量子计算</button>
               </div>
             </div>
           ) : (
             messages.map((msg, index) => (
               <div 
                 key={msg.id} 
-                className={`message-item ${msg.role}`}
+                className={`${styles.messageItem} ${msg.role === 'user' ? styles.user : ''}`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="message-avatar">
+                <div className={styles.messageAvatar}>
                   {msg.role === 'user' ? <RiUserLine /> : <RiRobot2Line />}
                 </div>
-                <div className="message-content">
-                  <div className="message-sender">
+                <div className={styles.messageContent}>
+                  <div className={styles.messageSender}>
                     {msg.role === 'user' ? '你' : 'AI Chat'}
-                    <span className="message-time">
+                    <span className={styles.messageTime}>
                       {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
-                  <div className="message-bubble">
+                  <div className={styles.messageBubble}>
                     {msg.role === 'assistant' && msg.content === '' ? (
-                      <div className="typing-indicator">
+                      <div className={styles.typingIndicator}>
                         <span></span>
                         <span></span>
                         <span></span>
@@ -282,9 +286,9 @@ function ChatContent() {
           )}
           
           {error && (
-            <div className="error-message">
+            <div className={styles.errorMessage}>
               <span>{error}</span>
-              <button onClick={() => setError(null)} className="error-close">×</button>
+              <button onClick={() => setError(null)} className={styles.errorClose}>×</button>
             </div>
           )}
           
@@ -292,9 +296,9 @@ function ChatContent() {
         </div>
       </main>
 
-      <div className="input-area">
-        <div className="input-container">
-          <div className="input-wrapper">
+      <div className={styles.inputArea}>
+        <div className={styles.inputContainer}>
+          <div className={styles.inputWrapper}>
             <textarea
               ref={textareaRef}
               value={input}
@@ -302,26 +306,26 @@ function ChatContent() {
               onKeyDown={handleKeyDown}
               placeholder="输入消息... (Shift + Enter 换行)"
               disabled={loading}
-              className="chat-input"
+              className={styles.chatInput}
               rows={1}
             />
           </div>
-          <div className="button-group">
-            <button className="action-btn" title="表情" disabled={loading}>
+          <div className={styles.buttonGroup}>
+            <button className={styles.actionBtn} title="表情" disabled={loading}>
               <BsEmojiSmile />
             </button>
-            <button className="action-btn" title="附件" disabled={loading}>
+            <button className={styles.actionBtn} title="附件" disabled={loading}>
               <HiPaperClip />
             </button>
             {loading ? (
-              <button onClick={handleStop} className="stop-btn" title="停止生成">
+              <button onClick={handleStop} className={styles.stopBtn} title="停止生成">
                 <IoStop />
               </button>
             ) : (
               <button
                 onClick={handleSend}
                 disabled={!input.trim()}
-                className="send-btn"
+                className={styles.sendBtn}
                 title="发送 (Enter)"
               >
                 <IoSend />
@@ -329,16 +333,16 @@ function ChatContent() {
             )}
           </div>
         </div>
-        <div className="input-hint">
+        <div className={styles.inputHint}>
           <span>{loading ? 'AI 正在思考... 点击红色按钮停止' : 'Enter 发送 · Shift + Enter 换行'}</span>
           {input.length > 0 && (
-            <span className={`char-count ${input.length > 2000 ? 'warning' : ''}`}>
+            <span className={`${styles.charCount} ${input.length > 2000 ? styles.warning : ''}`}>
               {input.length}/2000
             </span>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -346,23 +350,23 @@ function ChatContent() {
 export default function FullscreenChat() {
   return (
     <Suspense fallback={
-      <div className="app">
-        <header className="header">
-          <div className="header-left">
-            <div className="header-logo">
-              <HiOutlineSparkles className="header-icon" />
+      <div className={styles.app}> {/* 确保 fallback 也有 app 类 */}
+        <header className={styles.header}>
+          <div className={styles.headerLeft}>
+            <div className={styles.headerLogo}>
+              <HiOutlineSparkles className={styles.headerIcon} />
             </div>
-            <h1 className="header-title">AI Chat</h1>
-            <div className="header-status">
-              <span className="status-dot"></span>
+            <h1 className={styles.headerTitle}>AI Chat</h1>
+            <div className={styles.headerStatus}>
+              <span className={styles.statusDot}></span>
               <span>加载中...</span>
             </div>
           </div>
         </header>
-        <main className="chat-area">
-          <div className="messages-container flex items-center justify-center">
+        <main className={styles.chatArea}>
+          <div className={`${styles.messagesContainer} flex items-center justify-center`}>
             <div className="text-center">
-              <div className="empty-icon mx-auto mb-4 animate-pulse">
+              <div className={`${styles.emptyIcon} mx-auto mb-4 animate-pulse`}>
                 <HiOutlineSparkles className="w-12 h-12 text-gray-400" />
               </div>
               <p className="text-gray-500">加载聊天记录...</p>
