@@ -25,7 +25,7 @@ const AVATAR = {
 // 消息气泡组件
 const MessageBubble = ({ message }: { message: Message }) => (
   <div
-    className={`flex gap-2 ${
+    className={`flex gap-2 animate-in fade-in-0 slide-in-from-bottom-2 duration-300 ${
       message.role === "user" ? "justify-end" : "justify-start"
     }`}
   >
@@ -130,6 +130,7 @@ export default function AIChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -140,35 +141,38 @@ export default function AIChat() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // 计算初始位置 - 在按钮上方
+  // 处理打开/关闭动画
   useEffect(() => {
-    if (open && buttonRef.current && window.innerWidth >= 640) {
-      const buttonRect = buttonRef.current.getBoundingClientRect();
-      const chatWidth = 320;
-      const chatHeight = 560;
-      
-      // 计算水平位置：按钮的左边
-      let x = buttonRect.left;
-      
-      // 计算垂直位置：按钮的上方
-      let y = buttonRect.top - chatHeight - 10; // 10px 间距
-      
-      // 确保不超出视口顶部
-      if (y < 10) {
-        y = buttonRect.bottom + 10; // 如果上方空间不够，就放在下方
+    if (open) {
+      // 先计算位置再显示
+      if (buttonRef.current && window.innerWidth >= 640) {
+        const buttonRect = buttonRef.current.getBoundingClientRect();
+        const chatWidth = 320;
+        const chatHeight = 560;
+        
+        let x = buttonRect.left;
+        let y = buttonRect.top - chatHeight - 10;
+        
+        if (y < 10) {
+          y = buttonRect.bottom + 10;
+        }
+        
+        if (x + chatWidth > window.innerWidth - 10) {
+          x = window.innerWidth - chatWidth - 10;
+        }
+        
+        if (x < 10) {
+          x = 10;
+        }
+        
+        setPosition({ x, y });
       }
       
-      // 确保不超出视口右侧
-      if (x + chatWidth > window.innerWidth - 10) {
-        x = window.innerWidth - chatWidth - 10;
-      }
-      
-      // 确保不超出视口左侧
-      if (x < 10) {
-        x = 10;
-      }
-      
-      setPosition({ x, y });
+      // 延迟显示以触发动画
+      const timer = setTimeout(() => setIsVisible(true), 10);
+      return () => clearTimeout(timer);
+    } else {
+      setIsVisible(false);
     }
   }, [open]);
 
@@ -342,10 +346,10 @@ export default function AIChat() {
 
   return (
     <>
-      {/* 悬浮按钮 - 添加 ref */}
+      {/* 悬浮按钮 */}
       <button
         ref={buttonRef}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => setOpen(true)}
         aria-label="打开AI Chat"
         className="fixed bottom-4 right-4 sm:bottom-6 sm:left-6 sm:right-auto z-50 group"
       >
@@ -359,22 +363,25 @@ export default function AIChat() {
         </div>
       </button>
 
-      {/* 弹出聊天窗口 */}
+      {/* 弹出聊天窗口 - 添加过渡动画 */}
       {open && (
         <>
-          {/* 移动端遮罩层 */}
+          {/* 移动端遮罩层 - 淡入淡出 */}
           <div 
-            className="fixed inset-0 bg-black/20 dark:bg-black/40 z-40 sm:hidden"
+            className={`fixed inset-0 bg-black/20 dark:bg-black/40 z-40 sm:hidden transition-opacity duration-300 ${
+              isVisible ? 'opacity-100' : 'opacity-0'
+            }`}
             onClick={() => setOpen(false)}
           />
           
           {/* 聊天窗口 */}
           <div
             ref={chatContainerRef}
-            className="fixed flex flex-col rounded-xl shadow-xl overflow-hidden z-50
-                       bg-white dark:bg-[#23272f] transition-none"
+            className={`fixed flex flex-col rounded-xl shadow-xl overflow-hidden z-50
+                       bg-white dark:bg-[#23272f] transition-all duration-300 ease-out
+                       ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
             style={{
-              // 桌面端：绝对定位在按钮旁边
+              // 桌面端：绝对定位
               ...(window.innerWidth >= 640 ? {
                 position: 'fixed',
                 left: `${position.x}px`,
@@ -383,6 +390,7 @@ export default function AIChat() {
                 maxHeight: 'min(560px, 80vh)',
                 height: 'min(560px, 80vh)',
                 cursor: isDragging ? 'grabbing' : 'default',
+                transformOrigin: 'left top',
               } : {
                 // 移动端：底部弹出
                 position: 'fixed',
@@ -394,6 +402,8 @@ export default function AIChat() {
                 height: 'min(600px, 90vh)',
                 borderBottomLeftRadius: 0,
                 borderBottomRightRadius: 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+                transition: 'transform 0.3s ease-out',
               })
             }}
           >
@@ -427,7 +437,7 @@ export default function AIChat() {
               }}
             >
               {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center text-center h-full">
+                <div className="flex flex-col items-center justify-center text-center h-full animate-in fade-in-0 duration-500">
                   <div className="w-12 h-12 mb-3 rounded-xl bg-[#f3f4f6] dark:bg-[#374151] flex items-center justify-center">
                     <HiOutlineSparkles className="w-5 h-5 text-[#2563eb] dark:text-[#60a5fa]" />
                   </div>
