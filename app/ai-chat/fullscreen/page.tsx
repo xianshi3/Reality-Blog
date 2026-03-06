@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation"; // 添加这个导入
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -80,6 +81,25 @@ export default function FullscreenChat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const chatAreaRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams(); // 添加这个
+
+  // 从 URL 参数恢复聊天记录 - 只添加这个功能
+  useEffect(() => {
+    const messagesParam = searchParams.get('messages');
+    if (messagesParam) {
+      try {
+        const parsedMessages = JSON.parse(messagesParam);
+        // 为每条消息添加 id
+        const formattedMessages = parsedMessages.map((msg: any) => ({
+          ...msg,
+          id: generateId(),
+        }));
+        setMessages(formattedMessages);
+      } catch (error) {
+        console.error('Failed to parse messages from URL:', error);
+      }
+    }
+  }, [searchParams]);
 
   // 自动调整文本框高度
   useEffect(() => {
