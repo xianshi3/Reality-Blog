@@ -1,290 +1,343 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { useSearchParams } from "next/navigation"; // 添加这个导入
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
 import "./fullscreen-chat.css";
 
-export default function FullscreenChat() {
-  const [messages, setMessages] = useState<any[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const endRef = useRef<HTMLDivElement>(null);
+// 图标
+import { HiOutlineHome, HiOutlineSparkles, HiPaperClip } from "react-icons/hi";
+import { IoSend, IoStop } from "react-icons/io5";
+import { RiRobot2Line, RiUserLine } from "react-icons/ri";
+import { BsEmojiSmile, BsClipboard, BsClipboardCheck } from "react-icons/bs";
+import { VscSymbolKeyword } from "react-icons/vsc";
 
-  // 检测是否为移动设备
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+  id: string;
+};
 
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get("messages");
-    if (q) setMessages(JSON.parse(q));
-  }, []);
+// 复制按钮组件
+const CopyButton = ({ text }: { text: string }) => {
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
-
-  const handleSend = () => {
-    if (!input.trim() || loading) return;
-    const userMsg = { role: "user", content: input };
-    const newMsgs = [...messages, userMsg];
-    setMessages(newMsgs);
-    setInput("");
-    setLoading(true);
-    setTimeout(() => {
-      setMessages([
-        ...newMsgs,
-        { role: "assistant", content: `AI 回答：${userMsg.content} 🤖` },
-      ]);
-      setLoading(false);
-    }, 1000);
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  // 桌面端布局
-  if (!isMobile) {
+  return (
+    <button
+      onClick={handleCopy}
+      className={`copy-button ${copied ? 'copied' : ''}`}
+      title={copied ? "已复制!" : "复制代码"}
+    >
+      {copied ? <BsClipboardCheck /> : <BsClipboard />}
+    </button>
+  );
+};
+
+// 代码块组件
+const CodeBlock = ({ inline, className, children, ...props }: any) => {
+  const match = /language-(\w+)/.exec(className || '');
+  const code = String(children).replace(/\n$/, '');
+  const language = match ? match[1] : 'text';
+
+  if (!inline && match) {
     return (
-      <div className="desktop-chat-layout">
-        {/* 左侧导航栏 */}
-        <aside className={`sidebar ${sidebarOpen ? "open" : "closed"}`}>
-          <div className="sidebar-header">
-            <h2>🤖 AI 助手</h2>
-            <button
-              className="toggle-btn"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              {sidebarOpen ? "⟨" : "⟩"}
-            </button>
-          </div>
-
-          <nav className="sidebar-nav">
-            <button className="nav-item active">
-              <span className="nav-text">💬 新对话</span>
-            </button>
-            <button className="nav-item">
-              <span className="nav-text">🧠 Prompt 预设</span>
-            </button>
-            <button className="nav-item">
-              <span className="nav-text">📜 历史记录</span>
-            </button>
-            <button className="nav-item">
-              <span className="nav-text">⚙️ 设置</span>
-            </button>
-          </nav>
-        </aside>
-
-        {/* 中间主聊天区 */}
-        <div className="chat-main">
-          <header className="chat-topbar">
-            <h1>AI 聊天助手</h1>
-            {/* 返回首页按钮 */}
-            <button
-              className="back-home-btn"
-              onClick={() => window.location.href = "/"}
-            >
-              返回首页
-            </button>
-          </header>
-
-          <main className="chat-body">
-            <div className="chat-inner">
-              {messages.length === 0 ? (
-                <div className="chat-empty">
-                  <div className="icon">💬</div>
-                  <h2>开始与 AI 对话</h2>
-                  <p>例如：帮我写一段文案、分析一篇文章、写段代码</p>
-                </div>
-              ) : (
-                messages.map((msg, i) => (
-                  <div key={i} className={`msg ${msg.role}`}>
-                    <div className="avatar">
-                      {msg.role === "user" ? "🧑" : "🤖"}
-                    </div>
-                    <div className="bubble">
-                      <p>{msg.content}</p>
-                    </div>
-                  </div>
-                ))
-              )}
-              {loading && (
-                <div className="msg assistant">
-                  <div className="avatar">🤖</div>
-                  <div className="bubble typing">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </div>
-              )}
-              <div ref={endRef} />
-            </div>
-          </main>
-
-          {/* 底部毛玻璃输入栏 */}
-          <footer className="chat-footer">
-            <form
-              className="chat-input"
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSend();
-              }}
-            >
-              <input
-                type="text"
-                placeholder="输入你的问题..."
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                disabled={loading}
-              />
-              <button type="submit" disabled={loading}>
-                {loading ? "..." : "发送"}
-              </button>
-            </form>
-          </footer>
+      <div className="code-block-wrapper">
+        <div className="code-header">
+          <span className="code-language">
+            <VscSymbolKeyword />
+            {language}
+          </span>
+          <CopyButton text={code} />
         </div>
-
-        {/* 右侧可扩展区域 */}
-        <aside className="right-panel">
-          <div className="hint-card">
-            <h3>💡 提示</h3>
-            <p>你可以试试：</p>
-            <ul>
-              <li>生成一段励志语录</li>
-              <li>帮我写一段产品介绍</li>
-              <li>分析一篇新闻内容</li>
-            </ul>
-          </div>
-        </aside>
+        <div className="code-block-content">
+          <pre className={`language-${language}`}>
+            <code className={className}>{children}</code>
+          </pre>
+        </div>
       </div>
     );
   }
 
-  // 手机端布局
+  return <code className={className} {...props}>{children}</code>;
+};
+
+export default function FullscreenChat() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const chatAreaRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams(); // 添加这个
+
+  // 从 URL 参数恢复聊天记录 - 只添加这个功能
+  useEffect(() => {
+    const messagesParam = searchParams.get('messages');
+    if (messagesParam) {
+      try {
+        const parsedMessages = JSON.parse(messagesParam);
+        // 为每条消息添加 id
+        const formattedMessages = parsedMessages.map((msg: any) => ({
+          ...msg,
+          id: generateId(),
+        }));
+        setMessages(formattedMessages);
+      } catch (error) {
+        console.error('Failed to parse messages from URL:', error);
+      }
+    }
+  }, [searchParams]);
+
+  // 自动调整文本框高度
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+    }
+  }, [input]);
+
+  // 自动滚动到底部
+  const scrollToBottom = useCallback(() => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  // 自动聚焦输入框
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
+  const handleSend = useCallback(async () => {
+    if (!input.trim() || loading) return;
+
+    setError(null);
+
+    const userMsg: Message = {
+      role: "user",
+      content: input.trim(),
+      id: generateId(),
+    };
+
+    const assistantMsg: Message = {
+      role: "assistant",
+      content: "",
+      id: generateId(),
+    };
+
+    setMessages(prev => [...prev, userMsg, assistantMsg]);
+    setInput("");
+    setLoading(true);
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          messages: [...messages, userMsg].map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      if (!res.body) throw new Error("No response body");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let aiText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        aiText += decoder.decode(value, { stream: true });
+
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === assistantMsg.id
+              ? { ...msg, content: aiText }
+              : msg
+          )
+        );
+      }
+    } catch (error: any) {
+      console.error("Error:", error);
+      setError(error.message || "发送失败，请重试");
+      setMessages(prev => prev.filter(msg => msg.id !== assistantMsg.id));
+    } finally {
+      setLoading(false);
+      textareaRef.current?.focus();
+    }
+  }, [input, loading, messages]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleStop = () => {
+    setLoading(false);
+  };
+
   return (
-    <div className="mobile-chat-layout">
-      {/* 手机端顶部导航栏 */}
-      <header className="mobile-header">
-        <button
-          className="mobile-menu-btn"
-          onClick={() => setShowMobileMenu(!showMobileMenu)}
-        >
-          ☰
-        </button>
-        <h1 className="mobile-title">AI 助手</h1>
-        <button
-          className="mobile-home-btn"
-          onClick={() => window.location.href = "/"}
-        >
-          🏠
+    <div className="app">
+      <header className="header">
+        <div className="header-left">
+          <div className="header-logo">
+            <HiOutlineSparkles className="header-icon" />
+          </div>
+          <h1 className="header-title">AI Chat</h1>
+          <div className={`header-status ${loading ? 'thinking' : ''}`}>
+            <span className="status-dot"></span>
+            <span>{loading ? '思考中...' : '在线'}</span>
+          </div>
+        </div>
+        <button className="header-home" onClick={() => window.location.href = "/"}>
+          <HiOutlineHome />
+          <span>返回首页</span>
         </button>
       </header>
 
-      {/* 手机端侧边菜单 */}
-      {showMobileMenu && (
-        <div className="mobile-menu-overlay" onClick={() => setShowMobileMenu(false)}>
-          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
-            <div className="mobile-menu-header">
-              <h3>菜单</h3>
-              <button onClick={() => setShowMobileMenu(false)}>✕</button>
-            </div>
-            <nav className="mobile-nav">
-              <button className="mobile-nav-item active">
-                💬 新对话
-              </button>
-              <button className="mobile-nav-item">
-                🧠 Prompt 预设
-              </button>
-              <button className="mobile-nav-item">
-                📜 历史记录
-              </button>
-              <button className="mobile-nav-item">
-                ⚙️ 设置
-              </button>
-            </nav>
-          </div>
-        </div>
-      )}
-
-      {/* 手机端聊天主体 */}
-      <main className="mobile-chat-body">
-        {messages.length === 0 ? (
-          <div className="mobile-chat-empty">
-            <div className="mobile-empty-icon">🤖</div>
-            <h2>开始与 AI 对话</h2>
-            <p>有什么问题都可以问我</p>
-            <div className="mobile-suggestions">
-              <button className="mobile-suggestion-btn" onClick={() => setInput("帮我写一段产品介绍")}>
-                📝 写文案
-              </button>
-              <button className="mobile-suggestion-btn" onClick={() => setInput("分析一下这篇文章")}>
-                📊 内容分析
-              </button>
-              <button className="mobile-suggestion-btn" onClick={() => setInput("帮我写段代码")}>
-                💻 编程助手
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="mobile-messages">
-            {messages.map((msg, i) => (
-              <div key={i} className={`mobile-msg ${msg.role}`}>
-                <div className="mobile-avatar">
-                  {msg.role === "user" ? "👤" : "🤖"}
-                </div>
-                <div className="mobile-bubble">
-                  <p>{msg.content}</p>
-                </div>
+      <main className="chat-area" ref={chatAreaRef}>
+        <div className="messages-container">
+          {messages.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon">
+                <HiOutlineSparkles />
               </div>
-            ))}
-            {loading && (
-              <div className="mobile-msg assistant">
-                <div className="mobile-avatar">🤖</div>
-                <div className="mobile-bubble typing">
-                  <div className="typing-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+              <h2>开始新的对话</h2>
+              <p>输入消息，开始与AI助手交流</p>
+              <div className="empty-suggestions">
+                <button className="suggestion-chip" onClick={() => setInput("你能做什么？")}>你能做什么？</button>
+                <button className="suggestion-chip" onClick={() => setInput("写一首诗")}>写一首诗</button>
+                <button className="suggestion-chip" onClick={() => setInput("解释量子计算")}>解释量子计算</button>
+              </div>
+            </div>
+          ) : (
+            messages.map((msg, index) => (
+              <div 
+                key={msg.id} 
+                className={`message-item ${msg.role}`}
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <div className="message-avatar">
+                  {msg.role === 'user' ? <RiUserLine /> : <RiRobot2Line />}
+                </div>
+                <div className="message-content">
+                  <div className="message-sender">
+                    {msg.role === 'user' ? '你' : 'AI Chat'}
+                    <span className="message-time">
+                      {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  <div className="message-bubble">
+                    {msg.role === 'assistant' && msg.content === '' ? (
+                      <div className="typing-indicator">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    ) : msg.role === 'assistant' ? (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeHighlight]}
+                        components={{
+                          code: CodeBlock,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    ) : (
+                      <p>{msg.content}</p>
+                    )}
                   </div>
                 </div>
               </div>
-            )}
-            <div ref={endRef} />
-          </div>
-        )}
+            ))
+          )}
+          
+          {error && (
+            <div className="error-message">
+              <span>{error}</span>
+              <button onClick={() => setError(null)} className="error-close">×</button>
+            </div>
+          )}
+          
+          <div ref={messagesEndRef} />
+        </div>
       </main>
 
-      {/* 手机端输入区域 */}
-      <footer className="mobile-input-footer">
-        <form
-          className="mobile-input-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSend();
-          }}
-        >
-          <input
-            type="text"
-            className="mobile-input"
-            placeholder="输入你的问题..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={loading}
-          />
-          <button
-            type="submit"
-            className="mobile-send-btn"
-            disabled={loading || !input.trim()}
-          >
-            {loading ? "⏳" : "📤"}
-          </button>
-        </form>
-      </footer>
+      <div className="input-area">
+        <div className="input-container">
+          <div className="input-wrapper">
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="输入消息... (Shift + Enter 换行)"
+              disabled={loading}
+              className="chat-input"
+              rows={1}
+            />
+          </div>
+          <div className="button-group">
+            <button className="action-btn" title="表情" disabled={loading}>
+              <BsEmojiSmile />
+            </button>
+            <button className="action-btn" title="附件" disabled={loading}>
+              <HiPaperClip />
+            </button>
+            {loading ? (
+              <button onClick={handleStop} className="stop-btn" title="停止生成">
+                <IoStop />
+              </button>
+            ) : (
+              <button
+                onClick={handleSend}
+                disabled={!input.trim()}
+                className="send-btn"
+                title="发送 (Enter)"
+              >
+                <IoSend />
+              </button>
+            )}
+          </div>
+        </div>
+        <div className="input-hint">
+          <span>{loading ? 'AI 正在思考... 点击红色按钮停止' : 'Enter 发送 · Shift + Enter 换行'}</span>
+          {input.length > 0 && (
+            <span className={`char-count ${input.length > 2000 ? 'warning' : ''}`}>
+              {input.length}/2000
+            </span>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
