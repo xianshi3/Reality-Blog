@@ -170,7 +170,7 @@ export default function FullscreenChat() {
                 </div>
                 <div className="message-content">
                   <div className="message-sender">
-                    {msg.role === 'user' ? '你' : 'AI助手'}
+                    {msg.role === 'user' ? '你' : 'Al Chat'}
                   </div>
                   <div className="message-bubble">
                     {msg.role === 'assistant' && msg.content === '' ? (
