@@ -204,13 +204,12 @@ function ChatContent() {
     setLoading(false);
   };
 
-  // 修改返回首页的函数，强制刷新
   const handleBackToHome = () => {
     window.location.href = '/';
   };
 
   return (
-    <>
+    <div className={styles.app}> {/* 确保根元素有 app 类 */}
       <header className={styles.header}>
         <div className={styles.headerLeft}>
           <div className={styles.headerLogo}>
@@ -343,7 +342,7 @@ function ChatContent() {
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 
@@ -351,7 +350,7 @@ function ChatContent() {
 export default function FullscreenChat() {
   return (
     <Suspense fallback={
-      <div className={styles.app}>
+      <div className={styles.app}> {/* 确保 fallback 也有 app 类 */}
         <header className={styles.header}>
           <div className={styles.headerLeft}>
             <div className={styles.headerLogo}>
