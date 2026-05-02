@@ -24,6 +24,7 @@ import ArticleContent from '@/components/ArticleContent';
 import ArticleToc from '@/components/ArticleToc';
 import AIChat from '../../../components/AIChat';
 import ReturnHome from '../../../components/ReturnHome';
+import TagList from '../../../components/TagList';
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   // 解析路由参数（文章 ID）
@@ -95,13 +96,15 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
             {/* 标签 & 点赞 */}
             <div className="tag-like-container">
-              <div className="tag-list">
-                {(Array.isArray(article.tags) ? article.tags : typeof article.tags === 'string' ? article.tags.split(',') : []).map((tag) => (
-                  <span key={tag} className="tag">
-                    #{tag}
-                  </span>
-                ))}
-              </div>
+              <TagList
+                tags={
+                  Array.isArray(article.tags)
+                    ? article.tags
+                    : typeof article.tags === "string"
+                    ? article.tags.split(",")
+                    : []
+                }
+              />
 
               <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
             </div>
