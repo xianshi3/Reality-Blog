@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
+import { FaTrashCan } from "react-icons/fa6";
 import "./images.css";
 
 interface ImageItem {
@@ -12,24 +12,23 @@ interface ImageItem {
   article?: { id: number; title: string } | null;
 }
 
+function ImageSkeleton() {
+  return (
+    <div className="image-loading">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <div key={i} className="image-skeleton" />
+      ))}
+    </div>
+  );
+}
+
 export default function ImageManagerPage() {
   const [images, setImages] = useState<ImageItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
-
-  async function fetchImageSize(url: string): Promise<number | undefined> {
-    try {
-      const res = await fetch(url, { method: "HEAD" });
-      if (!res.ok) return undefined;
-      const length = res.headers.get("content-length");
-      return length ? parseInt(length, 10) : undefined;
-    } catch {
-      return undefined;
-    }
-  }
+  const [deleting, setDeleting] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchImagesAndArticles = async () => {
+    const fetchImages = async () => {
       const { data, error } = await supabase.storage
         .from("article-images")
         .list("", {
@@ -43,6 +42,7 @@ export default function ImageManagerPage() {
         setLoading(false);
         return;
       }
+
       if (!data) {
         setLoading(false);
         return;
@@ -52,13 +52,9 @@ export default function ImageManagerPage() {
         /\.(jpg|jpeg|png|webp|gif)$/i.test(item.name)
       );
 
-      const { data: articlesData, error: articlesError } = await supabase
+      const { data: articlesData } = await supabase
         .from("articles")
         .select("id, title, image_url");
-
-      if (articlesError) {
-        alert("加载文章信息失败：" + articlesError.message);
-      }
 
       const imgs: ImageItem[] = files.map((item) => {
         const { data: urlData } = supabase.storage
@@ -83,34 +79,43 @@ export default function ImageManagerPage() {
 
       const sizes = await Promise.all(
         imgs.map(async (img) => {
-          const size = await fetchImageSize(img.publicUrl);
-          return size;
+          try {
+            const res = await fetch(img.publicUrl, { method: "HEAD" });
+            if (!res.ok) return undefined;
+            const length = res.headers.get("content-length");
+            return length ? parseInt(length, 10) : undefined;
+          } catch {
+            return undefined;
+          }
         })
       );
 
       setImages(imgs.map((img, i) => ({ ...img, size: sizes[i] })));
-
       setLoading(false);
     };
 
-    fetchImagesAndArticles();
+    fetchImages();
   }, []);
 
   const formatSize = (size?: number) => {
-    if (!size || isNaN(size)) return "未知大小";
+    if (!size || isNaN(size)) return "";
     if (size < 1024) return size + " B";
-    else if (size < 1024 * 1024) return (size / 1024).toFixed(2) + " KB";
-    else return (size / (1024 * 1024)).toFixed(2) + " MB";
+    if (size < 1024 * 1024) return (size / 1024).toFixed(1) + " KB";
+    return (size / (1024 * 1024)).toFixed(1) + " MB";
   };
 
   const handleDelete = async (publicUrl: string, name: string) => {
     if (!window.confirm("确定要删除这张图片吗？")) return;
+    setDeleting(name);
 
     const res = await fetch("/api/storage", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name }),
     });
+
+    setDeleting(null);
+
     if (!res.ok) {
       const data = await res.json();
       alert("删除失败：" + (data.error || "Unknown error"));
@@ -121,36 +126,39 @@ export default function ImageManagerPage() {
 
   return (
     <div>
-      <h1 className="admin-page-title"><span>🖼️</span>图片管理</h1>
+      <h1 className="admin-page-title">
+        <span>🖼️</span>图片管理
+        {!loading && <span className="admin-stat-label" style={{ fontSize: "0.8rem", fontWeight: 400 }}>({images.length})</span>}
+      </h1>
 
       {loading ? (
-        <p className="loading-text">加载中...</p>
+        <ImageSkeleton />
       ) : images.length === 0 ? (
-        <p className="no-images">暂无图片</p>
+        <p className="image-empty">
+          <span style={{ fontSize: "2rem", display: "block", marginBottom: "0.5rem" }}>🖼️</span>
+          暂无图片
+        </p>
       ) : (
         <div className="image-grid">
-          {images.map(({ publicUrl, size, name, article }) => (
+          {images.map(({ publicUrl, size, name, article }, idx) => (
             <div
               key={publicUrl}
               className="image-card"
+              style={{ animationDelay: `${idx * 30}ms` }}
               title={article?.title || "未关联文章"}
             >
-              <img
-                src={publicUrl}
-                alt={article?.title || "文章封面"}
-                loading="lazy"
-              />
+              <img src={publicUrl} alt={article?.title || "文章封面"} loading="lazy" />
               <div className="image-info">
                 <p className="image-title">{article?.title || "未关联文章"}</p>
-                <p className="image-size">{formatSize(size)}</p>
+                {size && <span className="image-size">{formatSize(size)}</span>}
               </div>
               <button
                 onClick={() => handleDelete(publicUrl, name)}
-                className="delete-button"
-                type="button"
+                className="image-delete-btn"
+                disabled={deleting === name}
                 aria-label={`删除图片 ${name}`}
               >
-                删除
+                <FaTrashCan />
               </button>
             </div>
           ))}

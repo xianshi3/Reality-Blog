@@ -1,7 +1,17 @@
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabaseServer";
 import ArticleItem from "@/components/ArticleItem";
-import { FaPenToSquare, FaImages, FaNewspaper, FaFileLines } from "react-icons/fa6";
+import { FaPenToSquare, FaImages, FaNewspaper, FaFileLines, FaRocket } from "react-icons/fa6";
+
+function getGreeting(): string {
+  const hour = new Date().getHours();
+  if (hour < 6) return "夜深了";
+  if (hour < 9) return "早上好";
+  if (hour < 12) return "上午好";
+  if (hour < 14) return "中午好";
+  if (hour < 18) return "下午好";
+  return "晚上好";
+}
 
 export default async function AdminPage() {
   const supabase = await createServerSupabase();
@@ -17,10 +27,7 @@ export default async function AdminPage() {
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-4">
             未登录，请先登录
           </p>
-          <a
-            href="/login"
-            className="admin-btn admin-btn-primary"
-          >
+          <a href="/login" className="admin-btn admin-btn-primary">
             前往登录
           </a>
         </div>
@@ -48,9 +55,14 @@ export default async function AdminPage() {
 
   return (
     <div>
-      <h1 className="admin-page-title">
-        <FaNewspaper />控制台
-      </h1>
+      {/* Welcome banner */}
+      <div className="admin-welcome">
+        <div className="admin-welcome-text">
+          <h2>{getGreeting()}，管理员</h2>
+          <p>欢迎回来，当前共有 {totalArticles} 篇文章</p>
+        </div>
+        <FaRocket className="admin-welcome-icon" />
+      </div>
 
       {/* Stats */}
       <div className="admin-stats">
@@ -97,11 +109,14 @@ export default async function AdminPage() {
 
       {/* Article list */}
       <div className="admin-card">
-        <h2 className="admin-section-title">最近文章</h2>
+        <h2 className="admin-section-title">
+          <FaNewspaper style={{ marginRight: 4 }} />
+          最近文章
+        </h2>
         <ul className="admin-list">
           {articles?.length ? (
             articles.map((article, idx) => (
-              <ArticleItem key={article.id} article={article} delay={idx * 60} />
+              <ArticleItem key={article.id} article={article} delay={idx * 40} />
             ))
           ) : (
             <li className="admin-empty">

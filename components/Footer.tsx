@@ -1,36 +1,16 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-
 type FooterProps = {
   currentYear: number;
 };
 
-/**
- * 网站页脚组件
- * 包含版权信息和开源地址
- * 使用 Tailwind 实现淡入动画效果，无需额外配置
- */
 export default function Footer({ currentYear }: FooterProps) {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setVisible(true), 100);
-    return () => clearTimeout(timeout);
-  }, []);
-
   return (
     <footer
-      className={`footer mt-12 flex flex-col sm:flex-row justify-between items-center gap-2 px-4 py-6
-        transition-all duration-700 ease-out
-        ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+      className="footer mt-12 flex flex-col sm:flex-row justify-between items-center gap-2 px-4 py-6 animate-fadeInUp"
     >
-      {/* 版权声明 */}
       <div className="text-center sm:text-left text-sm text-gray-600 dark:text-gray-400">
         © {currentYear} Reality-Blog. All rights reserved.
       </div>
 
-      {/* 开源地址 */}
       <div className="flex gap-4 text-sm items-center">
         <a
           href="https://github.com/xianshi3/Reality-Blog"

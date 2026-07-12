@@ -22,9 +22,9 @@ import ReadingProgress from '@/components/ReadingProgress';
 import { createServerSupabase } from '@/lib/supabaseServer';
 import ArticleContent from '@/components/ArticleContent';
 import ArticleToc from '@/components/ArticleToc';
-import AIChat from '@/components/AIChat';
 import ReturnHome from '@/components/ReturnHome';
 import TagList from '@/components/TagList';
+import AIChat from '@/components/DynamicAIChat';
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   // 解析路由参数（文章 ID）
