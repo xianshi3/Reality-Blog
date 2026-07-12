@@ -89,3 +89,58 @@
   from { opacity: 0; transform: translateY(30px);}
   to { opacity: 1; transform: translateY(0);}
 }
+
+/* ===== 深色模式 ===== */
+.dark .login-bg {
+  background: linear-gradient(120deg, #1e1b2e 0%, #18181b 100%);
+}
+
+.dark .login-card {
+  background: #23272f;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.dark .login-title {
+  color: #e0e7ff;
+}
+
+.dark .login-input {
+  background: #2a2f3a;
+  border-color: #374151;
+  color: #f3f4f6;
+}
+
+.dark .login-input::placeholder {
+  color: #6b7280;
+}
+
+.dark .login-input:focus {
+  border-color: #818cf8;
+  box-shadow: 0 0 0 2px #818cf833;
+}
+
+.dark .login-error {
+  background: #451a1a;
+  color: #fca5a5;
+}
+
+.dark .login-info {
+  background: #064e3b;
+  color: #6ee7b7;
+}
+
+.login-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: login-spin 0.6s linear infinite;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+@keyframes login-spin {
+  to { transform: rotate(360deg); }
+}

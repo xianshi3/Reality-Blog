@@ -128,3 +128,42 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ===== 深色模式 ===== */
+.dark .create-bg {
+  background-color: #18181b;
+  color: #f3f4f6;
+}
+
+.dark .create-back-button {
+  color: #60a5fa;
+}
+
+.dark .create-back-button:hover {
+  color: #93c5fd;
+}
+
+.dark .image-card {
+  background-color: #23272f;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.dark .image-card:hover {
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.4);
+}
+
+.dark .image-title {
+  color: #f3f4f6;
+}
+
+.dark .image-size {
+  color: #9ca3af;
+}
+
+.dark .no-images {
+  color: #6b7280;
+}
+
+.dark .loading-text {
+  color: #9ca3af;
+}

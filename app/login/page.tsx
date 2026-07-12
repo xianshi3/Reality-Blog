@@ -63,9 +63,15 @@ export default function AuthPage() {
     }
   };
 
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !loading) {
+      handleLogin();
+    }
+  };
+
   return (
     <div className="login-bg min-h-screen flex items-center justify-center">
-      <div className="login-card animate-fade-in-up">
+      <div className="login-card animate-fade-in-up" onKeyDown={onKeyDown}>
         <h1 className="login-title">管理员登录</h1>
 
         {errorMsg && (
@@ -82,6 +88,7 @@ export default function AuthPage() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={loading}
+          autoFocus
         />
 
         <input
@@ -98,7 +105,7 @@ export default function AuthPage() {
           className={`login-btn ${loading ? "login-btn-disabled" : ""}`}
           onClick={handleLogin}
         >
-          {loading ? "正在登录..." : "登录"}
+          {loading ? <><span className="login-spinner" />正在登录...</> : "登录"}
         </button>
 
       </div>

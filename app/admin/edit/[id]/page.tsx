@@ -1,19 +1,62 @@
 "use client";
 
 import "./edit-article.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
+import { uploadImage } from "@/lib/upload";
 import { supabase } from "@/lib/supabaseClient";
+import { FaBold, FaItalic, FaHeading, FaCode, FaListOl, FaListUl, FaImage } from "react-icons/fa6";
+
+const TOOLBAR_ACTIONS = [
+  { label: "标题 1", icon: FaHeading, markdown: "# " },
+  { label: "标题 2", icon: FaHeading, markdown: "## ", style: { fontSize: "0.85rem" } },
+  { label: "标题 3", icon: FaHeading, markdown: "### ", style: { fontSize: "0.75rem" } },
+  { label: "加粗", icon: FaBold, markdown: "**加粗文字**" },
+  { label: "斜体", icon: FaItalic, markdown: "*斜体文字*" },
+  { label: "代码块", icon: FaCode, markdown: "\n```\n\n```\n" },
+  { label: "有序列表", icon: FaListOl, markdown: "\n1. " },
+  { label: "无序列表", icon: FaListUl, markdown: "\n- " },
+  { label: "图片", icon: FaImage, markdown: "\n![图片描述](图片URL)\n" },
+];
+
+interface ArticleData {
+  id: string;
+  title: string;
+  summary: string;
+  content: string;
+  date: string;
+  category: string;
+  tags: string;
+  image_url: string;
+  [key: string]: unknown;
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="editor-page">
+      <div className="editor-body">
+        <div className="editor-main">
+          <div className="skeleton skeleton-title" />
+          <div className="skeleton skeleton-toolbar" />
+          <div className="skeleton skeleton-textarea" />
+        </div>
+        <aside className="editor-sidebar">
+          <div className="skeleton skeleton-card" />
+          <div className="skeleton skeleton-card" />
+          <div className="skeleton skeleton-card" />
+        </aside>
+      </div>
+    </div>
+  );
+}
 
 export default function EditArticle() {
   const { id } = useParams();
   const router = useRouter();
 
-  const [form, setForm] = useState<any>(null);
+  const [form, setForm] = useState<ArticleData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
-  // 新增状态：保存图片文件，和上传中状态
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -32,20 +75,31 @@ export default function EditArticle() {
       }
 
       if (data) {
-        setForm(data);
+        setForm(data as unknown as ArticleData);
       }
       setLoading(false);
     })();
   }, [id, router]);
 
-  // 选图片时只保存文件，不上传
-  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    setImageFile(file);
-  };
+    if (file) setImageFile(file);
+  }, []);
 
-  // 点击保存时，先上传图片（如果有），然后更新文章
+  const handleToolbarInsert = useCallback((markdown: string) => {
+    setForm((f: ArticleData | null) => {
+      if (!f) return f;
+      return { ...f, content: (f.content || "") + markdown };
+    });
+  }, []);
+
+  const updateField = useCallback((field: string, value: string) => {
+    setForm((f: ArticleData | null) => {
+      if (!f) return f;
+      return { ...f, [field]: value };
+    });
+  }, []);
+
   const handleUpdate = async () => {
     if (!form || saving) return;
     if (!form.title) {
@@ -55,24 +109,12 @@ export default function EditArticle() {
 
     setSaving(true);
 
-    let imageUrl = form.image_url || ""; // 默认用原来图片地址
+    let imageUrl = form.image_url || "";
 
     if (imageFile) {
       setUploading(true);
-      const fileExt = imageFile.name.split(".").pop();
-      const fileName = `${Date.now()}.${fileExt}`;
       try {
-        const { error: uploadError } = await supabase.storage
-          .from("article-images")
-          .upload(fileName, imageFile, {
-            cacheControl: "3600",
-            upsert: false,
-          });
-        if (uploadError) throw uploadError;
-
-        const { data } = supabase.storage.from("article-images").getPublicUrl(fileName);
-        if (!data?.publicUrl) throw new Error("获取图片地址失败");
-        imageUrl = data.publicUrl;
+        imageUrl = await uploadImage(imageFile);
       } catch (error: any) {
         alert("图片上传失败：" + error.message);
         setUploading(false);
@@ -82,18 +124,14 @@ export default function EditArticle() {
       setUploading(false);
     }
 
-    // 准备更新的数据，排除 id
-    const { id: _id, ...updateData } = form;
-    // 更新 image_url
-    updateData.image_url = imageUrl;
-
-    // 清理空字段
-    if (!updateData.date) delete updateData.date;
-    if (!updateData.summary) delete updateData.summary;
-    if (!updateData.content) delete updateData.content;
-    if (!updateData.category) delete updateData.category;
-    if (!updateData.tags) delete updateData.tags;
-    if (!updateData.image_url) delete updateData.image_url;
+    const updateData: Record<string, unknown> = {};
+    if (form.title) updateData.title = form.title;
+    if (imageUrl) updateData.image_url = imageUrl;
+    if (form.date) updateData.date = form.date;
+    if (form.summary) updateData.summary = form.summary;
+    if (form.content) updateData.content = form.content;
+    if (form.category) updateData.category = form.category;
+    if (form.tags) updateData.tags = form.tags;
 
     const res = await fetch("/api/article", {
       method: "PUT",
@@ -110,143 +148,131 @@ export default function EditArticle() {
     }
   };
 
-  const handleBack = () => {
-    router.push("/admin");
-  };
+  if (loading || !form) return <LoadingSkeleton />;
 
-  const insertCodeBlock = () => {
-    const codeBlockTemplate = "\n```js\n// 这里写代码\n```\n";
-    setForm((f: any) => ({
-      ...f,
-      content: (f.content || "") + codeBlockTemplate,
-    }));
-  };
-
-  if (loading || !form) {
-    return <div className="text-center text-gray-500 mt-20">加载中...</div>;
-  }
+  const previewUrl = imageFile ? URL.createObjectURL(imageFile) : form.image_url;
 
   return (
-    <>
-      <button
-        onClick={handleBack}
-        className="edit-back-button"
-        aria-label="返回管理页"
-        type="button"
-      >
-        ← 返回
-      </button>
-
-      <div className="edit-container" style={{ paddingTop: "3rem" }}>
-        <h2 className="edit-title">编辑文章</h2>
-
-        {/* 插入代码块按钮 */}
+    <div className="editor-page">
+      <div className="editor-header">
+        <h1 className="admin-page-title">
+          <span>📝</span>编辑文章
+        </h1>
         <button
-          type="button"
-          onClick={insertCodeBlock}
-          className="edit-button mb-4"
-          style={{ backgroundColor: "#10b981" }} // 绿色按钮
-          disabled={saving}
-        >
-          插入代码块
-        </button>
-
-        {/* 图片选择按钮 */}
-        <div style={{ marginBottom: 16 }}>
-          <label
-            htmlFor="image-upload"
-            className="edit-button cursor-pointer"
-            style={{ backgroundColor: "#3b82f6" }} // 蓝色按钮
-          >
-            {uploading
-              ? "上传中..."
-              : imageFile
-              ? "更改图片"
-              : form.image_url
-              ? "更改图片"
-              : "选择封面图片"}
-          </label>
-          <input
-            id="image-upload"
-            type="file"
-            accept="image/*"
-            onChange={handleImageSelect}
-            disabled={uploading || saving}
-            className="hidden"
-          />
-          {/* 预览图片：优先显示本地选中的图片，否则显示已有图片 */}
-          {imageFile ? (
-            <img
-              src={URL.createObjectURL(imageFile)}
-              alt="预览封面"
-              style={{ marginTop: 8, maxHeight: 160, borderRadius: 8, border: "1px solid #ddd", objectFit: "contain" }}
-            />
-          ) : form.image_url ? (
-            <img
-              src={form.image_url}
-              alt="封面"
-              style={{ marginTop: 8, maxHeight: 160, borderRadius: 8, border: "1px solid #ddd", objectFit: "contain" }}
-            />
-          ) : null}
-        </div>
-
-        <input
-          className="edit-input"
-          value={form.title || ""}
-          onChange={(e) => setForm({ ...form, title: e.target.value })}
-          placeholder="文章标题"
-          disabled={saving}
-        />
-
-        <input
-          className="edit-input"
-          value={form.summary || ""}
-          onChange={(e) => setForm({ ...form, summary: e.target.value })}
-          placeholder="文章摘要"
-          disabled={saving}
-        />
-
-        <textarea
-          className="edit-textarea"
-          value={form.content || ""}
-          onChange={(e) => setForm({ ...form, content: e.target.value })}
-          placeholder="文章内容（支持 Markdown）"
-          disabled={saving}
-        />
-
-        <input
-          className="edit-input"
-          value={form.category || ""}
-          onChange={(e) => setForm({ ...form, category: e.target.value })}
-          placeholder="分类"
-          disabled={saving}
-        />
-
-        <input
-          className="edit-input"
-          value={form.tags || ""}
-          onChange={(e) => setForm({ ...form, tags: e.target.value })}
-          placeholder="标签（逗号分隔）"
-          disabled={saving}
-        />
-
-        <input
-          className="edit-input"
-          type="date"
-          value={form.date || ""}
-          onChange={(e) => setForm({ ...form, date: e.target.value })}
-          disabled={saving}
-        />
-
-        <button
+          className="editor-submit-btn"
           onClick={handleUpdate}
           disabled={saving}
-          className="edit-button mt-4"
         >
-          {saving && <div className="spinner" />}
-          {saving ? "保存中..." : "保存修改"}
+          {saving ? (
+            <><span className="btn-spinner" />保存中...</>
+          ) : (
+            "保存修改"
+          )}
         </button>
       </div>
-    </>
+
+      <div className="editor-body">
+        <div className="editor-main">
+          <input
+            type="text"
+            placeholder="输入文章标题..."
+            className="editor-title-input"
+            value={form.title || ""}
+            onChange={(e) => updateField("title", e.target.value)}
+          />
+
+          <div className="editor-toolbar">
+            {TOOLBAR_ACTIONS.map((action) => {
+              const Icon = action.icon;
+              return (
+                <button
+                  key={action.label}
+                  className="toolbar-btn"
+                  title={action.label}
+                  onClick={() => handleToolbarInsert(action.markdown)}
+                >
+                  <Icon style={action.style} />
+                </button>
+              );
+            })}
+          </div>
+
+          <textarea
+            className="editor-textarea"
+            placeholder="开始写作，支持 Markdown 语法..."
+            value={form.content || ""}
+            onChange={(e) => updateField("content", e.target.value)}
+          />
+        </div>
+
+        <aside className="editor-sidebar">
+          {/* Cover image */}
+          <div className="editor-card">
+            <h3 className="editor-card-title">封面图片</h3>
+            <label className="editor-upload-btn">
+              {uploading ? "上传中..." : imageFile || form.image_url ? "更换图片" : "选择封面图片"}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageSelect}
+                disabled={uploading || saving}
+                hidden
+              />
+            </label>
+            {previewUrl && (
+              <div className="editor-preview-wrap">
+                <img src={previewUrl} alt="封面预览" className="editor-preview-img" />
+              </div>
+            )}
+          </div>
+
+          {/* Basic info */}
+          <div className="editor-card">
+            <h3 className="editor-card-title">基本信息</h3>
+            <div className="editor-field">
+              <label className="editor-field-label">摘要</label>
+              <input
+                className="editor-field-input"
+                placeholder="文章简要概述..."
+                value={form.summary || ""}
+                onChange={(e) => updateField("summary", e.target.value)}
+              />
+            </div>
+            <div className="editor-field">
+              <label className="editor-field-label">分类</label>
+              <input
+                className="editor-field-input"
+                placeholder="如：技术、生活、教程"
+                value={form.category || ""}
+                onChange={(e) => updateField("category", e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Metadata */}
+          <div className="editor-card">
+            <h3 className="editor-card-title">元数据</h3>
+            <div className="editor-field">
+              <label className="editor-field-label">标签</label>
+              <input
+                className="editor-field-input"
+                placeholder="逗号分隔，如：React, Next.js"
+                value={form.tags || ""}
+                onChange={(e) => updateField("tags", e.target.value)}
+              />
+            </div>
+            <div className="editor-field">
+              <label className="editor-field-label">发布日期</label>
+              <input
+                className="editor-field-input"
+                type="date"
+                value={form.date || ""}
+                onChange={(e) => updateField("date", e.target.value)}
+              />
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
   );
 }

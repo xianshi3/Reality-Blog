@@ -120,16 +120,8 @@ export default function ImageManagerPage() {
   };
 
   return (
-    <div className="create-bg">
-      <button
-        onClick={() => router.push("/admin")}
-        className="create-back-button"
-        type="button"
-      >
-        ← 返回后台
-      </button>
-
-      <h1 className="text-3xl font-extrabold select-none mb-8">🖼️ 图片管理</h1>
+    <div>
+      <h1 className="admin-page-title"><span>🖼️</span>图片管理</h1>
 
       {loading ? (
         <p className="loading-text">加载中...</p>
