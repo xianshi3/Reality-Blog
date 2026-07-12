@@ -139,7 +139,7 @@ export default function TagCard({ articles }: TagCardProps) {
             label={tag}
             count={count}
             onClick={() =>
-              router.push(`/category?category=${encodeURIComponent(tag)}`)
+              router.push(`/category?tag=${encodeURIComponent(tag)}`)
             }
             index={idx + 1}
           />

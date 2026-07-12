@@ -46,7 +46,7 @@ function TagItem({
 }) {
   return (
     <motion.a
-      href={`/category?category=${encodeURIComponent(label)}`}
+      href={`/category?tag=${encodeURIComponent(label)}`}
       custom={index}
       initial="hidden"
       animate="visible"

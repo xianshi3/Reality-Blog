@@ -118,6 +118,14 @@ html, body {
   box-shadow: 0 6px 12px rgb(0 0 0 / 0.2);
 }
 
+/* 封面图 */
+.article-image {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
 /* 无封面图占位 */
 .article-image-placeholder {
   width: 100%;
@@ -184,7 +192,7 @@ html, body {
   position: sticky;
   top: 5.9rem;
   background-color: #f8fafc;
-  z-index: 140;
+  z-index: 40;
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 }
 
@@ -243,6 +251,20 @@ html, body {
   box-shadow:
     0 6px 12px rgb(59 130 246 / 0.6);
   transform: scale(1.1);
+}
+
+/* 标签筛选提示条 */
+.tag-active-hint {
+  margin-top: -1.5rem;
+  padding: 0.4rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tag-badge {
+  font-size: 0.8rem;
+  pointer-events: none;
 }
 
 /* 动画由 styles/animations.css 统一提供 */
