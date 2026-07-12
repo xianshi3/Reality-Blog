@@ -267,4 +267,114 @@ html, body {
   pointer-events: none;
 }
 
+/* 搜索条容器 */
+.category-search-container {
+  max-width: 75rem;
+  margin: 0 auto 1rem;
+  padding: 0 1.5rem;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* 搜索框外层 */
+.category-search-wrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.category-search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+  font-size: 1rem;
+}
+
+.category-search-input {
+  width: 100%;
+  padding: 0.7rem 2.5rem 0.7rem 2.8rem;
+  border-radius: 9999px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #1f2937;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.dark .category-search-input {
+  background: #23272f;
+  border-color: #374151;
+  color: #f3f4f6;
+}
+
+.category-search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+}
+
+.category-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.category-search-clear {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 9999px;
+  border: none;
+  background: #e5e7eb;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.dark .category-search-clear {
+  background: #374151;
+  color: #9ca3af;
+}
+
+.category-search-clear:hover {
+  background: #d1d5db;
+  color: #374151;
+}
+
+.dark .category-search-clear:hover {
+  background: #4b5563;
+  color: #e5e7eb;
+}
+
+.category-search-count {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .category-search-container {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .category-search-count {
+    text-align: right;
+  }
+}
+
 /* 动画由 styles/animations.css 统一提供 */
