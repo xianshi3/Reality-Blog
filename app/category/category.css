@@ -8,11 +8,9 @@ html, body {
   font-family: var(--font-geist-sans), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  html, body {
-    background: #18181b;
-    color: #f3f4f6;
-  }
+.dark html, .dark body {
+  background: #18181b;
+  color: #f3f4f6;
 }
 
 /* 页面整体容器 */
@@ -57,11 +55,9 @@ html, body {
   transform: translateY(-4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  .category-card {
-    background-color: #23272f;
-    box-shadow: 0 12px 24px rgb(0 0 0 / 0.3);
-  }
+.dark .category-card {
+  background-color: #23272f;
+  box-shadow: 0 12px 24px rgb(0 0 0 / 0.3);
 }
 
 /* 分类标题 */
@@ -76,10 +72,8 @@ html, body {
   opacity: 0;
   animation: fadeInDown 0.6s ease forwards;
 }
-@media (prefers-color-scheme: dark) {
-  .category-header-title {
-    color: #f3f4f6;
-  }
+.dark .category-header-title {
+  color: #f3f4f6;
 }
 
 /* 左侧彩色指示条 */
@@ -119,11 +113,9 @@ html, body {
   transform: scale(1.04) translateY(-3px);
 }
 
-@media (prefers-color-scheme: dark) {
-  .article-card {
-    background-color: #23272f;
-    box-shadow: 0 6px 12px rgb(0 0 0 / 0.2);
-  }
+.dark .article-card {
+  background-color: #23272f;
+  box-shadow: 0 6px 12px rgb(0 0 0 / 0.2);
 }
 
 /* 无封面图占位 */
@@ -138,11 +130,9 @@ html, body {
   font-size: 0.875rem;
   user-select: none;
 }
-@media (prefers-color-scheme: dark) {
-  .article-image-placeholder {
-    background-color: #374151;
-    color: #9ca3af;
-  }
+.dark .article-image-placeholder {
+  background-color: #374151;
+  color: #9ca3af;
 }
 
 /* 文章标题 */
@@ -155,10 +145,8 @@ html, body {
   flex-grow: 0;
   user-select: none;
 }
-@media (prefers-color-scheme: dark) {
-  .category-article-title {
-    color: #fff;
-  }
+.dark .category-article-title {
+  color: #fff;
 }
 
 /* 文章摘要 */
@@ -172,10 +160,8 @@ html, body {
   color: #4b5563;
   user-select: none;
 }
-@media (prefers-color-scheme: dark) {
-  .category-article-summary {
-    color: #cbd5e1;
-  }
+.dark .category-article-summary {
+  color: #cbd5e1;
 }
 
 /* 移动端响应 */
@@ -202,11 +188,9 @@ html, body {
   box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .category-filter-container {
-    background-color: #18181b;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 0.6);
-  }
+.dark .category-filter-container {
+  background-color: #18181b;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.6);
 }
 
 /* 筛选按钮 */
@@ -242,46 +226,23 @@ html, body {
   transform: scale(1.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  .category-filter-btn {
-    background: #374151;
-    color: #d1d5db;
-    box-shadow:
-      0 2px 5px rgb(0 0 0 / 0.1);
-  }
-  .category-filter-btn:hover {
-    background: #3b82f6;
-    color: #f9fafb;
-    transform: scale(1.05);
-  }
-  .category-filter-btn.active {
-    background: #3b82f6;
-    color: #f9fafb;
-    box-shadow:
-      0 6px 12px rgb(59 130 246 / 0.6);
-    transform: scale(1.1);
-  }
+.dark .category-filter-btn {
+  background: #374151;
+  color: #d1d5db;
+  box-shadow:
+    0 2px 5px rgb(0 0 0 / 0.1);
+}
+.dark .category-filter-btn:hover {
+  background: #3b82f6;
+  color: #f9fafb;
+  transform: scale(1.05);
+}
+.dark .category-filter-btn.active {
+  background: #3b82f6;
+  color: #f9fafb;
+  box-shadow:
+    0 6px 12px rgb(59 130 246 / 0.6);
+  transform: scale(1.1);
 }
 
-/* 动画定义 */
-@keyframes fadeInDown {
-  0% {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
+/* 动画由 styles/animations.css 统一提供 */

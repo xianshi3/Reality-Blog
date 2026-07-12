@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 
 export default function ReturnHome() {
   const [hidden, setHidden] = useState(false);
@@ -46,7 +47,7 @@ export default function ReturnHome() {
   }
 
   return (
-    <a
+    <Link
       href="/"
       className={`return-home ${hidden ? "hidden" : ""}`}
       aria-label="返回首页"
@@ -59,6 +60,6 @@ export default function ReturnHome() {
     >
       <span className="text-lg">←</span>
       <span>返回首页</span>
-    </a>
+    </Link>
   );
 }

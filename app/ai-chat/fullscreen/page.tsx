@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -19,6 +19,7 @@ type Message = {
   role: "user" | "assistant";
   content: string;
   id: string;
+  timestamp: number;
 };
 
 const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -130,16 +131,19 @@ function ChatContent() {
 
     setError(null);
 
+    const now = Date.now();
     const userMsg: Message = {
       role: "user",
       content: input.trim(),
       id: generateId(),
+      timestamp: now,
     };
 
     const assistantMsg: Message = {
       role: "assistant",
       content: "",
       id: generateId(),
+      timestamp: now + 1,
     };
 
     setMessages(prev => [...prev, userMsg, assistantMsg]);
@@ -204,8 +208,10 @@ function ChatContent() {
     setLoading(false);
   };
 
+  const router = useRouter();
+
   const handleBackToHome = () => {
-    window.location.href = '/';
+    router.push('/');
   };
 
   return (
@@ -256,7 +262,7 @@ function ChatContent() {
                   <div className={styles.messageSender}>
                     {msg.role === 'user' ? '你' : 'AI Chat'}
                     <span className={styles.messageTime}>
-                      {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
                   <div className={styles.messageBubble}>

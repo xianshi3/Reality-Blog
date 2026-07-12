@@ -48,26 +48,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 深色模式变量 - 单独定义，不影响继承 */
-@media (prefers-color-scheme: dark) {
-  .app {
-    --bg-color: #0a0c10;
-    --surface-color: rgba(18, 22, 28, 0.85);
-    --surface-solid: #1a1e24;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --text-primary: #f3f4f6;
-    --text-secondary: #d1d5db;
-    --text-tertiary: #6b7280;
-    --accent-color: #60a5fa;
-    --accent-light: rgba(96, 165, 250, 0.15);
-    --accent-glow: rgba(96, 165, 250, 0.3);
-    --user-bubble: #60a5fa;
-    --ai-bubble: #1a1e24;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
-    --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.7);
-  }
+/* 深色模式变量 - 通过 .dark 类切换 */
+:global(.dark) .app {
+  --bg-color: #0a0c10;
+  --surface-color: rgba(18, 22, 28, 0.85);
+  --surface-solid: #1a1e24;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #6b7280;
+  --accent-color: #60a5fa;
+  --accent-light: rgba(96, 165, 250, 0.15);
+  --accent-glow: rgba(96, 165, 250, 0.3);
+  --user-bubble: #60a5fa;
+  --ai-bubble: #1a1e24;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.6);
+  --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.7);
 }
 
 /* ===== 动画定义 ===== */

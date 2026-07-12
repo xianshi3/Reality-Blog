@@ -84,10 +84,15 @@ export default function CreateArticle() {
     if (!form.category) delete insertData.category;
     if (!form.tags) delete insertData.tags;
 
-    const { error } = await supabase.from("articles").insert([insertData]);
+    const res = await fetch("/api/article", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(insertData),
+    });
     setLoading(false);
-    if (error) {
-      alert("创建失败：" + error.message);
+    if (!res.ok) {
+      const data = await res.json();
+      alert("创建失败：" + (data.error || "Unknown error"));
     } else {
       router.push("/admin");
     }

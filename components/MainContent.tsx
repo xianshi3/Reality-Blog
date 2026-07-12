@@ -4,11 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Article } from "../types/article";
 
-/**
- * 每页文章数量（必须和服务端一致）
- */
-const PAGE_SIZE = 4;
-
 interface MainContentProps {
   articles: Article[];
   className?: string;

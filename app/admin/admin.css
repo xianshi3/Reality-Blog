@@ -239,6 +239,65 @@
   }
 }
 
+/* ===== 深色模式 Overrides ===== */
+.dark .admin-bg {
+  background: linear-gradient(135deg, #18181b, #23272f);
+}
+
+.dark .admin-card {
+  background: #23272f;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+}
+
+.dark .admin-title {
+  color: #f3f4f6;
+}
+
+.dark .admin-list-item {
+  background: #1f2937;
+}
+
+.dark .admin-list-item:hover {
+  background: #374151;
+}
+
+.dark .admin-article-title {
+  color: #f3f4f6;
+}
+
+.dark .admin-article-date {
+  color: #6b7280;
+}
+
+.dark .admin-edit-link {
+  background: #312e81;
+  color: #a5b4fc;
+}
+
+.dark .admin-edit-link:hover {
+  background: #4338ca;
+  color: white;
+}
+
+.dark .admin-delete-btn {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+
+.dark .admin-delete-btn:hover {
+  background: #dc2626;
+  color: white;
+}
+
+.dark .admin-empty {
+  color: #6b7280;
+}
+
+.dark .delete-spinner {
+  border-color: #ef4444;
+  border-top-color: transparent;
+}
+
 .admin-btn-row {
   display: flex;
   justify-content: space-between; /* 两边对齐 */

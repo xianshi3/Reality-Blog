@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaList, FaChevronDown, FaChevronUp, FaXmark } from "react-icons/fa6";
+import { FaList, FaChevronDown, FaXmark } from "react-icons/fa6";
 
 interface TocItem {
   id: string;
@@ -178,7 +178,7 @@ export default function ArticleToc({ className }: Props) {
                     <span
                       className="toc-level-dot"
                       style={{
-                        backgroundColor: activeId === item.id ? "#3b82f6" : item.level === 1 ? "#6b7280" : "#9ca3af",
+                        backgroundColor: activeId === item.id ? "var(--toc-dot-active, #3b82f6)" : item.level === 1 ? "var(--toc-dot-level1, #6b7280)" : "var(--toc-dot-level2, #9ca3af)",
                       }}
                     />
                     <span className="toc-item-text">{item.text}</span>

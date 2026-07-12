@@ -27,7 +27,7 @@ export default function ReadingProgress() {
         className="h-full rounded-b transition-all duration-300 shadow-lg"
         style={{
           width: `${progress}%`,
-          background: "linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%)",
+          background: "var(--progress-gradient, linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%))",
           boxShadow: "0 2px 8px rgba(59,130,246,0.15)",
         }}
       />

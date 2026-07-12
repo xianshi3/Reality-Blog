@@ -11,38 +11,7 @@ export default function AuthPage() {
   const [errorMsg, setErrorMsg] = useState("");
   const [infoMsg, setInfoMsg] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState<"login" | "signup">("login");
   const router = useRouter();
-
-  const handleSignup = async () => {
-    if (!email || !password) {
-      setErrorMsg("请输入邮箱和密码");
-      return;
-    }
-    setErrorMsg("");
-    setInfoMsg("");
-    setLoading(true);
-
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: window.location.origin + "/login",
-        },
-      });
-
-      if (error) {
-        setErrorMsg("注册失败：" + error.message);
-      } else {
-        setInfoMsg("注册成功！请检查邮箱完成验证后再登录。");
-      }
-    } catch (err: any) {
-      setErrorMsg("注册异常：" + (err.message || JSON.stringify(err)));
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -132,22 +101,6 @@ export default function AuthPage() {
           {loading ? "正在登录..." : "登录"}
         </button>
 
-        {/* 
-        <p className="text-center text-sm mt-2">
-          还没有账号？{" "}
-          <button
-            className="text-blue-600 hover:underline"
-            onClick={() => {
-              setMode("signup");
-              setErrorMsg("");
-              setInfoMsg("");
-            }}
-            disabled={loading}
-          >
-            注册一个
-          </button>
-        </p>
-        */}
       </div>
     </div>
   );

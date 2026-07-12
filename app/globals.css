@@ -1,6 +1,9 @@
 /* Tailwind CSS 基础 */
 @import "tailwindcss";
 
+/* 使用 class 策略控制暗色模式（而非默认的 prefers-color-scheme） */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* 基础样式 */
 @import "./styles/base.css";
 

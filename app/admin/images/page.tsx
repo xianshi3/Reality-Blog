@@ -33,7 +33,7 @@ export default function ImageManagerPage() {
       const { data, error } = await supabase.storage
         .from("article-images")
         .list("", {
-          limit: 100,
+          limit: 1000,
           offset: 0,
           sortBy: { column: "created_at", order: "desc" },
         });
@@ -81,20 +81,14 @@ export default function ImageManagerPage() {
         };
       });
 
-      setImages(imgs);
-
-      await Promise.all(
-        imgs.map(async (img, index) => {
+      const sizes = await Promise.all(
+        imgs.map(async (img) => {
           const size = await fetchImageSize(img.publicUrl);
-          if (size !== undefined) {
-            setImages((prev) => {
-              const copy = [...prev];
-              copy[index] = { ...copy[index], size };
-              return copy;
-            });
-          }
+          return size;
         })
       );
+
+      setImages(imgs.map((img, i) => ({ ...img, size: sizes[i] })));
 
       setLoading(false);
     };
@@ -112,9 +106,14 @@ export default function ImageManagerPage() {
   const handleDelete = async (publicUrl: string, name: string) => {
     if (!window.confirm("确定要删除这张图片吗？")) return;
 
-    const { error } = await supabase.storage.from("article-images").remove([name]);
-    if (error) {
-      alert("删除失败：" + error.message);
+    const res = await fetch("/api/storage", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name }),
+    });
+    if (!res.ok) {
+      const data = await res.json();
+      alert("删除失败：" + (data.error || "Unknown error"));
     } else {
       setImages((prev) => prev.filter((img) => img.publicUrl !== publicUrl));
     }

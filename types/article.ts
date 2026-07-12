@@ -11,4 +11,3 @@ export interface Article {
   image_url?: string;
 }
 
-export default Article;

@@ -1,5 +1,4 @@
 "use client";
-import React from "react";
 import type { Article } from "../types/article";
 
 interface ArticleSearchProps {
@@ -28,6 +27,7 @@ export default function ArticleSearch({
       {/* 搜索框 */}
       <input
         type="text"
+        aria-label="搜索文章"
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}

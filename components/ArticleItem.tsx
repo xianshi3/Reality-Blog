@@ -3,7 +3,6 @@
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { supabase } from "@/lib/supabaseClient";
 
 export default function ArticleItem({
   article,
@@ -13,19 +12,24 @@ export default function ArticleItem({
   delay?: number;
 }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
     const confirmDelete = confirm(`确定要删除文章「${article.title}」吗？`);
     if (!confirmDelete) return;
 
-    setIsDeleting(true); // 开始动画
-    const { error } = await supabase.from("articles").delete().eq("id", article.id);
-    setIsDeleting(false); // 删除请求结束
+    setIsDeleting(true);
+    const res = await fetch("/api/article", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: article.id }),
+    });
+    setIsDeleting(false);
 
-    if (error) {
-      alert("删除失败：" + error.message);
+    if (!res.ok) {
+      const data = await res.json();
+      alert("删除失败：" + (data.error || "Unknown error"));
     } else {
       startTransition(() => {
         router.refresh();

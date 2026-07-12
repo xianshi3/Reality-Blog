@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHashtag, FaChevronDown, FaChevronUp } from "react-icons/fa6";
+import { parseTags } from "@/lib/parseTags";
 
 interface TagListProps {
   tags: string[] | string | undefined;
@@ -74,15 +74,7 @@ function TagItem({
 export default function TagList({ tags }: TagListProps) {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // 处理 tags 数组
-  const tagArray = useMemo(() => {
-    if (!tags) return [];
-    return Array.isArray(tags)
-      ? (tags as string[]).map((t: string) => t.trim()).filter(Boolean)
-      : typeof tags === "string"
-      ? tags.split(",").map((t: string) => t.trim()).filter(Boolean)
-      : [];
-  }, [tags]);
+  const tagArray = useMemo(() => parseTags(tags), [tags]);
 
   const visibleTags = isExpanded
     ? tagArray.slice(0, MAX_VISIBLE_TAGS_EXPANDED)

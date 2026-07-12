@@ -26,6 +26,8 @@ export async function GET(req: Request) {
 }
 
 // POST 方法：解构 context 里的 params
+// Note: read-then-write has a race condition under concurrent requests.
+// A production fix would use a Supabase RPC (e.g. increment_likes) or a row-level lock.
 export async function POST(
   req: Request,
   context: { params: Promise<{ id: string }> }

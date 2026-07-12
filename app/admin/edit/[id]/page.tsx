@@ -95,12 +95,16 @@ export default function EditArticle() {
     if (!updateData.tags) delete updateData.tags;
     if (!updateData.image_url) delete updateData.image_url;
 
-    const { error } = await supabase.from("articles").update(updateData).eq("id", id);
-
+    const res = await fetch("/api/article", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...updateData, id }),
+    });
     setSaving(false);
 
-    if (error) {
-      alert("更新失败：" + error.message);
+    if (!res.ok) {
+      const data = await res.json();
+      alert("更新失败：" + (data.error || "Unknown error"));
     } else {
       router.push("/admin");
     }

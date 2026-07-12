@@ -357,7 +357,7 @@ export default function AIChat() {
           <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl bg-white dark:bg-[#23272f] shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200">
             <HiOutlineSparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#2563eb] dark:text-[#60a5fa]" />
           </div>
-          <span className="hidden sm:block absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#1f2937] text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          <span className="hidden sm:block absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#1f2937] dark:bg-gray-200 text-white dark:text-gray-800 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             AI 助手
           </span>
         </div>
@@ -448,7 +448,7 @@ export default function AIChat() {
                 </div>
               ) : (
                 messages.map((message, idx) => (
-                  <MessageBubble key={`${idx}-${message.content}`} message={message} />
+                  <MessageBubble key={idx} message={message} />
                 ))
               )}
               <div ref={messagesEndRef} />

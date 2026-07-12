@@ -52,6 +52,7 @@ export default function RightSidebar({
           <a
             href="https://github.com/xianshi3"
             target="_blank"
+            rel="noopener noreferrer"
             className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-blue-800 transition-all duration-300 hover:scale-110 hover:shadow-md"
           >
             <FaGithub className="w-5 h-5" />
@@ -60,6 +61,7 @@ export default function RightSidebar({
           <a
             href="https://x.com/xianshi_3"
             target="_blank"
+            rel="noopener noreferrer"
             className="p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-blue-800 transition-all duration-300 hover:scale-110 hover:shadow-md"
           >
             <FaXTwitter className="w-5 h-5" />

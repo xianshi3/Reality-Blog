@@ -7,6 +7,7 @@ import Footer from '@/components/Footer';
 import AIChat from '@/components/AIChat';
 import ErrorDisplay from '@/components/ErrorDisplay';
 import { createServerSupabase } from '@/lib/supabaseServer';
+import { parseTags } from '@/lib/parseTags';
 import type { Article } from '@/types/article';
 
 // 每页显示的文章数量
@@ -45,14 +46,18 @@ export default async function Home() {
     return <ErrorDisplay status={status} message={error.message} />;
   }
 
-  // 格式化文章数据，附加链接
+  // 格式化文章数据，附加链接，转换 tags
   const articles: Article[] = (articlesRaw ?? []).map((item) => ({
     ...item,
     link: `/article/${item.id}`,
+    tags: parseTags(item.tags),
   }));
 
   // 计算总页数
-  const totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+  let totalPages = Math.ceil((count ?? 0) / PAGE_SIZE);
+  if (count === null && articles.length > 0) {
+    totalPages = Math.ceil(articles.length / PAGE_SIZE);
+  }
 
   // 渲染完整页面结构
   return (

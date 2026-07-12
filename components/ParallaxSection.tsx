@@ -20,6 +20,7 @@ export default function ParallaxSection({
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isAtTop, setIsAtTop] = useState(true);
+  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
 
   // 判断是否为移动端
   useEffect(() => {
@@ -31,15 +32,9 @@ export default function ParallaxSection({
 
   // 滚动监听
   useEffect(() => {
-    const handleScroll = () => setOffsetY(window.pageYOffset);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-    // 监听滚动位置
-  useEffect(() => {
     const handleScroll = () => {
-      setIsAtTop(window.scrollY < 50); // 50px 内认为在顶部
+      setOffsetY(window.scrollY);
+      setIsAtTop(window.scrollY < 50);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -85,8 +80,6 @@ export default function ParallaxSection({
     
     setMouseOffset({ x: offsetX, y: offsetY });
   };
-
-  const [mouseOffset, setMouseOffset] = useState({ x: 0, y: 0 });
 
   const handleMouseEnter = () => {
     if (isMobile) return;

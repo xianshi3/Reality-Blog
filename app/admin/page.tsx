@@ -14,12 +14,12 @@ export default async function AdminPage() {
     return (
       <div className="admin-bg flex items-center justify-center min-h-screen">
         <div className="admin-card animate-fade-in-down">
-          <p className="text-gray-600 text-lg">
-            未登录，请先{" "}
-            <a
-              href="/login"
-              className="text-blue-500 underline font-semibold hover:text-blue-700 transition"
-            >
+         <p className="text-gray-600 dark:text-gray-400 text-lg">
+           未登录，请先{" "}
+           <a
+             href="/login"
+             className="text-blue-500 dark:text-blue-400 underline font-semibold hover:text-blue-700 dark:hover:text-blue-300 transition"
+           >
               登录页面
             </a>
           </p>

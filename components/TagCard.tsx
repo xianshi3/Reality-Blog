@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { FaHashtag, FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Article } from "@/types/article";
+import { parseTags } from "@/lib/parseTags";
 
 interface TagCardProps {
   articles: Article[];
@@ -86,20 +87,11 @@ export default function TagCard({ articles }: TagCardProps) {
     const map = new Map<string, number>();
 
     articles.forEach((article) => {
-      const rawTags = article.tags;
-      if (!rawTags) return;
+      if (!article.tags) return;
 
-      const tagArray =
-        typeof rawTags === "string"
-          ? rawTags.split(",")
-          : Array.isArray(rawTags)
-          ? rawTags
-          : [];
-
-      tagArray.forEach((tag) => {
-        const trimmed = tag.trim();
-        if (!trimmed) return;
-        map.set(trimmed, (map.get(trimmed) || 0) + 1);
+      const tagArray = parseTags(article.tags);
+      tagArray.forEach((tag: string) => {
+        map.set(tag, (map.get(tag) || 0) + 1);
       });
     });
 
