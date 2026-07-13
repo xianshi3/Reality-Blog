@@ -5,7 +5,7 @@ export interface Article {
   category: string;
   summary: string;
   content?: string;
-  tags?: string[];
+  tags?: string[] | string;
   link: string;
   likes?: number;
   image_url?: string;

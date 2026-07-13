@@ -1,146 +1,381 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import "./fullscreen-chat.css";
+import React, { useState, useRef, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
+import "highlight.js/styles/github-dark.css";
+import styles from "./fullscreen-chat.module.css";
 
-export default function FullscreenChat() {
-  const [messages, setMessages] = useState<any[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+// 图标
+import { HiOutlineHome, HiOutlineSparkles, HiPaperClip } from "react-icons/hi";
+import { IoSend, IoStop } from "react-icons/io5";
+import { RiRobot2Line, RiUserLine } from "react-icons/ri";
+import { BsEmojiSmile, BsClipboard, BsClipboardCheck } from "react-icons/bs";
+import { VscSymbolKeyword } from "react-icons/vsc";
 
-  useEffect(() => {
-    const queryMessages = new URLSearchParams(window.location.search).get("messages");
-    queryMessages && setMessages(JSON.parse(queryMessages) || []);
-  }, []);
+type Message = {
+  role: "user" | "assistant";
+  content: string;
+  id: string;
+};
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
+const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
-  const handleSend = async () => {
-    if (!input.trim() || loading) return;
+// 复制按钮组件
+const CopyButton = ({ text }: { text: string }) => {
+  const [copied, setCopied] = useState(false);
 
-    setLoading(true);
-    const userMessage = { role: "user", content: input };
-    const newMessages = [...messages, userMessage];
-
-    setMessages(newMessages);
-    setInput("");
-
-    setTimeout(() => {
-      setMessages([
-        ...newMessages,
-        {
-          role: "assistant",
-          content: `AI 回复: ${input}`,
-        },
-      ]);
-      setLoading(false);
-    }, 1000);
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="gpt-root">
-      {/* 顶部栏 */}
-      <header className="gpt-header">
-        <div className="gpt-header-inner">
-          <button
-            onClick={() => window.history.back()}
-            className="gpt-header-back"
-            aria-label="返回"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <h1 className="gpt-header-title">AI 对话</h1>
+    <button
+      onClick={handleCopy}
+      className={`${styles.copyButton} ${copied ? styles.copied : ''}`}
+      title={copied ? "已复制!" : "复制代码"}
+    >
+      {copied ? <BsClipboardCheck /> : <BsClipboard />}
+    </button>
+  );
+};
+
+// 代码块组件
+const CodeBlock = ({ inline, className, children, ...props }: any) => {
+  const match = /language-(\w+)/.exec(className || '');
+  const code = String(children).replace(/\n$/, '');
+  const language = match ? match[1] : 'text';
+
+  if (!inline && match) {
+    return (
+      <div className={styles.codeBlockWrapper}>
+        <div className={styles.codeHeader}>
+          <span className={styles.codeLanguage}>
+            <VscSymbolKeyword />
+            {language}
+          </span>
+          <CopyButton text={code} />
         </div>
+        <div className={styles.codeBlockContent}>
+          <pre className={`language-${language}`}>
+            <code className={className}>{children}</code>
+          </pre>
+        </div>
+      </div>
+    );
+  }
+
+  return <code className={className} {...props}>{children}</code>;
+};
+
+// 将主要聊天逻辑提取到子组件中
+function ChatContent() {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const chatAreaRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+
+  // 从 URL 参数恢复聊天记录
+  useEffect(() => {
+    const messagesParam = searchParams.get('messages');
+    if (messagesParam) {
+      try {
+        const parsedMessages = JSON.parse(messagesParam);
+        const formattedMessages = parsedMessages.map((msg: any) => ({
+          ...msg,
+          id: generateId(),
+        }));
+        setMessages(formattedMessages);
+      } catch (error) {
+        console.error('Failed to parse messages from URL:', error);
+      }
+    }
+  }, [searchParams]);
+
+  // 自动调整文本框高度
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 120)}px`;
+    }
+  }, [input]);
+
+  // 自动滚动到底部
+  const scrollToBottom = useCallback(() => {
+    if (chatAreaRef.current) {
+      chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
+    }
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
+
+  // 自动聚焦输入框
+  useEffect(() => {
+    textareaRef.current?.focus();
+  }, []);
+
+  const handleSend = useCallback(async () => {
+    if (!input.trim() || loading) return;
+
+    setError(null);
+
+    const userMsg: Message = {
+      role: "user",
+      content: input.trim(),
+      id: generateId(),
+    };
+
+    const assistantMsg: Message = {
+      role: "assistant",
+      content: "",
+      id: generateId(),
+    };
+
+    setMessages(prev => [...prev, userMsg, assistantMsg]);
+    setInput("");
+    setLoading(true);
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          messages: [...messages, userMsg].map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      if (!res.body) throw new Error("No response body");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let aiText = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        aiText += decoder.decode(value, { stream: true });
+
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === assistantMsg.id
+              ? { ...msg, content: aiText }
+              : msg
+          )
+        );
+      }
+    } catch (error: any) {
+      console.error("Error:", error);
+      setError(error.message || "发送失败，请重试");
+      setMessages(prev => prev.filter(msg => msg.id !== assistantMsg.id));
+    } finally {
+      setLoading(false);
+      textareaRef.current?.focus();
+    }
+  }, [input, loading, messages]);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleStop = () => {
+    setLoading(false);
+  };
+
+  const handleBackToHome = () => {
+    window.location.href = '/';
+  };
+
+  return (
+    <div className={styles.app}> {/* 确保根元素有 app 类 */}
+      <header className={styles.header}>
+        <div className={styles.headerLeft}>
+          <div className={styles.headerLogo}>
+            <HiOutlineSparkles className={styles.headerIcon} />
+          </div>
+          <h1 className={styles.headerTitle}>AI Chat</h1>
+          <div className={`${styles.headerStatus} ${loading ? styles.thinking : ''}`}>
+            <span className={styles.statusDot}></span>
+            <span>{loading ? '思考中...' : '在线'}</span>
+          </div>
+        </div>
+        <button className={styles.headerHome} onClick={handleBackToHome}>
+          <HiOutlineHome />
+          <span>返回首页</span>
+        </button>
       </header>
 
-      {/* 聊天内容 */}
-      <main className="gpt-chat-main">
-        <div className="gpt-chat-list">
+      <main className={styles.chatArea} ref={chatAreaRef}>
+        <div className={styles.messagesContainer}>
           {messages.length === 0 ? (
-            <div className="gpt-chat-empty animate-fade-in">
-              <div className="gpt-chat-empty-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
-                </svg>
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>
+                <HiOutlineSparkles />
               </div>
-              <p className="gpt-chat-empty-tip">和 AI 聊聊技术、生活或任何问题吧！</p>
-              <p className="gpt-chat-empty-desc">在下方输入框开始对话</p>
+              <h2>开始新的对话</h2>
+              <p>输入消息，开始与AI助手交流</p>
+              <div className={styles.emptySuggestions}>
+                <button className={styles.suggestionChip} onClick={() => setInput("你能做什么？")}>你能做什么？</button>
+                <button className={styles.suggestionChip} onClick={() => setInput("写一首诗")}>写一首诗</button>
+                <button className={styles.suggestionChip} onClick={() => setInput("解释量子计算")}>解释量子计算</button>
+              </div>
             </div>
           ) : (
-            messages.map((msg, idx) => (
-              <div
-                key={idx}
-                className={`gpt-chat-message ${msg.role} animate-slide-in`}
-                style={{ animationDelay: `${idx * 60}ms`, animationFillMode: "backwards" }}
+            messages.map((msg, index) => (
+              <div 
+                key={msg.id} 
+                className={`${styles.messageItem} ${msg.role === 'user' ? styles.user : ''}`}
+                style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="gpt-chat-avatar">
-                  {msg.role === "user" ? (
-                    <div className="gpt-chat-avatar-user">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  ) : (
-                    <div className="gpt-chat-avatar-ai">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  )}
+                <div className={styles.messageAvatar}>
+                  {msg.role === 'user' ? <RiUserLine /> : <RiRobot2Line />}
                 </div>
-                <div className="gpt-chat-bubble">
-                  <div className="gpt-chat-bubble-inner">{msg.content}</div>
-                  <div className="gpt-chat-meta">
-                    {msg.role === "user" ? "你" : "AI助手"} · {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                <div className={styles.messageContent}>
+                  <div className={styles.messageSender}>
+                    {msg.role === 'user' ? '你' : 'AI Chat'}
+                    <span className={styles.messageTime}>
+                      {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                  <div className={styles.messageBubble}>
+                    {msg.role === 'assistant' && msg.content === '' ? (
+                      <div className={styles.typingIndicator}>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </div>
+                    ) : msg.role === 'assistant' ? (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        rehypePlugins={[rehypeHighlight]}
+                        components={{
+                          code: CodeBlock,
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    ) : (
+                      <p>{msg.content}</p>
+                    )}
                   </div>
                 </div>
               </div>
             ))
           )}
+          
+          {error && (
+            <div className={styles.errorMessage}>
+              <span>{error}</span>
+              <button onClick={() => setError(null)} className={styles.errorClose}>×</button>
+            </div>
+          )}
+          
           <div ref={messagesEndRef} />
         </div>
       </main>
 
-      {/* 输入栏 */}
-      <footer className="gpt-chat-footer">
-        <form
-          className="gpt-chat-inputbar"
-          onSubmit={e => {
-            e.preventDefault();
-            handleSend();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="输入你的问题..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            disabled={loading}
-            autoFocus
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            aria-label="发送"
-          >
+      <div className={styles.inputArea}>
+        <div className={styles.inputContainer}>
+          <div className={styles.inputWrapper}>
+            <textarea
+              ref={textareaRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="输入消息... (Shift + Enter 换行)"
+              disabled={loading}
+              className={styles.chatInput}
+              rows={1}
+            />
+          </div>
+          <div className={styles.buttonGroup}>
+            <button className={styles.actionBtn} title="表情" disabled={loading}>
+              <BsEmojiSmile />
+            </button>
+            <button className={styles.actionBtn} title="附件" disabled={loading}>
+              <HiPaperClip />
+            </button>
             {loading ? (
-              <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
+              <button onClick={handleStop} className={styles.stopBtn} title="停止生成">
+                <IoStop />
+              </button>
             ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clipRule="evenodd" />
-              </svg>
+              <button
+                onClick={handleSend}
+                disabled={!input.trim()}
+                className={styles.sendBtn}
+                title="发送 (Enter)"
+              >
+                <IoSend />
+              </button>
             )}
-          </button>
-        </form>
-      </footer>
+          </div>
+        </div>
+        <div className={styles.inputHint}>
+          <span>{loading ? 'AI 正在思考... 点击红色按钮停止' : 'Enter 发送 · Shift + Enter 换行'}</span>
+          {input.length > 0 && (
+            <span className={`${styles.charCount} ${input.length > 2000 ? styles.warning : ''}`}>
+              {input.length}/2000
+            </span>
+          )}
+        </div>
+      </div>
     </div>
+  );
+}
+
+// 主页面组件，用 Suspense 包裹 ChatContent
+export default function FullscreenChat() {
+  return (
+    <Suspense fallback={
+      <div className={styles.app}> {/* 确保 fallback 也有 app 类 */}
+        <header className={styles.header}>
+          <div className={styles.headerLeft}>
+            <div className={styles.headerLogo}>
+              <HiOutlineSparkles className={styles.headerIcon} />
+            </div>
+            <h1 className={styles.headerTitle}>AI Chat</h1>
+            <div className={styles.headerStatus}>
+              <span className={styles.statusDot}></span>
+              <span>加载中...</span>
+            </div>
+          </div>
+        </header>
+        <main className={styles.chatArea}>
+          <div className={`${styles.messagesContainer} flex items-center justify-center`}>
+            <div className="text-center">
+              <div className={`${styles.emptyIcon} mx-auto mb-4 animate-pulse`}>
+                <HiOutlineSparkles className="w-12 h-12 text-gray-400" />
+              </div>
+              <p className="text-gray-500">加载聊天记录...</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    }>
+      <ChatContent />
+    </Suspense>
   );
 }
