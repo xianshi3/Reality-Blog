@@ -10,14 +10,14 @@
   letter-spacing: 0.02em; /* 微调字间距 */
   font-size: 1rem;
   color: #111827;
-  background-image: linear-gradient(to bottom right, #f8fafc, #e0e7ef); /* 浅色渐变背景 */
+  background-image: var(--bg-gradient);
   padding: 0 1rem;
   position: relative;
 }
 
 /* 深色模式背景渐变替换 */
 .dark .article-page-container {
-  background-image: linear-gradient(to bottom right, #18181b, #23272f);
+  background-image: var(--bg-gradient);
   color: #e5e7eb;
 }
 

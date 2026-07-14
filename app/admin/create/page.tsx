@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { uploadImage } from "@/lib/upload";
 import { FaBold, FaItalic, FaHeading, FaCode, FaListOl, FaListUl, FaImage } from "react-icons/fa6";
-import "./create-article.css";
+import "../editor.css";
 
 const TOOLBAR_ACTIONS = [
   { label: "标题 1", icon: FaHeading, markdown: "# " },

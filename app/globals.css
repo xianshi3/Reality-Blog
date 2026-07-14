@@ -16,9 +16,6 @@
 /* 文章页样式 */
 @import "./styles/article.css";
 
-/* AI 对话样式 */
-@import "./styles/ai-chat.css";
-
 /* 代码高亮样式 */
 @import "./styles/code-highlight.css";
 

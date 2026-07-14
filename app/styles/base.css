@@ -4,19 +4,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* 自定义文本渐变工具类 */
-@layer utilities {
-  .text-gradient {
-    background-image: linear-gradient(to right, black, #4b5563, #9ca3af); /* 渐变色 */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
-  }
-}
-
 /* 全局变量：浅色模式下的配色 */
 :root {
+  --bg-gradient: linear-gradient(to bottom right, #f8fafc, #e0e7ef);
   --like-bg: #f3f4f6;
   --like-bg-hover: #e5e7eb;
   --like-border: #d1d5db;
@@ -30,6 +20,7 @@ body {
 
 /* 深色模式下的配色变量 */
 .dark {
+  --bg-gradient: linear-gradient(to bottom right, #18181b, #23272f);
   --like-bg: #23272f;
   --like-bg-hover: #374151;
   --like-border: #4b5563;

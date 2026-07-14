@@ -1,6 +1,6 @@
 "use client";
 
-import "./edit-article.css";
+import "../../editor.css";
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { uploadImage } from "@/lib/upload";
