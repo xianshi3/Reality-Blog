@@ -45,10 +45,10 @@ export default function LikeButton({ articleId, initialLikes = 0 }: LikeButtonPr
   };
 
   const baseStyle = {
-    backgroundColor: liked ? "var(--like-active-bg)" : "var(--like-bg)",
-    color: liked ? "var(--like-active-text)" : "var(--like-text)",
-    borderColor: liked ? "var(--like-active-border)" : "var(--like-border)",
-    boxShadow: liked ? `0 2px 8px var(--like-shadow)` : "none",
+    backgroundColor: liked ? "var(--like-active-bg, #2563eb)" : "var(--like-bg, #f3f4f6)",
+    color: liked ? "var(--like-active-text, #fff)" : "var(--like-text, #374151)",
+    borderColor: liked ? "var(--like-active-border, #2563eb)" : "var(--like-border, #e5e7eb)",
+    boxShadow: liked ? `0 2px 8px var(--like-shadow, rgba(37,99,235,0.3))` : "none",
     transform: isAnimating ? "scale(1.1)" : "scale(1)",
   };
 
@@ -71,15 +71,15 @@ export default function LikeButton({ articleId, initialLikes = 0 }: LikeButtonPr
       onMouseEnter={(e) => {
         if (!liked) {
           const el = e.currentTarget;
-          el.style.backgroundColor = "var(--like-bg-hover)";
-          el.style.color = "var(--like-active-text)";
+          el.style.backgroundColor = "var(--like-bg-hover, #dbeafe)";
+          el.style.color = "var(--like-active-text, #fff)";
         }
       }}
       onMouseLeave={(e) => {
         if (!liked) {
           const el = e.currentTarget;
-          el.style.backgroundColor = "var(--like-bg)";
-          el.style.color = "var(--like-text)";
+          el.style.backgroundColor = "var(--like-bg, #f3f4f6)";
+          el.style.color = "var(--like-text, #374151)";
         }
       }}
     >

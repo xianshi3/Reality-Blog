@@ -1,31 +1,59 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+
+const THEME_KEY = "theme";
+
+function getStoredTheme(): string | null {
+  try {
+    return localStorage.getItem(THEME_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function getSystemDark(): boolean {
+  try {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  } catch {
+    return false;
+  }
+}
+
+function applyTheme(dark: boolean) {
+  document.documentElement.classList.toggle("dark", dark);
+}
 
 export default function ThemeToggle() {
   const [isDark, setIsDark] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    if (storedTheme === "dark") {
+    const stored = getStoredTheme();
+    if (stored === "dark") {
       setIsDark(true);
-      document.documentElement.classList.add("dark");
-    } else {
+      applyTheme(true);
+    } else if (stored === "light") {
       setIsDark(false);
-      document.documentElement.classList.remove("dark");
+      applyTheme(false);
+    } else {
+      const prefersDark = getSystemDark();
+      setIsDark(prefersDark);
+      applyTheme(prefersDark);
+      try {
+        localStorage.setItem(THEME_KEY, prefersDark ? "dark" : "light");
+      } catch {}
     }
+    setMounted(true);
   }, []);
 
   useEffect(() => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [isDark]);
+    if (!mounted) return;
+    applyTheme(isDark);
+    try {
+      localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
+    } catch {}
+  }, [isDark, mounted]);
 
   const toggle = () => setIsDark((prev) => !prev);
 
@@ -39,6 +67,8 @@ export default function ThemeToggle() {
   return (
     <button
       type="button"
+      role="switch"
+      aria-checked={isDark}
       onClick={toggle}
       onKeyDown={onKeyDown}
       aria-label="切换主题"

@@ -9,10 +9,8 @@
 }
 
 /* 深色模式首页背景渐变 */
-@media (prefers-color-scheme: dark) {
-  .home-container {
-    background-image: linear-gradient(to bottom right, #18181b, #23272f);
-  }
+.dark .home-container {
+  background-image: linear-gradient(to bottom right, #18181b, #23272f);
 }
 
 /* ======= 首页头部容器 ======= */
@@ -70,10 +68,8 @@
     font-size: 2.25rem;
   }
 }
-@media (prefers-color-scheme: dark) {
-  .home-title {
-    color: #fff;
-  }
+.dark .home-title {
+  color: #fff;
 }
 
 /* 首页描述文字 */
@@ -83,10 +79,8 @@
   max-width: 36rem;
   color: #4b5563;
 }
-@media (prefers-color-scheme: dark) {
-  .home-description {
-    color: #d1d5db;
-  }
+.dark .home-description {
+  color: #d1d5db;
 }
 
 /* ======= 区块标题 ======= */
@@ -96,10 +90,8 @@
   color: #1f2937;
   margin-bottom: 1rem;
 }
-@media (prefers-color-scheme: dark) {
-  .section-title {
-    color: #f3f4f6;
-  }
+.dark .section-title {
+  color: #f3f4f6;
 }
 
 /* ======= 文章卡片 ======= */
@@ -117,10 +109,8 @@
   transform: scale(1.02);
 }
 
-@media (prefers-color-scheme: dark) {
-  .article-item {
-    background-color: #23272f;
-  }
+.dark .article-item {
+  background-color: #23272f;
 }
 
 /* a 链接样式 */
@@ -140,10 +130,8 @@
   color: #111827;
   margin-bottom: 0.5rem;
 }
-@media (prefers-color-scheme: dark) {
-  .article-title {
-    color: #fff;
-  }
+.dark .article-title {
+  color: #fff;
 }
 
 /* 文章元信息 */
@@ -153,10 +141,8 @@
   margin-bottom: 0.6rem;
 }
 
-@media (prefers-color-scheme: dark) {
-  .article-meta {
-    color: #9ca3af;
-  }
+.dark .article-meta {
+  color: #9ca3af;
 }
 
 /* 文章摘要 */
@@ -168,17 +154,15 @@
   display: -webkit-box;         
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;          /* 限制行数 */
-  line-clamp: 3;                  /* 标准属性，增强兼容性 */
+  line-clamp: 2;                  /* 标准属性，增强兼容性 */
   overflow: hidden;               /* 隐藏溢出 */
   text-overflow: ellipsis;        /* 显示省略号 */
   white-space: normal;            /* 允许换行 */
   max-width: 100%;                /* 容器宽度 */
 }
 
-@media (prefers-color-scheme: dark) {
-  .article-summary {
-    color: #cbd5e1; /* 更亮一点的灰色，便于在深色背景下阅读 */
-  }
+.dark .article-summary {
+  color: #cbd5e1; /* 更亮一点的灰色，便于在深色背景下阅读 */
 }
 
 .article-image {
@@ -209,11 +193,9 @@
     justify-content: space-between;
   }
 }
-@media (prefers-color-scheme: dark) {
-  .footer {
-    color: #9ca3af;
-    border-top-color: #374151;
-  }
+.dark .footer {
+  color: #9ca3af;
+  border-top-color: #374151;
 }
 
 /* 页脚链接组 */
@@ -236,11 +218,9 @@
   background-color: #e5e7eb;
   color: #1f2937;
 }
-@media (prefers-color-scheme: dark) {
-  .tag {
-    background-color: #374151;
-    color: #d1d5db;
-  }
+.dark .tag {
+  background-color: #374151;
+  color: #d1d5db;
 }
 
 /* 小字号文本 */
@@ -248,22 +228,8 @@
   font-size: 0.875rem;
   color: #4b5563;
 }
-@media (prefers-color-scheme: dark) {
-  .text-sm {
-    color: #d1d5db;
-  }
-}
-
-/* ======= 动画关键帧 ======= */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dark .text-sm {
+  color: #d1d5db;
 }
 
 @keyframes fadeInUpSimple {
@@ -311,12 +277,10 @@
   transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  .pagination a {
-    background-color: #374151;
-    color: #d1d5db;
-    box-shadow: none;
-  }
+.dark .pagination a {
+  background-color: #374151;
+  color: #d1d5db;
+  box-shadow: none;
 }
 
 .pagination a:hover:not(.disabled):not(.active) {

@@ -2,13 +2,15 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 import { Message } from "../types/message";
 import { HiOutlineSparkles } from "react-icons/hi";
-import { IoSend } from "react-icons/io5";
+import { IoSend, IoStop } from "react-icons/io5";
 import { RiRobot2Line, RiUserLine } from "react-icons/ri";
 import { IoClose, IoExpand } from "react-icons/io5";
 
-// 用户和 AI 的头像组件
 const AVATAR = {
   user: (
     <div className="flex-shrink-0 w-7 h-7 rounded-full bg-[#e5e7eb] dark:bg-[#374151] flex items-center justify-center">
@@ -22,7 +24,6 @@ const AVATAR = {
   ),
 };
 
-// 消息气泡组件
 const MessageBubble = ({ message }: { message: Message }) => (
   <div
     className={`flex gap-2 animate-in fade-in-0 slide-in-from-bottom-2 duration-300 ${
@@ -31,20 +32,36 @@ const MessageBubble = ({ message }: { message: Message }) => (
   >
     {message.role === "assistant" && AVATAR.assistant}
     <div
-      className={`max-w-[70%] px-3 py-2 text-sm whitespace-pre-wrap break-words shadow-sm
-        ${
-          message.role === "user"
-            ? "bg-[#2563eb] text-white rounded-2xl rounded-tr-none"
-            : "bg-white dark:bg-[#23272f] text-[#374151] dark:text-[#cbd5e1] rounded-2xl rounded-tl-none"
-        }`}
+      className={`max-w-[70%] px-3 py-2 text-sm shadow-sm ${
+        message.role === "user"
+          ? "bg-[#2563eb] text-white rounded-2xl rounded-tr-none"
+          : "bg-white dark:bg-[#23272f] text-[#374151] dark:text-[#cbd5e1] rounded-2xl rounded-tl-none"
+      }`}
     >
-      {message.content}
+      {message.role === "assistant" ? (
+        <div className="prose prose-sm dark:prose-invert max-w-none [&_pre]:overflow-x-auto [&_pre]:rounded-lg [&_pre]:bg-[#1e1e1e] [&_pre]:p-3 [&_code]:bg-transparent [&_p]:leading-relaxed [&_p]:mb-1 [&_ul]:my-1 [&_ol]:my-1">
+          <ReactMarkdown
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight]}
+            components={{
+              a: ({ href, children }) => (
+                <a href={href} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                  {children}
+                </a>
+              ),
+            }}
+          >
+            {message.content}
+          </ReactMarkdown>
+        </div>
+      ) : (
+        <p className="whitespace-pre-wrap break-words">{message.content}</p>
+      )}
     </div>
     {message.role === "user" && AVATAR.user}
   </div>
 );
 
-// 聊天顶部栏
 const ChatHeader = ({
   onFullscreen,
   onClose,
@@ -54,7 +71,7 @@ const ChatHeader = ({
   onClose: () => void;
   onMouseDown: (e: React.MouseEvent) => void;
 }) => (
-  <div 
+  <div
     className="flex items-center justify-between px-4 py-3 bg-gradient-to-br from-[#f8fafc] to-[#e0e7ef] dark:from-[#18181b] dark:to-[#23272f] cursor-move select-none"
     onMouseDown={onMouseDown}
   >
@@ -83,16 +100,17 @@ const ChatHeader = ({
   </div>
 );
 
-// 聊天输入框组件
 const ChatInput = ({
   value,
   onChange,
   onSend,
+  onStop,
   loading,
 }: {
   value: string;
   onChange: (value: string) => void;
   onSend: () => void;
+  onStop: () => void;
   loading: boolean;
 }) => (
   <div className="flex items-center gap-2 p-3 bg-white dark:bg-[#23272f]">
@@ -106,34 +124,39 @@ const ChatInput = ({
         disabled={loading}
       />
     </div>
-    <button
-      className="bg-[#2563eb] text-white rounded-full w-8 h-8 flex items-center justify-center transition-all
-                 hover:bg-[#1d4ed8] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#2563eb]"
-      onClick={onSend}
-      disabled={loading || !value.trim()}
-    >
-      {loading ? (
-        <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-        </svg>
-      ) : (
+    {loading ? (
+      <button
+        onClick={onStop}
+        className="bg-[#ef4444] text-white rounded-full w-8 h-8 flex items-center justify-center transition-all hover:bg-[#dc2626] active:scale-95"
+        title="停止生成"
+      >
+        <IoStop className="w-4 h-4" />
+      </button>
+    ) : (
+      <button
+        className="bg-[#2563eb] text-white rounded-full w-8 h-8 flex items-center justify-center transition-all hover:bg-[#1d4ed8] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#2563eb]"
+        onClick={onSend}
+        disabled={loading || !value.trim()}
+      >
         <IoSend className="w-4 h-4" />
-      )}
-    </button>
+      </button>
+    )}
   </div>
 );
 
-// 主组件
 export default function AIChat() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
   const [position, setPosition] = useState({ x: 20, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
@@ -141,42 +164,42 @@ export default function AIChat() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // 处理打开/关闭动画
   useEffect(() => {
-    if (open) {
-      // 先计算位置再显示
-      if (buttonRef.current && window.innerWidth >= 640) {
+    setIsDesktop(window.innerWidth >= 640);
+    const handleResize = () => setIsDesktop(window.innerWidth >= 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (open && isDesktop) {
+      if (buttonRef.current) {
         const buttonRect = buttonRef.current.getBoundingClientRect();
         const chatWidth = 320;
         const chatHeight = 560;
-        
+
         let x = buttonRect.left;
         let y = buttonRect.top - chatHeight - 10;
-        
+
         if (y < 10) {
           y = buttonRect.bottom + 10;
         }
-        
         if (x + chatWidth > window.innerWidth - 10) {
           x = window.innerWidth - chatWidth - 10;
         }
-        
         if (x < 10) {
           x = 10;
         }
-        
+
         setPosition({ x, y });
       }
-      
-      // 延迟显示以触发动画
       const timer = setTimeout(() => setIsVisible(true), 10);
       return () => clearTimeout(timer);
-    } else {
+    } else if (!open) {
       setIsVisible(false);
     }
-  }, [open]);
+  }, [open, isDesktop]);
 
-  // 从 URL 参数恢复聊天记录
   useEffect(() => {
     const messagesParam = searchParams.get('messages');
     if (messagesParam) {
@@ -192,20 +215,17 @@ export default function AIChat() {
     }
   }, [searchParams]);
 
-  // 从 localStorage 恢复聊天记录
   useEffect(() => {
     const savedMessages = localStorage.getItem('ai-chat-messages');
     if (savedMessages) {
       try {
-        const parsed = JSON.parse(savedMessages);
-        setMessages(parsed);
+        setMessages(JSON.parse(savedMessages));
       } catch (error) {
         console.error('Failed to parse saved messages:', error);
       }
     }
   }, []);
 
-  // 保存聊天记录到 localStorage
   useEffect(() => {
     if (messages.length > 0) {
       localStorage.setItem('ai-chat-messages', JSON.stringify(messages));
@@ -214,24 +234,21 @@ export default function AIChat() {
     }
   }, [messages]);
 
-  // 自动滚动到底部
   useEffect(() => {
     if (messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);
 
-  // 拖动功能
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if (window.innerWidth < 640) return;
-    
+    if (!isDesktop) return;
     const target = e.target as HTMLElement;
     if (target.closest('button')) return;
-    
+
     setIsDragging(true);
     setDragStart({ x: e.clientX, y: e.clientY });
     setInitialPos({ x: position.x, y: position.y });
-  }, [position]);
+  }, [position, isDesktop]);
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isDragging) return;
@@ -275,7 +292,14 @@ export default function AIChat() {
     };
   }, [isDragging, handleMouseMove, handleMouseUp]);
 
-  // 发送消息
+  const handleStop = useCallback(() => {
+    if (abortRef.current) {
+      abortRef.current.abort();
+      abortRef.current = null;
+    }
+    setLoading(false);
+  }, []);
+
   const handleSend = useCallback(async () => {
     if (!input.trim() || loading) return;
 
@@ -284,17 +308,22 @@ export default function AIChat() {
 
     setMessages(newMessages);
     setInput("");
+    setError(null);
     setLoading(true);
+
+    const abortController = new AbortController();
+    abortRef.current = abortController;
 
     try {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ messages: newMessages }),
+        signal: abortController.signal,
       });
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      
+
       const reader = res.body?.getReader();
       if (!reader) throw new Error("No response body");
 
@@ -311,23 +340,24 @@ export default function AIChat() {
         assistantMessage += text;
 
         setMessages(prev => {
-          const newMessages = [...prev];
-          newMessages[newMessages.length - 1] = { role: "assistant", content: assistantMessage };
-          return newMessages;
+          const newMsgs = [...prev];
+          newMsgs[newMsgs.length - 1] = { role: "assistant", content: assistantMessage };
+          return newMsgs;
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        return;
+      }
       console.error("Chat error:", error);
-      setMessages(prev => [
-        ...prev,
-        { role: "assistant", content: "AI 服务异常，请稍后再试" },
-      ]);
+      setError("AI 服务异常，请稍后再试");
+      setMessages(prev => prev.slice(0, -1));
     } finally {
       setLoading(false);
+      abortRef.current = null;
     }
   }, [input, loading, messages]);
 
-  // 全屏
   const handleFullscreen = useCallback(() => {
     localStorage.setItem('ai-chat-messages', JSON.stringify(messages));
     const queryParams = new URLSearchParams();
@@ -336,17 +366,14 @@ export default function AIChat() {
     setOpen(false);
   }, [messages, router]);
 
-  // 清空记录
   const handleClear = useCallback(() => {
-    if (window.confirm('确定要清空所有聊天记录吗？')) {
-      setMessages([]);
-      localStorage.removeItem('ai-chat-messages');
-    }
+    setMessages([]);
+    localStorage.removeItem('ai-chat-messages');
+    setShowClearConfirm(false);
   }, []);
 
   return (
     <>
-      {/* 悬浮按钮 */}
       <button
         ref={buttonRef}
         onClick={() => setOpen(true)}
@@ -357,70 +384,62 @@ export default function AIChat() {
           <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl bg-white dark:bg-[#23272f] shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all duration-200">
             <HiOutlineSparkles className="w-5 h-5 sm:w-6 sm:h-6 text-[#2563eb] dark:text-[#60a5fa]" />
           </div>
-          <span className="hidden sm:block absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#1f2937] text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+          <span className="hidden sm:block absolute left-full ml-3 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-[#1f2937] dark:bg-gray-200 text-white dark:text-gray-800 text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
             AI 助手
           </span>
         </div>
       </button>
 
-      {/* 弹出聊天窗口 - 添加过渡动画 */}
       {open && (
         <>
-          {/* 移动端遮罩层 - 淡入淡出 */}
-          <div 
+          <div
             className={`fixed inset-0 bg-black/20 dark:bg-black/40 z-40 sm:hidden transition-opacity duration-300 ${
               isVisible ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={() => setOpen(false)}
           />
-          
-          {/* 聊天窗口 */}
+
           <div
             ref={chatContainerRef}
             className={`fixed flex flex-col rounded-xl shadow-xl overflow-hidden z-50
                        bg-white dark:bg-[#23272f] transition-all duration-300 ease-out
                        ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
-            style={{
-              // 桌面端：绝对定位
-              ...(window.innerWidth >= 640 ? {
-                position: 'fixed',
-                left: `${position.x}px`,
-                top: `${position.y}px`,
-                width: '320px',
-                maxHeight: 'min(560px, 80vh)',
-                height: 'min(560px, 80vh)',
-                cursor: isDragging ? 'grabbing' : 'default',
-                transformOrigin: 'left top',
-              } : {
-                // 移动端：底部弹出
-                position: 'fixed',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                width: '100%',
-                maxHeight: '85vh',
-                height: 'min(600px, 90vh)',
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
-                transition: 'transform 0.3s ease-out',
-              })
+            style={isDesktop ? {
+              position: 'fixed',
+              left: `${position.x}px`,
+              top: `${position.y}px`,
+              width: '320px',
+              maxHeight: 'min(560px, 80vh)',
+              height: 'min(560px, 80vh)',
+              cursor: isDragging ? 'grabbing' : 'default',
+              transformOrigin: 'left top',
+            } : {
+              position: 'fixed',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              width: '100%',
+              maxHeight: '85vh',
+              height: 'min(600px, 90vh)',
+              borderBottomLeftRadius: 0,
+              borderBottomRightRadius: 0,
+              transform: isVisible ? 'translateY(0)' : 'translateY(100%)',
+              transition: 'transform 0.3s ease-out',
             }}
           >
-            <ChatHeader 
-              onFullscreen={handleFullscreen} 
-              onClose={() => setOpen(false)} 
+            <ChatHeader
+              onFullscreen={handleFullscreen}
+              onClose={() => setOpen(false)}
               onMouseDown={handleMouseDown}
             />
 
-            {/* 消息数量提示 */}
             {messages.length > 0 && (
               <div className="flex justify-between items-center px-4 py-2 bg-[#f8fafc] dark:bg-[#18181b]">
                 <span className="text-xs text-[#6b7280] dark:text-[#9ca3af]">
                   共 {messages.length} 条消息
                 </span>
                 <button
-                  onClick={handleClear}
+                  onClick={() => setShowClearConfirm(true)}
                   className="text-xs text-[#6b7280] hover:text-[#ef4444] dark:text-[#9ca3af] dark:hover:text-[#f87171]"
                 >
                   清空
@@ -428,8 +447,7 @@ export default function AIChat() {
               </div>
             )}
 
-            {/* 消息内容区 */}
-            <div 
+            <div
               className="flex-1 overflow-y-auto px-4 py-4 space-y-4 scrollbar-none"
               style={{
                 scrollbarWidth: 'none',
@@ -448,14 +466,52 @@ export default function AIChat() {
                 </div>
               ) : (
                 messages.map((message, idx) => (
-                  <MessageBubble key={`${idx}-${message.content}`} message={message} />
+                  <MessageBubble key={idx} message={message} />
                 ))
               )}
+
+              {error && (
+                <div className="flex items-center gap-2 px-3 py-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-xs text-red-600 dark:text-red-400">
+                  <span className="flex-1">{error}</span>
+                  <button
+                    onClick={() => setError(null)}
+                    className="text-red-400 hover:text-red-600 dark:hover:text-red-300 font-bold leading-none"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+
+              {showClearConfirm && (
+                <div className="flex items-center justify-between px-3 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg text-xs">
+                  <span className="text-yellow-700 dark:text-yellow-300">确定清空所有消息？</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setShowClearConfirm(false)}
+                      className="text-yellow-600 hover:text-yellow-800 dark:text-yellow-400 dark:hover:text-yellow-200"
+                    >
+                      取消
+                    </button>
+                    <button
+                      onClick={handleClear}
+                      className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-200 font-medium"
+                    >
+                      确定
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
-            {/* 输入区域 */}
-            <ChatInput value={input} onChange={setInput} onSend={handleSend} loading={loading} />
+            <ChatInput
+              value={input}
+              onChange={setInput}
+              onSend={handleSend}
+              onStop={handleStop}
+              loading={loading}
+            />
           </div>
         </>
       )}

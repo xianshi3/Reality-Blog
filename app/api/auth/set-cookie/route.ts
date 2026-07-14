@@ -27,9 +27,13 @@ export async function POST(req: Request) {
   // 从请求体中解析 access_token 和 refresh_token
   const { access_token, refresh_token } = await req.json();
 
+  if (!access_token || !refresh_token || typeof access_token !== 'string' || typeof refresh_token !== 'string') {
+    return NextResponse.json({ error: 'Invalid tokens' }, { status: 400 });
+  }
+
   // 获取 Supabase 配置信息
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
   // 创建 Supabase 服务端客户端，并绑定 cookie 操作
   const supabase = createServerClient(supabaseUrl, supabaseKey, {

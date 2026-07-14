@@ -15,16 +15,16 @@
  * @dependency Supabase, Next.js Server Components
  */
 
-import type { Article } from '../../../types/article';
-import Footer from '../../../components/Footer';
-import LikeButton from '../../../components/LikeButton';
-import ReadingProgress from '../../../components/ReadingProgress';
-import { createServerSupabase } from '../../../lib/supabaseServer';
+import type { Article } from '@/types/article';
+import Footer from '@/components/Footer';
+import LikeButton from '@/components/LikeButton';
+import ReadingProgress from '@/components/ReadingProgress';
+import { createServerSupabase } from '@/lib/supabaseServer';
 import ArticleContent from '@/components/ArticleContent';
 import ArticleToc from '@/components/ArticleToc';
-import AIChat from '../../../components/AIChat';
-import ReturnHome from '../../../components/ReturnHome';
-import TagList from '../../../components/TagList';
+import ReturnHome from '@/components/ReturnHome';
+import TagList from '@/components/TagList';
+import AIChat from '@/components/DynamicAIChat';
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   // 解析路由参数（文章 ID）
@@ -96,15 +96,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
 
             {/* 标签 & 点赞 */}
             <div className="tag-like-container">
-              <TagList
-                tags={
-                  Array.isArray(article.tags)
-                    ? article.tags
-                    : typeof article.tags === "string"
-                    ? article.tags.split(",")
-                    : []
-                }
-              />
+              <TagList tags={article.tags ?? []} />
 
               <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
             </div>

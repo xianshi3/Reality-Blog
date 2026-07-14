@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import type { Article } from "../types/article";
 
 // 定义组件接收的属性类型
@@ -45,10 +46,8 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
       {article ? (
         <>
           {/* 文章链接（包含标题和摘要） */}
-          <a
+          <Link
             href={article.link}
-            target="_blank"
-            rel="noopener noreferrer"
             className="space-y-2 block text-left"
           >
             <h4 className="text-base font-semibold text-gray-900 dark:text-white line-clamp-2">
@@ -57,7 +56,7 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
             <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3">
               {article.summary || "暂无摘要"}
             </p>
-          </a>
+          </Link>
           {/* 文章元信息（分类和日期） */}
           <div className="mt-3 flex justify-between items-center text-sm text-gray-500 dark:text-gray-400">
             <span>{article.category || "未分类"}</span>

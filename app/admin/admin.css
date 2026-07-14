@@ -1,167 +1,648 @@
-/* 背景与卡片基础样式 */
-.admin-bg {
-  background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+/* ===== Admin Shell ===== */
+.admin-shell {
+  display: flex;
   min-height: 100vh;
-  animation: fade-in 0.7s ease both;
-  padding: 2rem;
+  background: #f0f2f5;
 }
 
-@media (max-width: 640px) {
-  .admin-bg {
-    padding: 1rem;
-  }
+.dark .admin-shell {
+  background: #13151a;
 }
 
-.admin-card {
+/* ===== Sidebar ===== */
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 230px;
   background: #ffffff;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
-  padding: 3rem 2rem;
-  transition: box-shadow 0.3s ease;
-  animation: slide-up 0.5s ease both;
-  max-width: 720px;
-  margin: 0 auto;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (max-width: 640px) {
-  .admin-card {
-    padding: 2rem 1rem;
-    border-radius: 1rem;
-  }
+.dark .admin-sidebar {
+  background: #16181f;
+  border-right-color: #252830;
 }
 
-/* 标题 */
-.admin-title {
-  font-size: 2rem;
-  font-weight: 800;
-  margin-bottom: 2.5rem;
-  color: #111827;
-  letter-spacing: 0.5px;
+/* ===== Sidebar Header ===== */
+.admin-sidebar-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem 0.75rem;
 }
 
-@media (max-width: 640px) {
-  .admin-title {
-    justify-content: center;
-    font-size: 1.75rem;
-  }
+.admin-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+  text-decoration: none;
+  letter-spacing: -0.3px;
 }
 
-.admin-emoji {
-  font-size: 2.2rem;
+.dark .admin-sidebar-brand {
+  color: #f3f4f6;
 }
 
-/* 创建按钮 */
-.admin-create-btn {
-  display: inline-block;
-  background: linear-gradient(90deg, #3b82f6, #6366f1);
-  color: #fff;
-  font-weight: 600;
-  padding: 0.6rem 1.5rem;
-  border-radius: 0.8rem;
-  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.1);
-  margin-bottom: 2rem;
-  transition: all 0.25s ease;
-  font-size: 1rem;
-  text-align: center;
-  user-select: none;
+.admin-sidebar-brand-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 0.45rem;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.admin-sidebar-close {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #6b7280;
   cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.35rem;
+  transition: background 0.15s;
 }
 
-.admin-create-btn:hover {
-  background: linear-gradient(90deg, #2563eb, #7c3aed);
-  transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 14px rgba(99, 102, 241, 0.2);
+.admin-sidebar-close:hover {
+  background: #f3f4f6;
 }
 
-@media (max-width: 640px) {
-  .admin-create-btn {
-    width: 100%;
-    font-size: 1.1rem;
-    padding: 0.8rem 0;
-    border-radius: 0.75rem;
+.dark .admin-sidebar-close:hover {
+  background: #252830;
+}
+
+/* ===== Sidebar Nav ===== */
+.admin-sidebar-nav {
+  flex: 1;
+  padding: 0.75rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+/* Custom scrollbar */
+.admin-sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.dark .admin-sidebar-nav::-webkit-scrollbar-thumb {
+  background: #374151;
+}
+
+.admin-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #4b5563;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.dark .admin-nav-item {
+  color: #9ca3af;
+}
+
+.admin-nav-item:hover {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+.dark .admin-nav-item:hover {
+  background: #1f2230;
+  color: #f3f4f6;
+}
+
+.admin-nav-item.active {
+  background: #eef2ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.admin-nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: -0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 1.2rem;
+  border-radius: 0 2px 2px 0;
+  background: linear-gradient(180deg, #3b82f6, #6366f1);
+}
+
+.dark .admin-nav-item.active {
+  background: #1e1b4b;
+  color: #a5b4fc;
+}
+
+.dark .admin-nav-item.active::before {
+  background: linear-gradient(180deg, #6366f1, #818cf8);
+}
+
+.admin-nav-item.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-nav-item svg {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.admin-nav-badge {
+  font-size: 0.6rem;
+  background: #e5e7eb;
+  color: #6b7280;
+  padding: 0.1rem 0.35rem;
+  border-radius: 0.25rem;
+  margin-left: auto;
+  font-weight: 500;
+}
+
+.dark .admin-nav-badge {
+  background: #252830;
+  color: #9ca3af;
+}
+
+/* ===== Sidebar Footer ===== */
+.admin-sidebar-footer {
+  padding: 0.75rem 0.6rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.dark .admin-sidebar-footer {
+  border-top-color: #252830;
+}
+
+.admin-sidebar-user {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.4rem;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+.dark .admin-sidebar-user {
+  color: #9ca3af;
+}
+
+.admin-sidebar-avatar {
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* ===== Main Content ===== */
+.admin-main {
+  flex: 1;
+  margin-left: 230px;
+  padding: 2rem;
+  min-height: 100vh;
+  animation: admin-fade-in 0.3s ease both;
+}
+
+@media (max-width: 768px) {
+  .admin-main {
+    margin-left: 0;
+    padding: 1rem;
+    padding-top: 3.5rem;
+  }
+
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .admin-sidebar-close {
+    display: block;
   }
 }
 
-/* 列表 */
+/* ===== Mobile Header ===== */
+.admin-mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3rem;
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  align-items: center;
+  padding: 0 1rem;
+  gap: 0.75rem;
+  z-index: 99;
+}
+
+.dark .admin-mobile-header {
+  background: #16181f;
+  border-bottom-color: #252830;
+}
+
+.admin-mobile-menu-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: #4b5563;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.35rem;
+  transition: background 0.15s;
+}
+
+.admin-mobile-menu-btn:hover {
+  background: #f3f4f6;
+}
+
+.dark .admin-mobile-menu-btn:hover {
+  background: #252830;
+}
+
+.admin-mobile-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #111827;
+}
+
+.dark .admin-mobile-title {
+  color: #f3f4f6;
+}
+
+@media (max-width: 768px) {
+  .admin-mobile-header {
+    display: flex;
+  }
+}
+
+/* ===== Overlay ===== */
+.admin-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  z-index: 99;
+  animation: admin-fade-in 0.2s ease both;
+}
+
+@media (max-width: 768px) {
+  .admin-overlay {
+    display: block;
+  }
+}
+
+/* ===== Page Title ===== */
+.admin-page-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  letter-spacing: -0.3px;
+}
+
+.dark .admin-page-title {
+  color: #f3f4f6;
+}
+
+/* ===== Shared Card ===== */
+.admin-card {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  padding: 1.5rem;
+  transition: box-shadow 0.2s ease;
+}
+
+.dark .admin-card {
+  background: #16181f;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Welcome Banner ===== */
+.admin-welcome {
+  background: linear-gradient(135deg, #3b82f6 0%, #6366f1 50%, #8b5cf6 100%);
+  border-radius: 0.75rem;
+  padding: 1.5rem 2rem;
+  margin-bottom: 1.5rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+}
+
+.dark .admin-welcome {
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+}
+
+.admin-welcome-text h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.admin-welcome-text p {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  margin: 0.25rem 0 0;
+}
+
+.admin-welcome-icon {
+  font-size: 2.5rem;
+  opacity: 0.3;
+  flex-shrink: 0;
+}
+
+/* ===== Dashboard Stats ===== */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-stat-card {
+  background: #ffffff;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: admin-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.admin-stat-card:nth-child(1) { animation-delay: 0.05s; }
+.admin-stat-card:nth-child(2) { animation-delay: 0.1s; }
+.admin-stat-card:nth-child(3) { animation-delay: 0.15s; }
+
+.dark .admin-stat-card {
+  background: #16181f;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.admin-stat-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.dark .admin-stat-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.admin-stat-icon {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.admin-stat-icon.blue {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.dark .admin-stat-icon.blue {
+  background: rgba(79, 70, 229, 0.15);
+  color: #818cf8;
+}
+
+.admin-stat-icon.green {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.dark .admin-stat-icon.green {
+  background: rgba(5, 150, 105, 0.15);
+  color: #34d399;
+}
+
+.admin-stat-icon.purple {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.dark .admin-stat-icon.purple {
+  background: rgba(124, 58, 237, 0.15);
+  color: #a78bfa;
+}
+
+.admin-stat-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.dark .admin-stat-value {
+  color: #f3f4f6;
+}
+
+.admin-stat-label {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.dark .admin-stat-label {
+  color: #9ca3af;
+}
+
+/* ===== Quick Actions ===== */
+.admin-quick-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.admin-btn-primary {
+  background: linear-gradient(90deg, #3b82f6, #6366f1);
+  color: white;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.15);
+}
+
+.admin-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+.admin-btn-secondary {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.dark .admin-btn-secondary {
+  background: #1f2230;
+  color: #d1d5db;
+}
+
+.admin-btn-secondary:hover {
+  background: #e5e7eb;
+}
+
+.dark .admin-btn-secondary:hover {
+  background: #252830;
+}
+
+/* ===== Article List ===== */
 .admin-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-/* 列表项 */
 .admin-list-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.2rem;
-  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.4rem;
   background: #f9fafb;
-  border-radius: 0.75rem;
-  transition: transform 0.2s ease, background 0.2s ease;
-  animation: fade-in 0.4s ease both;
+  border-radius: 0.5rem;
+  border-left: 3px solid transparent;
+  transition: border-color 0.2s, background 0.15s ease;
+}
+
+.dark .admin-list-item {
+  background: #1a1d24;
 }
 
 .admin-list-item:hover {
-  background: #eef2ff;
-  transform: translateY(-2px);
+  background: #f3f4f6;
+  border-left-color: #6366f1;
+}
+
+.dark .admin-list-item:hover {
+  background: #1f2230;
+  border-left-color: #6366f1;
+}
+
+.admin-article-title {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dark .admin-article-title {
+  color: #f3f4f6;
+}
+
+.admin-article-date {
+  font-size: 0.78rem;
+  color: #9ca3af;
+  display: block;
+  margin-top: 0.15rem;
+}
+
+.dark .admin-article-date {
+  color: #6b7280;
+}
+
+.admin-btns {
+  display: flex;
+  gap: 0.35rem;
 }
 
 @media (max-width: 640px) {
   .admin-list-item {
     flex-direction: column;
     align-items: flex-start;
-    padding: 1rem;
+    gap: 0.5rem;
   }
-}
 
-/* 文章标题 */
-.admin-article-title {
-  font-weight: 600;
-  color: #1f2937;
-  font-size: 1rem;
-  letter-spacing: 0.3px;
-}
-
-.admin-article-date {
-  margin-left: 0.75rem;
-  font-size: 0.85rem;
-  color: #9ca3af;
-}
-
-/* 编辑 + 删除按钮容器 */
-.admin-btns {
-  display: flex;
-  gap: 0.5rem;
-}
-
-@media (max-width: 640px) {
   .admin-btns {
     width: 100%;
     justify-content: flex-start;
-    gap: 0.75rem;
-    margin-top: 0.75rem;
-  }
-
-  .admin-edit-link,
-  .admin-delete-btn {
-    flex: 1;
-    text-align: center;
   }
 }
 
-/* 编辑按钮 */
 .admin-edit-link {
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding: 0.4rem 0.9rem;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.35rem;
+  transition: all 0.15s ease;
   text-decoration: none;
   color: #4f46e5;
   background: #e0e7ff;
+}
+
+.dark .admin-edit-link {
+  background: rgba(79, 70, 229, 0.15);
+  color: #a5b4fc;
 }
 
 .admin-edit-link:hover {
@@ -169,17 +650,26 @@
   color: white;
 }
 
-/* 删除按钮 */
+.dark .admin-edit-link:hover {
+  background: #4338ca;
+  color: white;
+}
+
 .admin-delete-btn {
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  padding: 0.4rem 0.9rem;
-  border-radius: 0.5rem;
-  transition: all 0.2s ease;
+  padding: 0.35rem 0.7rem;
+  border-radius: 0.35rem;
+  transition: all 0.15s ease;
   color: #dc2626;
   background: #fee2e2;
   border: none;
   cursor: pointer;
+}
+
+.dark .admin-delete-btn {
+  background: rgba(220, 38, 38, 0.15);
+  color: #fca5a5;
 }
 
 .admin-delete-btn:hover {
@@ -187,84 +677,73 @@
   color: white;
 }
 
+.dark .admin-delete-btn:hover {
+  background: #dc2626;
+  color: white;
+}
+
 .admin-delete-btn[disabled] {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* 空提示 */
+.delete-spinner {
+  border: 2px solid #f87171;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  width: 0.8rem;
+  height: 0.8rem;
+  animation: admin-spin 0.6s linear infinite;
+}
+
+.dark .delete-spinner {
+  border-color: #ef4444;
+  border-top-color: transparent;
+}
+
+/* ===== Empty State ===== */
 .admin-empty {
   color: #9ca3af;
   text-align: center;
-  font-size: 1.1rem;
-  padding: 3rem 0;
-  animation: fade-in 0.7s ease both;
+  font-size: 0.9rem;
+  padding: 2.5rem 0;
+}
+
+.dark .admin-empty {
+  color: #6b7280;
 }
 
 .admin-empty-icon {
-  font-size: 2.4rem;
-  animation: bounce 1.4s infinite;
+  font-size: 1.8rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
-/* 动画 */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* ===== Section ===== */
+.admin-section-title {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 0.75rem;
 }
 
-@keyframes slide-up {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.dark .admin-section-title {
+  color: #9ca3af;
 }
 
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-6px);
-  }
+/* ===== Animations ===== */
+@keyframes admin-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.admin-btn-row {
-  display: flex;
-  justify-content: space-between; /* 两边对齐 */
-  max-width: 480px; /* 你可以调整最大宽度 */
-  margin-bottom: 2rem;
-  gap: 1rem; /* 两按钮之间留点空隙 */
+@keyframes admin-slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* 保持按钮原样，只要它们能自适应宽度 */
-.admin-create-btn {
-  flex: 1; /* 让按钮占满等宽 */
-  text-align: center;
-}
-
-/* 删除按钮 loading 动画 */
-.delete-spinner {
-  border: 2px solid #f87171; /* 红色外圈 */
-  border-top: 2px solid transparent;
-  border-radius: 50%;
-  width: 1rem;
-  height: 1rem;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+@keyframes admin-spin {
+  to { transform: rotate(360deg); }
 }

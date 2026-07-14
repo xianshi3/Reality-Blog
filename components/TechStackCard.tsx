@@ -76,7 +76,7 @@ export default function TechStackCard() {
               className={`
                 w-5 h-5 flex-shrink-0
                 transition-all duration-300
-                ${isOpen ? "text-blue-500 scale-110" : "text-gray-500"}
+                ${isOpen ? "text-blue-500 dark:text-blue-400 scale-110" : "text-gray-500 dark:text-gray-400"}
               `}
             />
 
@@ -165,7 +165,7 @@ export default function TechStackCard() {
                     transition-all duration-300
                     ${
                       activeTab === tab
-                        ? "bg-blue-500 opacity-100"
+                        ? "bg-blue-500 dark:bg-blue-400 opacity-100"
                         : "opacity-0"
                     }
                   `}

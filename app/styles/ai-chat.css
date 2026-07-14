@@ -27,9 +27,4 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* 关键帧：向上渐显，从透明且向下位移到正常位置和不透明 */
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
 }

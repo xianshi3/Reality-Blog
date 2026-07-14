@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import { FiHome, FiGrid, FiMessageSquare, FiInfo } from "react-icons/fi"; // react-icons
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { FiHome, FiGrid, FiMessageSquare } from "react-icons/fi";
 import ArticleSearch from "./ArticleSearch";
 import type { Article } from "../types/article";
 
@@ -15,7 +17,6 @@ const NAV_LINKS: NavLink[] = [
   { href: "/", icon: <FiHome />, label: "首页", description: "博客首页" },
   { href: "/category", icon: <FiGrid />, label: "分类", description: "文章分类" },
   { href: "/ai-chat/fullscreen", icon: <FiMessageSquare />, label: "AI Chat", description: "智能对话" },
-  { href: "/about", icon: <FiInfo />, label: "关于", description: "关于博客" },
 ];
 
 interface NavCardProps {
@@ -47,6 +48,8 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
       setActiveHref(window.location.pathname);
     }
   }, []);
+
+  const router = useRouter();
 
   const filteredLinks = NAV_LINKS.filter(
     (link) =>
@@ -96,7 +99,7 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
           isOpen={isOpen}
           articles={articles}
           onSelect={(article) => {
-            window.location.href = article.link;
+            router.push(article.link);
           }}
         />
       </div>
@@ -110,7 +113,7 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
         {filteredLinks.length > 0 ? (
           filteredLinks.map(({ href, icon, label, description }) => (
             <li key={label}>
-              <a
+              <Link
                 href={href}
                 className={`flex items-center p-3 rounded-lg transition-all duration-200 group ${
                   activeHref === href
@@ -133,7 +136,7 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
                     </p>
                   )}
                 </div>
-              </a>
+              </Link>
             </li>
           ))
         ) : (

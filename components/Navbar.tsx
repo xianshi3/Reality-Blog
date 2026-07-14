@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import {
-  FiCpu,
   FiHome,
   FiGrid,
   FiMessageSquare,
@@ -13,19 +12,7 @@ import {
 } from "react-icons/fi";
 
 export default function Navbar() {
-  const [isDark, setIsDark] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const storedTheme = localStorage.getItem("theme");
-    setIsDark(storedTheme === "dark");
-  }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle("dark", isDark);
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-  }, [isDark]);
 
   const navItems = [
     { label: "首页", href: "/", icon: <FiHome size={16} /> },
@@ -63,7 +50,7 @@ export default function Navbar() {
                     hover:bg-white/40 dark:hover:bg-white/5
                   "
                 >
-                  <span className="text-gray-500 group-hover:text-blue-500 transition-colors duration-300">
+                  <span className="text-gray-500 dark:text-gray-400 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-300">
                     {icon}
                   </span>
 
@@ -131,7 +118,7 @@ export default function Navbar() {
                 transition-all duration-300
               "
             >
-              <span className="text-gray-500">{icon}</span>
+              <span className="text-gray-500 dark:text-gray-400">{icon}</span>
               {label}
             </Link>
           ))}

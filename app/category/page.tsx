@@ -1,7 +1,7 @@
 import type { Article } from "@/types/article";
 import CategoryPageClient from "./CategoryPageClient";
-
 import { createServerSupabase } from "@/lib/supabaseServer";
+import { parseTags } from "@/lib/parseTags";
 
 export default async function CategoryPage() {
   const supabase = await createServerSupabase();
@@ -16,7 +16,10 @@ export default async function CategoryPage() {
     );
   }
 
-  const articles = data as Article[];
+  const articles: Article[] = data.map((item) => ({
+    ...item,
+    tags: parseTags(item.tags),
+  }));
 
   return <CategoryPageClient articles={articles} />;
 }

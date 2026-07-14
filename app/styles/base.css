@@ -1,5 +1,3 @@
-@import "tailwindcss"; /* 引入 Tailwind CSS */
-
 /* 优化字体渲染 */
 body {
   -webkit-font-smoothing: antialiased;
@@ -19,34 +17,32 @@ body {
 
 /* 全局变量：浅色模式下的配色 */
 :root {
-  --like-bg: #f3f4f6;        /* 全局背景灰白 */
-  --like-bg-hover: #e5e7eb;  /* 浅灰色 hover */
-  --like-border: #d1d5db;    /* 边框颜色 */
-  --like-text: #374151;      /* 文字颜色 */
-  --like-active-bg: #fce7f3; /* 点赞后背景，淡粉色 */
-  --like-active-border: #f9a8d4; /* 点赞后边框 */
-  --like-active-text: #db2777; /* 点赞后文字，粉色 */
-  --like-shadow: rgba(244, 114, 182, 0.3); /* 点赞后阴影 */
+  --like-bg: #f3f4f6;
+  --like-bg-hover: #e5e7eb;
+  --like-border: #d1d5db;
+  --like-text: #374151;
+  --like-active-bg: #fce7f3;
+  --like-active-border: #f9a8d4;
+  --like-active-text: #db2777;
+  --like-shadow: rgba(244, 114, 182, 0.3);
+  --progress-gradient: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
 }
 
 /* 深色模式下的配色变量 */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --like-bg: #23272f;
-    --like-bg-hover: #374151;
-    --like-border: #4b5563;
-    --like-text: #d1d5db;
-    --like-active-bg: #4b1127;
-    --like-active-border: #db2777;
-    --like-active-text: #f9a8d4;
-    --like-shadow: rgba(244, 114, 182, 0.6);
-  }
+.dark {
+  --like-bg: #23272f;
+  --like-bg-hover: #374151;
+  --like-border: #4b5563;
+  --like-text: #d1d5db;
+  --like-active-bg: #4b1127;
+  --like-active-border: #db2777;
+  --like-active-text: #f9a8d4;
+  --like-shadow: rgba(244, 114, 182, 0.6);
+  --progress-gradient: linear-gradient(90deg, #60a5fa 0%, #22d3ee 100%);
 }
 
 /* 深色模式下的文章正文颜色 */
-@media (prefers-color-scheme: dark) {
-  .prose {
-    --text-primary-color: #d1d5db; /* 文章正文文字色 */
-    color: var(--text-primary-color) !important;
-  }
+.dark .prose {
+  --text-primary-color: #d1d5db;
+  color: var(--text-primary-color) !important;
 }
