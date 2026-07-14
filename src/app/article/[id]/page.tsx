@@ -16,15 +16,15 @@
  */
 
 import type { Article } from '@/types/article';
-import Footer from '@/components/Footer';
-import LikeButton from '@/components/LikeButton';
-import ReadingProgress from '@/components/ReadingProgress';
+import Footer from '@/components/layout/Footer';
+import LikeButton from '@/components/common/LikeButton';
+import ReadingProgress from '@/components/common/ReadingProgress';
 import { createServerSupabase } from '@/lib/supabaseServer';
-import ArticleContent from '@/components/ArticleContent';
-import ArticleToc from '@/components/ArticleToc';
-import ReturnHome from '@/components/ReturnHome';
-import TagList from '@/components/TagList';
-import AIChat from '@/components/DynamicAIChat';
+import ArticleContent from '@/components/article/ArticleContent';
+import ArticleToc from '@/components/article/ArticleToc';
+import ReturnHome from '@/components/common/ReturnHome';
+import TagList from '@/components/article/TagList';
+import AIChat from '@/components/chat/DynamicAIChat';
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   // 解析路由参数（文章 ID）

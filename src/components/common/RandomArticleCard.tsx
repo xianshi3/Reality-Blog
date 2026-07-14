@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import type { Article } from "../types/article";
+import type { Article } from "@/types/article";
 
 // 定义组件接收的属性类型
 interface RandomArticleCardProps {

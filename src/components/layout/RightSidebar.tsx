@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import TechStackCard from "./TechStackCard";
-import TagCard from "./TagCard";
+import TechStackCard from "@/components/common/TechStackCard";
+import TagCard from "@/components/article/TagCard";
 import { FaUser, FaGithub, FaXTwitter } from "react-icons/fa6";
 import type { Article } from "@/types/article";
 

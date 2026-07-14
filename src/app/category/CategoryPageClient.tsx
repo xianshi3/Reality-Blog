@@ -6,10 +6,10 @@ import type { Article } from "@/types/article";
 import Link from "next/link";
 import { parseTags } from "@/lib/parseTags";
 import { FiSearch, FiX } from "react-icons/fi";
+import Navbar from "@/components/layout/Navbar";
 
-import Navbar from "@/components/Navbar";
 import "./category.css";
-import Footer from "@/components/Footer";
+import Footer from "@/components/layout/Footer";
 
 interface Props {
   articles: Article[];

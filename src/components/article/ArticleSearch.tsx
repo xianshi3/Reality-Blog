@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import { parseTags } from "@/lib/parseTags";
-import type { Article } from "../types/article";
+import type { Article } from "@/types/article";
 
 interface ArticleSearchProps {
   value: string;

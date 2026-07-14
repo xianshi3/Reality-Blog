@@ -1,11 +1,11 @@
 import { headers } from 'next/headers';
-import Header from '@/components/Header';
-import LeftSidebar from '@/components/LeftSidebar';
-import MainContent from '@/components/MainContent';
-import RightSidebar from '@/components/RightSidebar';
-import Footer from '@/components/Footer';
-import ErrorDisplay from '@/components/ErrorDisplay';
-import AIChat from '@/components/DynamicAIChat';
+import Header from '@/components/layout/Header';
+import LeftSidebar from '@/components/layout/LeftSidebar';
+import MainContent from '@/components/common/MainContent';
+import RightSidebar from '@/components/layout/RightSidebar';
+import Footer from '@/components/layout/Footer';
+import ErrorDisplay from '@/components/common/ErrorDisplay';
+import AIChat from '@/components/chat/DynamicAIChat';
 import { createServerSupabase } from '@/lib/supabaseServer';
 import { parseTags } from '@/lib/parseTags';
 import type { Article } from '@/types/article';

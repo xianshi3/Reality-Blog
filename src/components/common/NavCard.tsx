@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FiHome, FiGrid, FiMessageSquare } from "react-icons/fi";
-import ArticleSearch from "./ArticleSearch";
-import type { Article } from "../types/article";
+import ArticleSearch from "@/components/article/ArticleSearch";
+import type { Article } from "@/types/article";
 
 interface NavLink {
   href: string;
