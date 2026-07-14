@@ -557,10 +557,15 @@
 }
 
 /* 手机端优化字体和代码块显示 */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .article-page-container {
+    padding: 0 0.75rem;
+  }
+
   .article-content {
-    padding: 1.2rem 0.5rem;
+    padding: 1.5rem 1rem;
     font-size: 0.95rem;
+    border-radius: 1rem;
   }
 
   .article-content h1,
@@ -594,6 +599,12 @@
     font-size: 0.85rem;
     word-break: break-all;
     white-space: pre-wrap;
+  }
+
+  .article-toc {
+    margin-top: 0 !important;
+    margin-bottom: 2rem !important;
+    padding: 1rem 0.75rem !important;
   }
 }
 

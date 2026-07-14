@@ -255,3 +255,26 @@
 @keyframes login-spin {
   to { transform: rotate(360deg); }
 }
+
+@media (max-width: 420px) {
+  .login-card {
+    padding: 2rem 1.25rem 1.5rem;
+    border-radius: 1rem;
+    max-width: 100%;
+    margin: 0 1rem;
+  }
+
+  .login-title {
+    font-size: 1.15rem;
+  }
+
+  .login-input {
+    padding: 0.6rem 0.85rem;
+    font-size: 0.88rem;
+  }
+
+  .login-btn {
+    padding: 0.65rem 0;
+    font-size: 0.9rem;
+  }
+}

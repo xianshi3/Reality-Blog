@@ -223,6 +223,30 @@
   color: #d1d5db;
 }
 
+/* 移动端优化 */
+@media (max-width: 768px) {
+  .container-home {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    gap: 1rem;
+  }
+
+  .article-item {
+    padding: 1rem;
+  }
+
+  .pagination {
+    gap: 0.35rem;
+  }
+
+  .pagination a {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
+  }
+}
+
 /* 分页导航相关 CSS */
 .pagination {
   display: flex;
