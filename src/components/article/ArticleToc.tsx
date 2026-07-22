@@ -255,56 +255,52 @@ export default function ArticleToc({ className }: Props) {
   return (
     <div
       ref={containerRef}
-      className="z-50"
+      className="z-50 flex flex-col overflow-hidden rounded-xl shadow-lg bg-white/85 dark:bg-[#23272f]/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/60"
       style={{
         position: "fixed",
         left: `${pos.x}px`,
         top: `${pos.y}px`,
         width: "240px",
-        maxHeight: "calc(100vh - 2rem)",
+        maxHeight: "calc(100vh - 4rem)",
       }}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerCancel={onPointerUp}
     >
-      <div
-        className="bg-white/85 dark:bg-[#23272f]/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/60 rounded-xl shadow-lg overflow-hidden"
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
-      >
-        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-700/60 cursor-grab active:cursor-grabbing select-none">
-          <div className="flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
-            <FaList className="text-xs text-blue-500" />
-            目录
-            <span className="text-xs font-normal text-gray-400 dark:text-gray-500">({tocItems.length})</span>
-          </div>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            aria-label="关闭目录"
+      <div className="flex-none flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-700/60 cursor-grab active:cursor-grabbing select-none">
+        <div className="flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
+          <FaList className="text-xs text-blue-500" />
+          目录
+          <span className="text-xs font-normal text-gray-400 dark:text-gray-500">({tocItems.length})</span>
+        </div>
+        <button
+          onClick={() => setIsOpen(false)}
+          className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+          aria-label="关闭目录"
+        >
+          <FaXmark />
+        </button>
+      </div>
+      <div className="flex-1 overflow-y-auto py-1">
+        {tocItems.map((item) => (
+          <a
+            key={item.id}
+            href={`#${item.id}`}
+            onClick={(e) => handleClick(e, item.id)}
+            className={`block transition-all duration-200 py-1.5 rounded-lg mx-2 ${
+              activeId === item.id
+                ? "text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/20"
+                : "text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800/30"
+            }`}
+            style={{
+              paddingLeft: `${(item.level - 1) * 0.75 + 0.75}rem`,
+              paddingRight: "0.75rem",
+            }}
           >
-            <FaXmark />
-          </button>
-        </div>
-        <div className="overflow-y-auto py-1" style={{ maxHeight: "calc(100vh - 10rem)" }}>
-          {tocItems.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              onClick={(e) => handleClick(e, item.id)}
-              className={`block transition-all duration-200 py-1.5 rounded-lg mx-2 ${
-                activeId === item.id
-                  ? "text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/20"
-                  : "text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800/30"
-              }`}
-              style={{
-                paddingLeft: `${(item.level - 1) * 0.75 + 0.75}rem`,
-                paddingRight: "0.75rem",
-              }}
-            >
-              <span className="truncate block text-sm">{item.text}</span>
-            </a>
-          ))}
-        </div>
+            <span className="truncate block text-sm">{item.text}</span>
+          </a>
+        ))}
       </div>
     </div>
   );
