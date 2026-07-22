@@ -26,7 +26,6 @@ export default function ArticleToc({ className }: Props) {
   const dragStart = useRef({ x: 0, y: 0 });
   const posStart = useRef({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
-  const tocRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
@@ -160,11 +159,9 @@ export default function ArticleToc({ className }: Props) {
     if (!dragging.current) return;
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
-    const tocHeight = tocRef.current?.offsetHeight ?? 400;
-    const maxY = Math.max(0, window.innerHeight - tocHeight - 8);
     setPos({
       x: Math.max(8, Math.min(window.innerWidth - 248, posStart.current.x + dx)),
-      y: Math.max(8, Math.min(maxY, posStart.current.y + dy)),
+      y: Math.max(8, posStart.current.y + dy),
     });
   }, []);
 
