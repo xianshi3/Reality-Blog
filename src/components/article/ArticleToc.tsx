@@ -26,6 +26,7 @@ export default function ArticleToc({ className }: Props) {
   const dragStart = useRef({ x: 0, y: 0 });
   const posStart = useRef({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
+  const tocRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
@@ -159,9 +160,11 @@ export default function ArticleToc({ className }: Props) {
     if (!dragging.current) return;
     const dx = e.clientX - dragStart.current.x;
     const dy = e.clientY - dragStart.current.y;
+    const tocHeight = tocRef.current?.offsetHeight ?? 400;
+    const maxY = Math.max(0, window.innerHeight - tocHeight - 8);
     setPos({
-      x: Math.max(0, Math.min(window.innerWidth - 240, posStart.current.x + dx)),
-      y: Math.max(0, Math.min(window.innerHeight - 60, posStart.current.y + dy)),
+      x: Math.max(8, Math.min(window.innerWidth - 248, posStart.current.x + dx)),
+      y: Math.max(8, Math.min(maxY, posStart.current.y + dy)),
     });
   }, []);
 
@@ -255,7 +258,7 @@ export default function ArticleToc({ className }: Props) {
   return (
     <div
       ref={containerRef}
-      className="z-50 flex flex-col overflow-hidden rounded-xl shadow-lg bg-white/85 dark:bg-[#23272f]/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/60"
+      className="z-50 flex flex-col overflow-hidden min-h-0 rounded-xl shadow-lg bg-white/85 dark:bg-[#23272f]/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/60"
       style={{
         position: "fixed",
         left: `${pos.x}px`,
@@ -282,7 +285,7 @@ export default function ArticleToc({ className }: Props) {
           <FaXmark />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto py-1">
+      <div className="flex-1 overflow-y-auto min-h-0 py-1">
         {tocItems.map((item) => (
           <a
             key={item.id}
