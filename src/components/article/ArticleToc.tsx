@@ -20,8 +20,8 @@ export default function ArticleToc({ className }: Props) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // 检测移动端
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
@@ -31,7 +31,6 @@ export default function ArticleToc({ className }: Props) {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // 点击外部关闭
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (isMobile && isExpanded && containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -41,7 +40,6 @@ export default function ArticleToc({ className }: Props) {
 
     if (isExpanded) {
       document.addEventListener("click", handleClickOutside);
-      // 禁止背景滚动
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -53,7 +51,6 @@ export default function ArticleToc({ className }: Props) {
     };
   }, [isMobile, isExpanded]);
 
-  // 提取目录项
   useEffect(() => {
     const headingElements = Array.from(
       document.querySelectorAll(
@@ -68,27 +65,42 @@ export default function ArticleToc({ className }: Props) {
     }));
 
     setTocItems(newTocItems);
-  }, []);
 
-  // 滚动监听 - 高亮当前标题
-  useEffect(() => {
-    const handleScroll = () => {
-      const headingElements = Array.from(
-        document.querySelectorAll(
-          "article.article-content h1[id], article.article-content h2[id], article.article-content h3[id], article.article-content h4[id], article.article-content h5[id], article.article-content h6[id]"
-        )
+    if (headingElements.length > 0) {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          const visibleEntries = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+          if (visibleEntries.length > 0) {
+            setActiveId((visibleEntries[0].target as HTMLElement).id);
+          } else {
+            const scrollY = window.scrollY;
+            let active = (headingElements[0] as HTMLElement).id;
+            for (const el of headingElements) {
+              const top = el.getBoundingClientRect().top + scrollY;
+              if (scrollY >= top - 120) {
+                active = el.id;
+              }
+            }
+            setActiveId(active);
+          }
+        },
+        {
+          rootMargin: "-80px 0px -60% 0px",
+          threshold: 0,
+        }
       );
 
       for (const el of headingElements) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= 120) {
-          setActiveId(el.id);
-        }
+        observerRef.current.observe(el);
       }
-    };
+    }
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      observerRef.current?.disconnect();
+    };
   }, []);
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, itemId: string) => {
@@ -104,7 +116,6 @@ export default function ArticleToc({ className }: Props) {
         behavior: "smooth",
       });
 
-      // 移动端点击后收起
       if (window.innerWidth < 768) {
         setIsExpanded(false);
       }
@@ -117,7 +128,6 @@ export default function ArticleToc({ className }: Props) {
 
   if (tocItems.length === 0) return null;
 
-  // 移动端渲染
   if (isMobile) {
     return (
       <div ref={containerRef} className={`mobile-toc-container ${className ?? ""}`}>
@@ -148,7 +158,6 @@ export default function ArticleToc({ className }: Props) {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="mobile-toc-expanded"
             >
-              {/* 头部 */}
               <div className="mobile-toc-header">
                 <div className="toc-header-title">
                   <FaList />
@@ -160,7 +169,6 @@ export default function ArticleToc({ className }: Props) {
                 </button>
               </div>
 
-              {/* 目录列表 */}
               <div className="mobile-toc-list">
                 {tocItems.map((item, index) => (
                   <motion.a
@@ -186,7 +194,6 @@ export default function ArticleToc({ className }: Props) {
                 ))}
               </div>
 
-              {/* 底部提示 */}
               <div className="mobile-toc-footer">
                 点击跳转 · 滑动关闭
               </div>
@@ -197,35 +204,32 @@ export default function ArticleToc({ className }: Props) {
     );
   }
 
-  // 桌面端渲染
   return (
     <aside className={`text-sm text-gray-800 dark:text-gray-300 ${className ?? ""}`}>
       <h2 className="font-semibold mb-3 text-base text-gray-900 dark:text-white flex items-center gap-2">
         <FaList className="text-xs" />
         目录
+        <span className="text-xs font-normal text-gray-400 dark:text-gray-500">
+          ({tocItems.length})
+        </span>
       </h2>
-      <ul className="space-y-1.5">
+      <ul className="space-y-0.5">
         {tocItems.map((item) => (
           <li key={item.id}>
             <a
               href={`#${item.id}`}
               onClick={(e) => handleClick(e, item.id)}
-              className={`toc-link block transition-all duration-200 ${
+              className={`block transition-all duration-200 py-1.5 rounded-lg ${
                 activeId === item.id
-                  ? "text-blue-600 dark:text-blue-400 font-medium"
-                  : "text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300"
+                  ? "text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/20"
+                  : "text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800/30"
               }`}
               style={{
-                paddingLeft: `${(item.level - 1) * 0.75 + 0.5}rem`,
-                fontWeight: item.level === 1 ? 600 : 400,
-                fontSize: item.level === 1 ? "0.9rem" : "0.8rem",
-                borderLeft:
-                  activeId === item.id
-                    ? "2px solid currentColor"
-                    : "2px solid transparent",
+                paddingLeft: `${(item.level - 1) * 0.75 + 0.75}rem`,
+                paddingRight: "0.75rem",
               }}
             >
-              <span className="truncate inline-block max-w-full">{item.text}</span>
+              <span className="truncate block text-sm">{item.text}</span>
             </a>
           </li>
         ))}
