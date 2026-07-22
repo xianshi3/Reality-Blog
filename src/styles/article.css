@@ -21,15 +21,27 @@
 
 .article-page-container .article-container {
   width: 100%;
-  max-width: 100ch;
+  max-width: 1400px;
   margin: 3rem auto 4rem;
   flex: 1 1 auto;
 }
 
+.article-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+@media (min-width: 1200px) {
+  .article-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
+
 .article-page-main {
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  flex: 1;
+  min-width: 0;
 }
 
 .article-content {
@@ -333,22 +345,28 @@
 }
 
 .article-toc {
-  position: fixed;
-  top: 6rem;
-  right: calc((100vw - 1100px - 260px) / 2 - 3rem);
   width: 240px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 6rem;
   max-height: calc(100vh - 8rem);
   overflow-y: auto;
   padding: 1.25rem;
   border-radius: 1rem;
-  color: #f8fafc;
+  color: #374151;
   box-sizing: border-box;
-  z-index: 50;
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: saturate(180%) blur(16px);
   -webkit-backdrop-filter: saturate(180%) blur(16px);
   border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  display: none;
+}
+
+@media (min-width: 1200px) {
+  .article-toc {
+    display: block;
+  }
 }
 
 .dark .article-toc {
@@ -372,12 +390,6 @@
 
 .dark .article-toc::-webkit-scrollbar-thumb {
   background: #4b5563;
-}
-
-@media (max-width: 1500px) {
-  .article-toc {
-    display: none;
-  }
 }
 
 .mobile-toc-container {
