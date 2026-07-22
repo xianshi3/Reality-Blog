@@ -19,17 +19,41 @@ export default function ArticleToc({ className }: Props) {
   const [activeId, setActiveId] = useState<string>("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [pos, setPos] = useState({ x: 8, y: 120 });
+  const dragging = useRef(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+  const posStart = useRef({ x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    const saved = localStorage.getItem("toc-open");
+    if (saved === "true") setIsOpen(true);
+    const savedPos = localStorage.getItem("toc-pos");
+    if (savedPos) {
+      try { setPos(JSON.parse(savedPos)); } catch {}
+    }
   }, []);
+
+  useEffect(() => {
+    const check = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsDesktop(window.innerWidth >= 1200);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("toc-open", isOpen ? "true" : "false");
+  }, [isOpen]);
+
+  useEffect(() => {
+    localStorage.setItem("toc-pos", JSON.stringify(pos));
+  }, [pos]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -110,12 +134,7 @@ export default function ArticleToc({ className }: Props) {
       const topOffset = 80;
       const elementPosition = target.getBoundingClientRect().top;
       const offsetPosition = window.scrollY + elementPosition - topOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
-
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
       if (window.innerWidth < 768) {
         setIsExpanded(false);
       }
@@ -124,6 +143,31 @@ export default function ArticleToc({ className }: Props) {
 
   const toggleExpand = useCallback(() => {
     setIsExpanded((prev) => !prev);
+  }, []);
+
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    if (isMobile) return;
+    const target = e.target as HTMLElement;
+    if (target.closest("button") || target.closest("a")) return;
+    dragging.current = true;
+    dragStart.current = { x: e.clientX, y: e.clientY };
+    posStart.current = { x: pos.x, y: pos.y };
+    e.currentTarget.setPointerCapture(e.pointerId);
+  }, [isMobile, pos]);
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragging.current) return;
+    const dx = e.clientX - dragStart.current.x;
+    const dy = e.clientY - dragStart.current.y;
+    setPos({
+      x: Math.max(0, Math.min(window.innerWidth - 240, posStart.current.x + dx)),
+      y: Math.max(0, Math.min(window.innerHeight - 60, posStart.current.y + dy)),
+    });
+  }, []);
+
+  const onPointerUp = useCallback((e: React.PointerEvent) => {
+    dragging.current = false;
+    e.currentTarget.releasePointerCapture(e.pointerId);
   }, []);
 
   if (tocItems.length === 0) return null;
@@ -142,9 +186,7 @@ export default function ArticleToc({ className }: Props) {
               onClick={toggleExpand}
               className="mobile-toc-toggle"
             >
-              <span className="toc-icon">
-                <FaList />
-              </span>
+              <span className="toc-icon"><FaList /></span>
               <span className="toc-label">目录</span>
               <span className="toc-count">({tocItems.length})</span>
               <FaChevronDown className="toc-arrow" />
@@ -164,11 +206,8 @@ export default function ArticleToc({ className }: Props) {
                   <span>目录</span>
                   <span className="toc-count">({tocItems.length})</span>
                 </div>
-                <button onClick={toggleExpand} className="toc-close-btn">
-                  <FaXmark />
-                </button>
+                <button onClick={toggleExpand} className="toc-close-btn"><FaXmark /></button>
               </div>
-
               <div className="mobile-toc-list">
                 {tocItems.map((item, index) => (
                   <motion.a
@@ -179,24 +218,16 @@ export default function ArticleToc({ className }: Props) {
                     transition={{ delay: index * 0.03 }}
                     onClick={(e) => handleClick(e, item.id)}
                     className={`toc-item ${activeId === item.id ? "active" : ""}`}
-                    style={{
-                      paddingLeft: `${(item.level - 1) * 0.5 + 0.75}rem`,
-                    }}
+                    style={{ paddingLeft: `${(item.level - 1) * 0.5 + 0.75}rem` }}
                   >
-                    <span
-                      className="toc-level-dot"
-                      style={{
-                        backgroundColor: activeId === item.id ? "var(--toc-dot-active, #3b82f6)" : item.level === 1 ? "var(--toc-dot-level1, #6b7280)" : "var(--toc-dot-level2, #9ca3af)",
-                      }}
-                    />
+                    <span className="toc-level-dot" style={{
+                      backgroundColor: activeId === item.id ? "var(--toc-dot-active)" : item.level === 1 ? "var(--toc-dot-level1)" : "var(--toc-dot-level2)",
+                    }} />
                     <span className="toc-item-text">{item.text}</span>
                   </motion.a>
                 ))}
               </div>
-
-              <div className="mobile-toc-footer">
-                点击跳转 · 滑动关闭
-              </div>
+              <div className="mobile-toc-footer">点击跳转 · 滑动关闭</div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -204,22 +235,63 @@ export default function ArticleToc({ className }: Props) {
     );
   }
 
-  return (
-    <aside className={`text-sm text-gray-800 dark:text-gray-300 ${className ?? ""}`}>
-      <h2 className="font-semibold mb-3 text-base text-gray-900 dark:text-white flex items-center gap-2">
+  if (!isDesktop) return null;
+
+  if (!isOpen) {
+    return (
+      <button
+        onClick={() => setIsOpen(true)}
+        className="fixed top-1/2 -translate-y-1/2 z-50 left-0 flex items-center gap-1.5 pl-1.5 pr-2.5 py-5 rounded-r-xl bg-white/80 dark:bg-[#23272f]/80 backdrop-blur-md border border-l-0 border-gray-200/60 dark:border-gray-700/60 shadow-md hover:shadow-lg transition-all cursor-pointer text-sm text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 group"
+        aria-label="打开目录"
+      >
         <FaList className="text-xs" />
-        目录
-        <span className="text-xs font-normal text-gray-400 dark:text-gray-500">
-          ({tocItems.length})
+        <span style={{ writingMode: "vertical-rl" }} className="text-[0.7rem] tracking-widest">
+          目录
         </span>
-      </h2>
-      <ul className="space-y-0.5">
-        {tocItems.map((item) => (
-          <li key={item.id}>
+      </button>
+    );
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="z-50"
+      style={{
+        position: "fixed",
+        left: `${pos.x}px`,
+        top: `${pos.y}px`,
+        width: "240px",
+        maxHeight: "calc(100vh - 2rem)",
+      }}
+    >
+      <div
+        className="bg-white/85 dark:bg-[#23272f]/85 backdrop-blur-md border border-gray-200/60 dark:border-gray-700/60 rounded-xl shadow-lg overflow-hidden"
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerUp}
+      >
+        <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-700/60 cursor-grab active:cursor-grabbing select-none">
+          <div className="flex items-center gap-2 text-sm font-semibold text-gray-800 dark:text-gray-200">
+            <FaList className="text-xs text-blue-500" />
+            目录
+            <span className="text-xs font-normal text-gray-400 dark:text-gray-500">({tocItems.length})</span>
+          </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            aria-label="关闭目录"
+          >
+            <FaXmark />
+          </button>
+        </div>
+        <div className="overflow-y-auto py-1" style={{ maxHeight: "calc(100vh - 10rem)" }}>
+          {tocItems.map((item) => (
             <a
+              key={item.id}
               href={`#${item.id}`}
               onClick={(e) => handleClick(e, item.id)}
-              className={`block transition-all duration-200 py-1.5 rounded-lg ${
+              className={`block transition-all duration-200 py-1.5 rounded-lg mx-2 ${
                 activeId === item.id
                   ? "text-blue-600 dark:text-blue-400 font-medium bg-blue-50 dark:bg-blue-900/20"
                   : "text-gray-500 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-300 hover:bg-gray-50 dark:hover:bg-gray-800/30"
@@ -231,9 +303,9 @@ export default function ArticleToc({ className }: Props) {
             >
               <span className="truncate block text-sm">{item.text}</span>
             </a>
-          </li>
-        ))}
-      </ul>
-    </aside>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
