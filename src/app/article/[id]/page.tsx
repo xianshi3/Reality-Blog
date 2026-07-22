@@ -76,39 +76,30 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       <ReturnHome />
 
       <div className="article-container">
-        <div className="article-layout">
-          <main className="article-page-main">
-            <article className="article-content">
-              {/* 文章标题 */}
-              <h1 className="article-page-title">{article.title}</h1>
+        <main className="article-page-main">
+          <article className="article-content">
+            <h1 className="article-page-title">{article.title}</h1>
 
-              {/* 元信息：日期 & 分类 */}
-              <div className="article-page-meta">
-                <span>{formattedDate}</span>
-                <span>·</span>
-                <span>{article.category}</span>
-              </div>
+            <div className="article-page-meta">
+              <span>{formattedDate}</span>
+              <span>·</span>
+              <span>{article.category}</span>
+            </div>
 
-              {/* 文章摘要（可选） */}
-              {article.summary && <div className="article-page-summary">{article.summary}</div>}
+            {article.summary && <div className="article-page-summary">{article.summary}</div>}
 
-              {/* 文章正文内容（Markdown 渲染） */}
-              <ArticleContent content={article.content ?? ''} />
+            <ArticleContent content={article.content ?? ''} />
 
-              {/* 标签 & 点赞 */}
-              <div className="tag-like-container">
-                <TagList tags={article.tags ?? []} />
+            <div className="tag-like-container">
+              <TagList tags={article.tags ?? []} />
+              <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
+            </div>
+          </article>
+        </main>
 
-                <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
-              </div>
-            </article>
-          </main>
-
-          {/* 文章目录（粘性侧边栏 / 移动端弹出层） */}
-          <aside className="article-toc">
-            <ArticleToc />
-          </aside>
-        </div>
+        <aside className="article-toc">
+          <ArticleToc />
+        </aside>
       </div>
 
       {/* 固定 AI 聊天助手 */}

@@ -27,7 +27,8 @@
 }
 
 .article-page-main {
-  max-width: 1100px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .article-content {
@@ -353,13 +354,13 @@
 @media (min-width: 1200px) {
   .article-toc {
     display: block;
-    right: max(0.5rem, calc((100vw - 1100px) / 2 - 260px));
+    right: max(0.5rem, calc((100vw - 900px) / 2 - 260px));
   }
 }
 
-@media (min-width: 1600px) {
+@media (min-width: 1400px) {
   .article-toc {
-    right: calc((100vw - 1100px) / 2 - 260px);
+    right: calc((100vw - 900px) / 2 - 260px);
   }
 }
 
