@@ -62,21 +62,21 @@ export default function MainContent({
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                   </div>
                 ) : (
-                  <div className="h-32 md:h-36 bg-gradient-to-b from-gray-100 to-gray-50 dark:from-[#2a2f3a] dark:to-[#23272f]" />
+                  <div className="h-48 md:h-56 bg-gradient-to-b from-gray-100 to-gray-50 dark:from-[#2a2f3a] dark:to-[#23272f]" />
                 )}
 
                 <div className="flex flex-col flex-1 px-4 pb-4 pt-3">
-                  <h3 className="article-title mb-2">
-                    {article.title}
-                  </h3>
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="article-title">
+                      {article.title}
+                    </h3>
 
-                  {article.summary && (
-                    <p className="article-summary mb-3">
-                      {article.summary}
+                    <p className={`article-summary min-h-[1.35em] ${!article.summary ? "invisible" : ""}`}>
+                      {article.summary || "."}
                     </p>
-                  )}
+                  </div>
 
-                  <div className="mt-auto flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+                  <div className="mt-auto flex flex-wrap items-center gap-2 pt-3 text-sm text-gray-500 dark:text-gray-400">
                     <span>
                       {article.date
                         ? new Date(article.date).toLocaleDateString("zh-CN", {
