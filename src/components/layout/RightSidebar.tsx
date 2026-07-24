@@ -33,7 +33,7 @@ export default function RightSidebar({
             sizes="96px"
             quality={100}
             priority
-            className="rounded-full object-cover ring-4 ring-blue-200 dark:ring-blue-900 transition-transform duration-300 hover:scale-105"
+            className="rounded-full object-cover ring-4 ring-blue-200 dark:ring-blue-900"
           />
         </div>
 

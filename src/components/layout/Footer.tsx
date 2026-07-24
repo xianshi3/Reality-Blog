@@ -4,20 +4,18 @@ type FooterProps = {
 
 export default function Footer({ currentYear }: FooterProps) {
   return (
-    <footer
-      className="footer mt-12 flex flex-col sm:flex-row justify-between items-center gap-2 px-4 py-6 animate-fadeInUp"
-    >
-      <div className="text-center sm:text-left text-sm text-gray-600 dark:text-gray-400">
-        © {currentYear} Reality-Blog. All rights reserved.
+    <footer className="footer">
+      <div>
+        &copy; {currentYear} Reality-Blog. All rights reserved.
       </div>
 
-      <div className="flex gap-4 text-sm items-center">
+      <div className="flex gap-4 items-center">
         <a
           href="https://github.com/xianshi3/Reality-Blog"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Blog Open Source"
-          className="flex items-center gap-1 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+          className="flex items-center gap-1 text-inherit hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"

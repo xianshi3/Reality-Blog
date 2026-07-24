@@ -107,7 +107,7 @@ export default function TagCard({ articles }: TagCardProps) {
   const hasCollapse = tagMap.length > MAX_VISIBLE_TAGS_EXPANDED;
 
   return (
-    <div className="relative bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-md p-5 sm:p-6 transition-all duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-lg">
+    <div className="relative bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-md p-5 sm:p-6 transition-shadow duration-300 hover:shadow-lg">
       
       {/* 标题 */}
       <div className="flex items-center justify-between mb-4">
