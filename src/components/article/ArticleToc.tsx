@@ -282,7 +282,7 @@ export default function ArticleToc({ className }: Props) {
           <FaXmark />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto min-h-0 py-1">
+      <div className="flex-1 overflow-y-auto min-h-0 py-1 toc-desktop-list">
         {tocItems.map((item) => (
           <a
             key={item.id}

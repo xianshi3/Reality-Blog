@@ -628,22 +628,60 @@
   background-color: rgba(31 41 55 / 0.8);
 }
 
+.article-content pre {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
 .article-content pre::-webkit-scrollbar {
   height: 6px;
 }
 
 .article-content pre::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 3px;
+  background: transparent;
 }
 
 .article-content pre::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 3px;
 }
 
 .article-content pre::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.toc-desktop-list {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+}
+
+.toc-desktop-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.toc-desktop-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.toc-desktop-list::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 2px;
+}
+
+.toc-desktop-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.6);
+}
+
+.dark .toc-desktop-list {
+  scrollbar-color: rgba(75, 85, 99, 0.5) transparent;
+}
+
+.dark .toc-desktop-list::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+.dark .toc-desktop-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
 }
 
 .article-content .task-list-item {
