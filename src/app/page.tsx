@@ -11,7 +11,7 @@ import { parseTags } from '@/lib/parseTags';
 import type { Article } from '@/types/article';
 
 // 每页显示的文章数量
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 6;
 
 /**
  * 博客首页组件（SSR）
