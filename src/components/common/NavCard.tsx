@@ -60,7 +60,7 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
   const cardBaseClass =
     "bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 sm:p-6 animate-fadeInUp animate-scaleIn";
   const cardHoverClass =
-    "transition-shadow duration-300 hover:shadow-xl";
+    "transition-all duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl";
 
   if (!isReady) return null;
 
