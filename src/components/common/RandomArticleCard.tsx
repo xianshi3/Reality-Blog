@@ -30,7 +30,7 @@ export default function RandomArticleCard({ articles }: RandomArticleCardProps) 
 
   return (
     <div className="bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 animate-fadeInUp animate-scaleIn
-    transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl">
+    transition-shadow duration-300 hover:shadow-xl">
       {/* 标题和刷新按钮区域 */}
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100">随机日志</h3>

@@ -55,9 +55,7 @@ export default function TechStackCard() {
         bg-white dark:bg-[#23272f]
         rounded-2xl
         shadow-lg
-        transition-all duration-300 ease-in-out
-        hover:scale-[1.02]
-        hover:-translate-y-1
+        transition-shadow duration-300 ease-in-out
         hover:shadow-xl
         overflow-hidden
         max-w-md

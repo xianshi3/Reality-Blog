@@ -61,7 +61,7 @@ export default async function Home() {
 
   // 渲染完整页面结构
   return (
-    <div className="home-container pt-14 bg-gray-100">
+    <div className="home-container">
       {/* 顶部导航栏 */}
       <Header />
 

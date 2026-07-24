@@ -13,7 +13,7 @@ export default function AnnouncementCard({
     "bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 animate-fadeInUp animate-scaleIn";
 
   const cardHoverClass =
-    "transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl";
+    "transition-shadow duration-300 hover:shadow-xl";
 
   const today = new Date().toLocaleDateString("zh-CN", {
     year: "numeric",

@@ -16,7 +16,7 @@ export default function RightSidebar({
   className,
 }: RightSidebarProps) {
   const cardClass =
-    "relative bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-6 transition-all duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl";
+    "relative bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-6 transition-shadow duration-300 hover:shadow-xl";
 
   return (
     <aside className={`lg:w-72 w-full space-y-6 ${className ?? ""}`}>
