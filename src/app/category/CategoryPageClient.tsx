@@ -221,13 +221,15 @@ export default function CategoryPageClient({ articles }: Props) {
                     href={`/article/${article.id}`}
                     className="art-card"
                   >
-                    {article.image_url && (
+                    {article.image_url ? (
                       <img
                         src={article.image_url}
                         alt={article.title}
                         className="art-card-image"
                         loading="lazy"
                       />
+                    ) : (
+                      <div className="art-card-image-placeholder" />
                     )}
                     <div className="art-card-body">
                       <h3 className="art-card-title">{article.title}</h3>

@@ -52,14 +52,14 @@ export default function MainContent({
                 className="article-item"
               >
                 {article.image_url && (
-                  <div className="relative h-48 md:h-52 w-full overflow-hidden">
+                  <div className="relative h-48 md:h-56 w-full overflow-hidden">
                     <img
                       src={article.image_url}
                       alt={article.title}
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                   </div>
                 )}
 

@@ -19,7 +19,7 @@ export default function Header() {
         <Navbar />
       </div>
 
-      <div className="overflow-hidden shadow-xl animate-fadeInDown">
+      <div className="overflow-hidden shadow-xl animate-fadeInDown transition-transform duration-700 ease-in-out hover:scale-105 sm:hover:scale-100">
         <ParallaxSection 
           backgroundImage="/parallax-bg.png" 
           height={450} 
