@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FiHome, FiGrid, FiMessageSquare } from "react-icons/fi";
-import ArticleSearch from "./ArticleSearch";
-import type { Article } from "../types/article";
+import ArticleSearch from "@/components/article/ArticleSearch";
+import type { Article } from "@/types/article";
 
 interface NavLink {
   href: string;
@@ -60,7 +60,7 @@ export default function NavCard({ className = "", articles }: NavCardProps) {
   const cardBaseClass =
     "bg-white dark:bg-[#23272f] border border-gray-100 dark:border-gray-800 rounded-2xl shadow-lg p-5 sm:p-6 animate-fadeInUp animate-scaleIn";
   const cardHoverClass =
-    "transition-transform duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl";
+    "transition-all duration-300 ease-in-out hover:scale-[1.02] hover:-translate-y-1 hover:shadow-xl";
 
   if (!isReady) return null;
 

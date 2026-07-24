@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { createServerSupabase } from "@/lib/supabaseServer";
-import ArticleItem from "@/components/ArticleItem";
+import ArticleItem from "@/components/article/ArticleItem";
 import { FaPenToSquare, FaImages, FaNewspaper, FaFileLines, FaRocket } from "react-icons/fa6";
 
 function getGreeting(): string {

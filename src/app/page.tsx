@@ -1,17 +1,17 @@
 import { headers } from 'next/headers';
-import Header from '@/components/Header';
-import LeftSidebar from '@/components/LeftSidebar';
-import MainContent from '@/components/MainContent';
-import RightSidebar from '@/components/RightSidebar';
-import Footer from '@/components/Footer';
-import ErrorDisplay from '@/components/ErrorDisplay';
-import AIChat from '@/components/DynamicAIChat';
+import Header from '@/components/layout/Header';
+import LeftSidebar from '@/components/layout/LeftSidebar';
+import MainContent from '@/components/common/MainContent';
+import RightSidebar from '@/components/layout/RightSidebar';
+import Footer from '@/components/layout/Footer';
+import ErrorDisplay from '@/components/common/ErrorDisplay';
+import AIChat from '@/components/chat/DynamicAIChat';
 import { createServerSupabase } from '@/lib/supabaseServer';
 import { parseTags } from '@/lib/parseTags';
 import type { Article } from '@/types/article';
 
 // 每页显示的文章数量
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 6;
 
 /**
  * 博客首页组件（SSR）
@@ -61,7 +61,7 @@ export default async function Home() {
 
   // 渲染完整页面结构
   return (
-    <div className="home-container pt-14 bg-gray-100">
+    <div className="home-container">
       {/* 顶部导航栏 */}
       <Header />
 

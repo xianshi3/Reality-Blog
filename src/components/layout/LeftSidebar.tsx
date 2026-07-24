@@ -1,9 +1,9 @@
 "use client";
 
-import RandomArticleCard from "./RandomArticleCard";
-import NavCard from "./NavCard";
-import AnnouncementCard from "./AnnouncementCard";
-import type { Article } from "../types/article";
+import RandomArticleCard from "@/components/common/RandomArticleCard";
+import NavCard from "@/components/common/NavCard";
+import AnnouncementCard from "@/components/common/AnnouncementCard";
+import type { Article } from "@/types/article";
 
 interface LeftSidebarProps {
   articles: Article[];

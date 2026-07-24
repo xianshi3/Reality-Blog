@@ -3,7 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { FiSearch } from "react-icons/fi";
 import { parseTags } from "@/lib/parseTags";
-import type { Article } from "../types/article";
+import type { Article } from "@/types/article";
 
 interface ArticleSearchProps {
   value: string;
@@ -91,7 +91,7 @@ export default function ArticleSearch({
       </div>
 
       <div
-        className={`absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden shadow-lg transition-all duration-300 transform origin-top ${
+        className={`absolute top-full left-0 right-0 mt-2 rounded-xl overflow-hidden shadow-lg transition-all duration-300 transform origin-top z-50 ${
           value && isOpen
             ? "opacity-100 scale-100 max-h-80"
             : "opacity-0 scale-95 max-h-0"

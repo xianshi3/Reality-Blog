@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
-import { Message } from "../types/message";
+import { Message } from "@/types/message";
 import { HiOutlineSparkles } from "react-icons/hi";
 import { IoSend, IoStop } from "react-icons/io5";
 import { RiRobot2Line, RiUserLine } from "react-icons/ri";

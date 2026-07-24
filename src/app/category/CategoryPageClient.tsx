@@ -5,11 +5,11 @@ import { useSearchParams, useRouter } from "next/navigation";
 import type { Article } from "@/types/article";
 import Link from "next/link";
 import { parseTags } from "@/lib/parseTags";
-import { FiSearch, FiX } from "react-icons/fi";
+import { FiSearch, FiX, FiInbox } from "react-icons/fi";
+import Navbar from "@/components/layout/Navbar";
 
-import Navbar from "@/components/Navbar";
 import "./category.css";
-import Footer from "@/components/Footer";
+import Footer from "@/components/layout/Footer";
 
 interface Props {
   articles: Article[];
@@ -125,131 +125,127 @@ export default function CategoryPageClient({ articles }: Props) {
   const totalResults = searchedArticles.length;
   const hasActiveFilter = selectedCategory !== "全部" || currentFilterType === "tag";
 
+  const clearAllFilters = () => {
+    setSearchQuery("");
+    handleCategorySelect("全部");
+    const params = new URLSearchParams();
+    router.replace("/category", { scroll: false });
+  };
+
   return (
-    <div className="category-page-container pt-14 bg-gray-100">
+    <div className="category-page-container">
       <Navbar />
 
-      <div className="category-filter-container">
-        <button
-          className={`category-filter-btn ${
-            selectedCategory === "全部" && currentFilterType !== "tag" ? "active" : ""
-          }`}
-          onClick={() => handleCategorySelect("全部")}
-        >
-          全部
-        </button>
+      <section className="category-hero">
+        <h1>分类浏览</h1>
+        <p className="category-hero-sub">共 {articles.length} 篇文章</p>
 
-        {categories.map((cat) => (
-          <button
-            key={cat}
-            className={`category-filter-btn ${
-              selectedCategory === cat && currentFilterType === "category" ? "active" : ""
-            }`}
-            onClick={() => handleCategorySelect(cat)}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {currentFilterType === "tag" && selectedCategory !== "全部" && (
-        <div className="category-filter-container tag-active-hint">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            标签筛选：
-          </span>
-          <span className="category-filter-btn active tag-badge">
-            #{selectedCategory}
-          </span>
-          <button
-            className="category-filter-btn"
-            onClick={() => handleCategorySelect("全部")}
-          >
-            清除筛选
-          </button>
-        </div>
-      )}
-
-      <div className="category-search-container">
-        <div className="category-search-wrapper">
-          <FiSearch className="category-search-icon" />
+        <div className="category-search-row">
+          <FiSearch className="search-icon" size={16} />
           <input
             ref={searchRef}
             type="text"
             value={searchQuery}
             onChange={(e) => handleSearchChange(e.target.value)}
             placeholder="搜索文章标题、摘要、标签..."
-            className="category-search-input"
           />
           {searchQuery && (
-            <button onClick={clearSearch} className="category-search-clear">
-              <FiX />
+            <button onClick={clearSearch} className="search-clear-btn">
+              <FiX size={14} />
             </button>
           )}
         </div>
-        {searchQuery && (
-          <span className="category-search-count">
-            找到 {totalResults} 篇
-          </span>
-        )}
-        {hasActiveFilter && !searchQuery && (
-          <span className="category-search-count">
-            {totalResults} 篇
-          </span>
-        )}
+      </section>
+
+      <div className="category-pills-sticky">
+        <div className="category-pills-inner">
+          <button
+            className={`pill ${selectedCategory === "全部" && currentFilterType !== "tag" ? "active" : ""}`}
+            onClick={() => handleCategorySelect("全部")}
+          >
+            全部
+          </button>
+
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`pill ${selectedCategory === cat && currentFilterType === "category" ? "active" : ""}`}
+              onClick={() => handleCategorySelect(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+
+          {currentFilterType === "tag" && selectedCategory !== "全部" && (
+            <>
+              <span className="pill tag-pill">#{selectedCategory}</span>
+              <button
+                className="pill clear-pill"
+                onClick={() => handleCategorySelect("全部")}
+              >
+                清除
+              </button>
+            </>
+          )}
+
+          {(searchQuery || hasActiveFilter) && (
+            <span className="result-chip">
+              {totalResults} 篇
+            </span>
+          )}
+        </div>
       </div>
 
-      <main className="category-container">
+      <main className="category-content">
         {Object.keys(groupedByCategory).length === 0 ? (
-          <div className="text-center py-20 text-gray-400 dark:text-gray-500">
-            <p className="text-lg">没有匹配的文章</p>
+          <div className="empty-state">
+            <div className="empty-state-icon"><FiInbox /></div>
+            <p>没有匹配的文章</p>
             {(searchQuery || hasActiveFilter) && (
-              <button
-                className="mt-4 text-sm text-blue-500 hover:underline"
-                onClick={() => {
-                  setSearchQuery("");
-                  handleCategorySelect("全部");
-                  const params = new URLSearchParams();
-                  router.replace("/category", { scroll: false });
-                }}
-              >
-                清除所有筛选
-              </button>
+              <button onClick={clearAllFilters}>清除所有筛选</button>
             )}
           </div>
         ) : (
           Object.entries(groupedByCategory).map(([category, arts]) => (
-            <section key={category} className="category-card">
-              <h2 className="category-header-title">
-                <span className="category-indicator" />
-                {category}（{arts.length} 篇）
+            <section key={category} className="cat-section">
+              <h2 className="cat-section-heading">
+                <span className="dot" />
+                {category}
+                <span className="count">{arts.length} 篇</span>
               </h2>
 
-              <div className="category-articles-grid">
+              <div className="article-grid">
                 {arts.map((article) => (
                   <Link
                     key={article.id}
                     href={`/article/${article.id}`}
-                    className="article-card"
+                    className="art-card"
                   >
                     {article.image_url ? (
-                      <img
-                        src={article.image_url}
-                        alt={article.title}
-                        className="article-image"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="article-image-placeholder">
-                        无封面图
+                      <div className="art-card-image-wrapper">
+                        <img
+                          src={article.image_url}
+                          alt={article.title}
+                          className="art-card-image"
+                          loading="lazy"
+                        />
                       </div>
+                    ) : (
+                      <div className="art-card-image-placeholder" />
                     )}
-
-                    <h3 className="category-article-title">
-                      {article.title}
-                    </h3>
-                    <p className="category-article-summary">
-                      {article.summary}
-                    </p>
+                    <div className="art-card-body">
+                      <h3 className="art-card-title">{article.title}</h3>
+                      {article.summary && (
+                        <p className="art-card-summary">{article.summary}</p>
+                      )}
+                      {article.tags && (
+                        <div className="art-card-meta">
+                          {parseTags(article.tags).slice(0, 3).map((t) => (
+                            <span key={t} className="tag">{t}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </Link>
                 ))}
               </div>

@@ -16,15 +16,15 @@
  */
 
 import type { Article } from '@/types/article';
-import Footer from '@/components/Footer';
-import LikeButton from '@/components/LikeButton';
-import ReadingProgress from '@/components/ReadingProgress';
+import Footer from '@/components/layout/Footer';
+import LikeButton from '@/components/common/LikeButton';
+import ReadingProgress from '@/components/common/ReadingProgress';
 import { createServerSupabase } from '@/lib/supabaseServer';
-import ArticleContent from '@/components/ArticleContent';
-import ArticleToc from '@/components/ArticleToc';
-import ReturnHome from '@/components/ReturnHome';
-import TagList from '@/components/TagList';
-import AIChat from '@/components/DynamicAIChat';
+import ArticleContent from '@/components/article/ArticleContent';
+import ArticleToc from '@/components/article/ArticleToc';
+import ReturnHome from '@/components/common/ReturnHome';
+import TagList from '@/components/article/TagList';
+import AIChat from '@/components/chat/DynamicAIChat';
 
 export default async function ArticlePage({ params }: { params: Promise<{ id: string }> }) {
   // 解析路由参数（文章 ID）
@@ -78,36 +78,29 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
       <div className="article-container">
         <main className="article-page-main">
           <article className="article-content">
-            {/* 文章标题 */}
             <h1 className="article-page-title">{article.title}</h1>
 
-            {/* 元信息：日期 & 分类 */}
             <div className="article-page-meta">
               <span>{formattedDate}</span>
               <span>·</span>
               <span>{article.category}</span>
             </div>
 
-            {/* 文章摘要（可选） */}
             {article.summary && <div className="article-page-summary">{article.summary}</div>}
 
-            {/* 文章正文内容（Markdown 渲染） */}
             <ArticleContent content={article.content ?? ''} />
 
-            {/* 标签 & 点赞 */}
             <div className="tag-like-container">
               <TagList tags={article.tags ?? []} />
-
               <LikeButton articleId={article.id} initialLikes={article.likes ?? 0} />
             </div>
           </article>
         </main>
-      </div>
 
-      {/* 文章目录（右侧固定 / 移动端下方） */}
-      <aside className="article-toc">
-        <ArticleToc />
-      </aside>
+        <aside className="article-toc">
+          <ArticleToc />
+        </aside>
+      </div>
 
       {/* 固定 AI 聊天助手 */}
       <div className="fixed-ai-chat">

@@ -5,19 +5,19 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* 基础样式 */
-@import "./styles/base.css";
+@import "../styles/base.css";
 
 /* 动画效果 */
-@import "./styles/animations.css";
+@import "../styles/animations.css";
 
 /* 首页样式 */
-@import "./styles/home.css";
+@import "../styles/home.css";
 
 /* 文章页样式 */
-@import "./styles/article.css";
+@import "../styles/article.css";
 
 /* 代码高亮样式 */
-@import "./styles/code-highlight.css";
+@import "../styles/code-highlight.css";
 
 html, body {
   margin: 0;
