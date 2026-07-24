@@ -130,44 +130,7 @@ export default function CategoryPageClient({ articles }: Props) {
       <Navbar />
 
       <div className="category-filter-sticky">
-        <div className="category-filter-container">
-          <button
-            className={`category-filter-btn ${
-              selectedCategory === "全部" && currentFilterType !== "tag" ? "active" : ""
-            }`}
-            onClick={() => handleCategorySelect("全部")}
-          >
-            全部
-          </button>
-
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              className={`category-filter-btn ${
-                selectedCategory === cat && currentFilterType === "category" ? "active" : ""
-              }`}
-              onClick={() => handleCategorySelect(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
-        {currentFilterType === "tag" && selectedCategory !== "全部" && (
-          <div className="category-filter-container tag-active-hint">
-            <span className="category-filter-btn active tag-badge">
-              #{selectedCategory}
-            </span>
-            <button
-              className="category-filter-btn"
-              onClick={() => handleCategorySelect("全部")}
-            >
-              清除
-            </button>
-          </div>
-        )}
-
-        <div className="category-search-container">
+        <div className="category-filter-inner">
           <div className="category-search-wrapper">
             <FiSearch className="category-search-icon" />
             <input
@@ -175,7 +138,7 @@ export default function CategoryPageClient({ articles }: Props) {
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearchChange(e.target.value)}
-              placeholder="搜索文章标题、摘要、标签..."
+              placeholder="搜索文章..."
               className="category-search-input"
             />
             {searchQuery && (
@@ -186,6 +149,43 @@ export default function CategoryPageClient({ articles }: Props) {
           </div>
           {(searchQuery || hasActiveFilter) && (
             <span className="category-search-count">{totalResults} 篇</span>
+          )}
+        </div>
+
+        <div className="category-pills">
+          <button
+            className={`category-pill ${
+              selectedCategory === "全部" && currentFilterType !== "tag" ? "active" : ""
+            }`}
+            onClick={() => handleCategorySelect("全部")}
+          >
+            全部
+          </button>
+
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`category-pill ${
+                selectedCategory === cat && currentFilterType === "category" ? "active" : ""
+              }`}
+              onClick={() => handleCategorySelect(cat)}
+            >
+              {cat}
+            </button>
+          ))}
+
+          {currentFilterType === "tag" && selectedCategory !== "全部" && (
+            <>
+              <span className="category-pill tag-badge">
+                #{selectedCategory}
+              </span>
+              <button
+                className="category-pill clear-btn"
+                onClick={() => handleCategorySelect("全部")}
+              >
+                清除
+              </button>
+            </>
           )}
         </div>
       </div>
