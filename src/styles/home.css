@@ -77,7 +77,7 @@
 }
 
 .article-title {
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #111827;
   line-height: 1.35;
@@ -93,8 +93,8 @@
 }
 
 .article-summary {
-  font-size: 0.875rem;
-  line-height: 1.55;
+  font-size: 0.85rem;
+  line-height: 1.5;
   color: #6b7280;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -109,7 +109,7 @@
 
 .article-meta-tag {
   display: inline-flex;
-  padding: 0.15rem 0.5rem;
+  padding: 0.1rem 0.5rem;
   border-radius: 9999px;
   background: rgba(0,0,0,0.04);
   font-size: 0.75rem;

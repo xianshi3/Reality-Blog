@@ -59,11 +59,11 @@ export default function MainContent({
                       className="w-full h-full object-cover"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                   </div>
                 )}
 
-                <div className="flex flex-col flex-1 p-4">
+                <div className="flex flex-col flex-1 p-[1rem_1.1rem_1.1rem]">
                   <h3 className="article-title mb-2">
                     {article.title}
                   </h3>

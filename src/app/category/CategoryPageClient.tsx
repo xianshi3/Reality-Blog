@@ -222,12 +222,14 @@ export default function CategoryPageClient({ articles }: Props) {
                     className="art-card"
                   >
                     {article.image_url ? (
-                      <img
-                        src={article.image_url}
-                        alt={article.title}
-                        className="art-card-image"
-                        loading="lazy"
-                      />
+                      <div className="art-card-image-wrapper">
+                        <img
+                          src={article.image_url}
+                          alt={article.title}
+                          className="art-card-image"
+                          loading="lazy"
+                        />
+                      </div>
                     ) : (
                       <div className="art-card-image-placeholder" />
                     )}
