@@ -126,85 +126,77 @@ export default function CategoryPageClient({ articles }: Props) {
   const hasActiveFilter = selectedCategory !== "全部" || currentFilterType === "tag";
 
   return (
-    <div className="category-page-container pt-14 bg-gray-100">
+    <div className="category-page-container">
       <Navbar />
 
-      <div className="category-filter-container">
-        <button
-          className={`category-filter-btn ${
-            selectedCategory === "全部" && currentFilterType !== "tag" ? "active" : ""
-          }`}
-          onClick={() => handleCategorySelect("全部")}
-        >
-          全部
-        </button>
-
-        {categories.map((cat) => (
+      <div className="category-filter-sticky">
+        <div className="category-filter-container">
           <button
-            key={cat}
             className={`category-filter-btn ${
-              selectedCategory === cat && currentFilterType === "category" ? "active" : ""
+              selectedCategory === "全部" && currentFilterType !== "tag" ? "active" : ""
             }`}
-            onClick={() => handleCategorySelect(cat)}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {currentFilterType === "tag" && selectedCategory !== "全部" && (
-        <div className="category-filter-container tag-active-hint">
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            标签筛选：
-          </span>
-          <span className="category-filter-btn active tag-badge">
-            #{selectedCategory}
-          </span>
-          <button
-            className="category-filter-btn"
             onClick={() => handleCategorySelect("全部")}
           >
-            清除筛选
+            全部
           </button>
-        </div>
-      )}
 
-      <div className="category-search-container">
-        <div className="category-search-wrapper">
-          <FiSearch className="category-search-icon" />
-          <input
-            ref={searchRef}
-            type="text"
-            value={searchQuery}
-            onChange={(e) => handleSearchChange(e.target.value)}
-            placeholder="搜索文章标题、摘要、标签..."
-            className="category-search-input"
-          />
-          {searchQuery && (
-            <button onClick={clearSearch} className="category-search-clear">
-              <FiX />
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              className={`category-filter-btn ${
+                selectedCategory === cat && currentFilterType === "category" ? "active" : ""
+              }`}
+              onClick={() => handleCategorySelect(cat)}
+            >
+              {cat}
             </button>
+          ))}
+        </div>
+
+        {currentFilterType === "tag" && selectedCategory !== "全部" && (
+          <div className="category-filter-container tag-active-hint">
+            <span className="category-filter-btn active tag-badge">
+              #{selectedCategory}
+            </span>
+            <button
+              className="category-filter-btn"
+              onClick={() => handleCategorySelect("全部")}
+            >
+              清除
+            </button>
+          </div>
+        )}
+
+        <div className="category-search-container">
+          <div className="category-search-wrapper">
+            <FiSearch className="category-search-icon" />
+            <input
+              ref={searchRef}
+              type="text"
+              value={searchQuery}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              placeholder="搜索文章标题、摘要、标签..."
+              className="category-search-input"
+            />
+            {searchQuery && (
+              <button onClick={clearSearch} className="category-search-clear">
+                <FiX />
+              </button>
+            )}
+          </div>
+          {(searchQuery || hasActiveFilter) && (
+            <span className="category-search-count">{totalResults} 篇</span>
           )}
         </div>
-        {searchQuery && (
-          <span className="category-search-count">
-            找到 {totalResults} 篇
-          </span>
-        )}
-        {hasActiveFilter && !searchQuery && (
-          <span className="category-search-count">
-            {totalResults} 篇
-          </span>
-        )}
       </div>
 
       <main className="category-container">
         {Object.keys(groupedByCategory).length === 0 ? (
-          <div className="text-center py-20 text-gray-400 dark:text-gray-500">
+          <div className="empty-state">
             <p className="text-lg">没有匹配的文章</p>
             {(searchQuery || hasActiveFilter) && (
               <button
-                className="mt-4 text-sm text-blue-500 hover:underline"
+                className="mt-3 text-sm text-blue-500 hover:underline cursor-pointer"
                 onClick={() => {
                   setSearchQuery("");
                   handleCategorySelect("全部");
@@ -221,7 +213,7 @@ export default function CategoryPageClient({ articles }: Props) {
             <section key={category} className="category-card">
               <h2 className="category-header-title">
                 <span className="category-indicator" />
-                {category}（{arts.length} 篇）
+                {category}（{arts.length}）
               </h2>
 
               <div className="category-articles-grid">
@@ -244,12 +236,10 @@ export default function CategoryPageClient({ articles }: Props) {
                       </div>
                     )}
 
-                    <h3 className="category-article-title">
-                      {article.title}
-                    </h3>
-                    <p className="category-article-summary">
-                      {article.summary}
-                    </p>
+                    <h3 className="category-article-title">{article.title}</h3>
+                    {article.summary && (
+                      <p className="category-article-summary">{article.summary}</p>
+                    )}
                   </Link>
                 ))}
               </div>
