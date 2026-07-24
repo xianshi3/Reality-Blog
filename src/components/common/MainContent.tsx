@@ -51,7 +51,7 @@ export default function MainContent({
                 href={article.link}
                 className="article-item"
               >
-                {article.image_url && (
+                {article.image_url ? (
                   <div className="relative h-48 md:h-56 w-full overflow-hidden">
                     <img
                       src={article.image_url}
@@ -61,9 +61,11 @@ export default function MainContent({
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
                   </div>
+                ) : (
+                  <div className="h-32 md:h-36 bg-gradient-to-b from-gray-100 to-gray-50 dark:from-[#2a2f3a] dark:to-[#23272f]" />
                 )}
 
-                <div className="flex flex-col flex-1 p-[1rem_1.1rem_1.1rem]">
+                <div className="flex flex-col flex-1 px-4 pb-4 pt-3">
                   <h3 className="article-title mb-2">
                     {article.title}
                   </h3>
