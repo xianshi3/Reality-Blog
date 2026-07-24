@@ -129,12 +129,11 @@ export default function ArticleToc({ className }: Props) {
 
   const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>, itemId: string) => {
     e.preventDefault();
-    const target = document.getElementById(itemId);
+    const target = document.getElementById(itemId) || document.querySelector(`[id="${CSS.escape(itemId)}"]`);
     if (target) {
       const topOffset = 80;
-      const elementPosition = target.getBoundingClientRect().top;
-      const offsetPosition = window.scrollY + elementPosition - topOffset;
-      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+      window.scrollBy(0, -topOffset);
       if (window.innerWidth < 768) {
         setIsExpanded(false);
       }
@@ -261,7 +260,6 @@ export default function ArticleToc({ className }: Props) {
         left: `${pos.x}px`,
         top: `${pos.y}px`,
         width: "240px",
-        maxHeight: "calc(100vh - 4rem)",
       }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
@@ -282,7 +280,7 @@ export default function ArticleToc({ className }: Props) {
           <FaXmark />
         </button>
       </div>
-      <div className="flex-1 overflow-y-auto min-h-0 py-1 toc-desktop-list">
+      <div className="flex-1 overflow-y-auto min-h-0 py-1 toc-desktop-list" style={{ maxHeight: "min(50vh, 400px)" }}>
         {tocItems.map((item) => (
           <a
             key={item.id}
