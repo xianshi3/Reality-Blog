@@ -38,13 +38,17 @@ export async function proxy(req: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession();
 
+  // 若配置了 ADMIN_EMAIL，仅该邮箱可访问后台（防止其他注册用户越权）
+  const adminEmail = process.env.ADMIN_EMAIL;
+  const isAdmin = session && (!adminEmail || session.user.email === adminEmail);
+
   // 未登录访问后台 → 跳转登录页
-  if (!session && req.nextUrl.pathname.startsWith('/admin')) {
+  if (!isAdmin && req.nextUrl.pathname.startsWith('/admin')) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
   // 已登录访问登录页 → 跳转后台
-  if (session && req.nextUrl.pathname === '/login') {
+  if (isAdmin && req.nextUrl.pathname === '/login') {
     return NextResponse.redirect(new URL('/admin', req.url));
   }
 

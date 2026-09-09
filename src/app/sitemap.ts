@@ -15,12 +15,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const supabase = await createServerSupabase();
     const { data } = await supabase
       .from("articles")
-      .select("id, date, category, updated_at")
+      .select("id, date, category")
       .order("date", { ascending: false });
 
     const articleRoutes: MetadataRoute.Sitemap = (data ?? []).map((a) => ({
       url: `${baseUrl}/article/${a.id}`,
-      lastModified: a.updated_at ?? a.date ?? new Date(),
+      lastModified: a.date ?? new Date(),
     }));
 
     const categories = Array.from(

@@ -30,10 +30,15 @@ export async function createServerSupabase() {
 
 // 校验当前请求是否已登录，未登录返回 null
 // 所有后台写操作接口（文章/资料/存储）必须先调用此函数
+// 若配置了 ADMIN_EMAIL，则只有该邮箱对应的用户可操作（防止其他注册用户越权）
 export async function requireUser() {
   const supabase = await createServerSupabase();
   const { data, error } = await supabase.auth.getUser();
   if (error || !data.user) return null;
+
+  const adminEmail = process.env.ADMIN_EMAIL;
+  if (adminEmail && data.user.email !== adminEmail) return null;
+
   return data.user;
 }
 

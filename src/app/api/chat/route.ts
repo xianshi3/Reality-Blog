@@ -15,6 +15,13 @@ const rateHits = new Map<string, number[]>();
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
+  if (rateHits.size > 10_000) {
+    for (const [key, hits] of rateHits) {
+      const recent = hits.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+      if (recent.length === 0) rateHits.delete(key);
+      else rateHits.set(key, recent);
+    }
+  }
   const hits = (rateHits.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
   hits.push(now);
   rateHits.set(ip, hits);

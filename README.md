@@ -158,7 +158,8 @@ npm run dev
 ```env
 NEXT_PUBLIC_SUPABASE_URL=           # Supabase 项目地址
 NEXT_PUBLIC_SUPABASE_ANON_KEY=      # Supabase 匿名密钥
-SUPABASE_SERVICE_ROLE_KEY=          # Supabase 服务角色密钥（仅服务端，图片删除）
+SUPABASE_SERVICE_ROLE_KEY=          # Supabase 服务角色密钥（仅服务端，图片上传/删除）
+ADMIN_EMAIL=                        # 管理员邮箱（强烈建议：后台页面与写接口仅允许该邮箱登录）
 ZHIPU_API_KEY=                      # 智谱 AI API 密钥
 NEXT_PUBLIC_SITE_URL=               # 站点真实域名（sitemap / robots / OG 元数据）
 ```
@@ -200,7 +201,7 @@ CREATE TABLE profile (
 );
 ```
 
-> 完整 DDL 和 RLS 策略见 [`schema.sql`](./schema.sql)
+> 完整 DDL、RLS 策略与点赞原子自增函数（`increment_likes`）见 [`schema.sql`](./schema.sql)
 
 ### Supabase 配置步骤
 
@@ -208,6 +209,7 @@ CREATE TABLE profile (
 2. **Auth** → Providers → 开启 Email
 3. **Storage** → 创建公开 bucket `article-images`
 4. **SQL Editor** → 执行 `schema.sql`
+5. **Storage** → Policies → 撤销 `article-images` 的匿名 INSERT 策略（上传已改走服务端鉴权接口，只需保留公开读取）
 
 ---
 
@@ -225,13 +227,15 @@ CREATE TABLE profile (
 
 | 方法 | 路径 | 用途 |
 |------|------|------|
-| `GET/POST/PUT/DELETE` | `/api/article` | 文章 CRUD |
-| `GET/POST` | `/api/article/[id]/like` | 点赞 |
-| `GET/PUT` | `/api/profile` | 个人信息 |
-| `POST` | `/api/chat` | AI 聊天 (SSE) |
+| `GET/POST/PUT/DELETE` | `/api/article` | 文章 CRUD（写操作需登录） |
+| `GET/POST` | `/api/article/[id]/like` | 点赞（RPC 原子自增，支持匿名访客） |
+| `GET/PUT` | `/api/profile` | 个人信息（PUT 需登录） |
+| `POST` | `/api/chat` | AI 聊天 (SSE，按 IP 限流) |
 | `POST` | `/api/auth/set-cookie` | 登录会话 |
 | `POST` | `/api/storage` | 上传图片（需登录，service role 落存储） |
 | `DELETE` | `/api/storage` | 删除图片（需登录） |
+
+> 安全说明：所有写接口由服务端 `requireUser` 统一校验会话；配置 `ADMIN_EMAIL` 后仅管理员邮箱可操作。后台页面由 `proxy.ts` 拦截未登录请求。
 
 ---
 
@@ -291,6 +295,13 @@ src/
 - 🗺️ 自动生成 **sitemap.xml**（文章 / 分类 / 静态页）与 **robots.txt**
 - 📱 **PWA manifest** + favicon + OG/Twitter 分享图
 - 🚧 毛玻璃风格 **404 / 错误页**（全局 + 根布局双错误边界，适配深色模式）
+
+### 安全
+
+- 🔐 后台写接口统一服务端会话校验（`requireUser`），可选 `ADMIN_EMAIL` 白名单
+- 📤 图片上传走服务端鉴权接口（service role），杜绝匿名直传滥用
+- ❤️ 点赞使用 `increment_likes` RPC 原子自增（SECURITY DEFINER），无并发竞态
+- 🚦 AI 聊天接口按 IP 限流，防止 API 密钥被盗刷
 
 ---
 

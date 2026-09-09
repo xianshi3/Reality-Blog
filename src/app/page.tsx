@@ -24,8 +24,9 @@ export default async function Home() {
   const url = new URL(fullUrl);
   const pageParam = url.searchParams.get('page');
 
-  // 当前页码，默认为第1页
-  const page = parseInt(pageParam ?? '1', 10);
+  // 当前页码，默认为第1页（非法参数一律回退到第1页）
+  const rawPage = parseInt(pageParam ?? '1', 10);
+  const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
 
   // Supabase 查询文章的起止索引
   const from = (page - 1) * PAGE_SIZE;
