@@ -623,16 +623,30 @@ body {
 .github-projects-more {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 0.5rem;
   font-size: 0.85rem;
-  font-weight: 500;
-  color: #6366f1;
+  font-weight: 600;
+  color: #374151;
+  background: rgba(243, 244, 246, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(229, 231, 235, 0.5);
   text-decoration: none;
-  transition: color 0.2s ease, transform 0.2s ease;
+  transition: all 0.15s ease;
 }
-.github-projects-more:hover { color: #4f46e5; transform: translateX(2px); }
-.dark .github-projects-more { color: #818cf8; }
-.dark .github-projects-more:hover { color: #a5b4fc; }
+.dark .github-projects-more {
+  background: rgba(31, 34, 48, 0.6);
+  color: #d1d5db;
+  border-color: rgba(55, 65, 81, 0.5);
+}
+.github-projects-more:hover {
+  background: rgba(229, 231, 235, 0.9);
+  transform: translateY(-1px);
+}
+.dark .github-projects-more:hover {
+  background: rgba(37, 40, 48, 0.8);
+}
 .github-projects-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
