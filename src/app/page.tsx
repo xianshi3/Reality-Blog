@@ -6,6 +6,7 @@ import RightSidebar from '@/components/layout/RightSidebar';
 import Footer from '@/components/layout/Footer';
 import ErrorDisplay from '@/components/common/ErrorDisplay';
 import AIChat from '@/components/chat/DynamicAIChat';
+import GitHubProjects from '@/components/github/GitHubProjects';
 import { createServerSupabase } from '@/lib/supabaseServer';
 import { parseTags } from '@/lib/parseTags';
 import type { Article } from '@/types/article';
@@ -114,6 +115,9 @@ export default async function Home() {
 
       {/* 底部固定 AI 聊天组件 */}
       <AIChat />
+
+      {/* GitHub 开源项目展示 */}
+      <GitHubProjects />
 
       {/* 页面底部 Footer */}
       <Footer currentYear={new Date().getFullYear()} />
