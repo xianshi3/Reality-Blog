@@ -3,6 +3,19 @@ import type { CookieOptions } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+// 从 access_token 的 JWT payload 中解码 email（仅用于跳转判断，不做鉴权依据）
+// 不访问 session.user，避免 supabase-js 的 insecure 警告
+function getEmailFromToken(token: string): string | null {
+  try {
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+    const claims = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
+    return typeof claims.email === 'string' ? claims.email : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function proxy(req: NextRequest) {
   const res = NextResponse.next();
 
@@ -40,7 +53,8 @@ export async function proxy(req: NextRequest) {
 
   // 若配置了 ADMIN_EMAIL，仅该邮箱可访问后台（防止其他注册用户越权）
   const adminEmail = process.env.ADMIN_EMAIL;
-  const isAdmin = session && (!adminEmail || session.user.email === adminEmail);
+  const sessionEmail = session ? getEmailFromToken(session.access_token) : null;
+  const isAdmin = session && (!adminEmail || sessionEmail === adminEmail);
 
   // 未登录访问后台 → 跳转登录页
   if (!isAdmin && req.nextUrl.pathname.startsWith('/admin')) {

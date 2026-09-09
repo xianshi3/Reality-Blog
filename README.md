@@ -63,6 +63,7 @@
 | <img src="https://img.shields.io/badge/dark_mode-000000?style=flat-square&logo=darkreader&logoColor=white"/> 深色模式 | 系统自动感知 + 手动切换，inline script 防 FOUC，全站适配 |
 | <img src="https://img.shields.io/badge/responsive-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white"/> 响应式 | 桌面 / 平板 / 手机全尺寸适配，移动端侧栏抽屉菜单 |
 | <img src="https://img.shields.io/badge/Image_Crop-000000?style=flat-square&logo=canvas&logoColor=white"/> 图片裁剪 | 上传前裁剪：头像 1:1 正方形，视差背景 21:9 宽屏 |
+| <img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white"/> 项目展示 | 首页展示 GitHub 开源项目（Star/Fork/语言），API 数据 + ISR 缓存自动同步 |
 | <img src="https://img.shields.io/badge/SEO-4285F4?style=flat-square&logo=google&logoColor=white"/> SEO | 自动 sitemap.xml、robots.txt、PWA manifest、OG/Twitter 分享图、全局 404 与错误页 |
 
 </div>
@@ -163,6 +164,7 @@ SUPABASE_SERVICE_ROLE_KEY=          # Supabase 服务角色密钥（仅服务端
 ADMIN_EMAIL=                        # 管理员邮箱（强烈建议：后台页面与写接口仅允许该邮箱登录）
 ZHIPU_API_KEY=                      # 智谱 AI API 密钥
 NEXT_PUBLIC_SITE_URL=               # 站点真实域名（sitemap / robots / OG 元数据）
+GITHUB_TOKEN=                       # GitHub 项目展示（可选，未配置则用未认证 API，限 60 次/小时）
 ```
 
 ---
@@ -262,10 +264,12 @@ src/
 │   ├── article/            # 文章组件（Content, TOC, Search, Tags）
 │   ├── common/             # 通用组件（LikeButton, ImageCropper, Cards）
 │   ├── chat/               # AI 聊天组件
+│   ├── github/             # GitHub 项目展示组件
 │   └── admin/              # 管理后台组件
-├── lib/                    # 工具库（Supabase 客户端, 上传）
+├── config/                 # 站点配置（GitHub 精选仓库等）
+├── lib/                    # 工具库（Supabase 客户端, 上传, GitHub API）
 ├── types/                  # TypeScript 类型
-└── proxy.ts                # Supabase 认证代理（Next.js 16 Proxy 约定）
+└── proxy.ts                # 认证代理（Next.js 16 Proxy 约定，本地解码 JWT 判断会话）
 ```
 
 ---
@@ -275,6 +279,12 @@ src/
 ### 首頁视差效果
 
 背景图随滚动偏移，鼠标悬停产生 3D 旋转 + 位移视差。支持通过后台自定义背景、标题和副标题，留空则自动隐藏。
+
+### GitHub 开源项目
+
+- 🐙 首页文章列表下方展示 **精选开源项目**（毛玻璃卡片，深色模式适配）
+- ⭐ 自动同步 **Star / Fork / 语言 / 简介**（GitHub API + ISR 每小时缓存，API 故障时自动隐藏不影响页面）
+- ⚙️ 展示哪些仓库由 `src/config/github.ts` 控制，可选配 `GITHUB_TOKEN` 提升 API 限额
 
 ### AI 聊天
 
