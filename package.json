@@ -1,7 +1,29 @@
 {
-  "name": "nextjs",
+  "name": "reality-blog",
   "version": "0.1.0",
   "private": true,
+  "description": "Reality 的个人技术博客：Next.js 16 + Supabase + AI 聊天 + 视差首页 + 完整后台管理",
+  "keywords": [
+    "blog",
+    "nextjs",
+    "supabase",
+    "markdown",
+    "ai-chat",
+    "typescript"
+  ],
+  "author": "Reality <vm1784257751@foxmail.com> (https://github.com/xianshi3)",
+  "license": "MIT",
+  "homepage": "https://github.com/xianshi3/Reality-Blog#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xianshi3/Reality-Blog.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xianshi3/Reality-Blog/issues"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

@@ -28,6 +28,7 @@
 
   <!-- Badges row -->
   <img src="https://img.shields.io/github/license/xianshi3/Reality-Blog?style=flat-square&color=6366f1" alt="License"/>
+  <img src="https://img.shields.io/github/actions/workflow/status/xianshi3/Reality-Blog/ci.yml?style=flat-square" alt="CI"/>
   <img src="https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square" alt="PRs Welcome"/>
   <img src="https://img.shields.io/github/last-commit/xianshi3/Reality-Blog?style=flat-square&color=6366f1" alt="Last Commit"/>
 
@@ -42,7 +43,7 @@
 
 <div align="center">
 
-[特性一览](#-特性一览) · [技术栈](#-技术栈) · [截图展示](#-截图展示) · [快速开始](#-快速开始) · [数据库](#-数据库) · [后台管理](#-后台管理) · [项目结构](#-项目结构) · [功能亮点](#-功能亮点) · [构建部署](#-构建部署)
+[特性一览](#-特性一览) · [技术栈](#-技术栈) · [截图展示](#-截图展示) · [快速开始](#-快速开始) · [数据库](#-数据库) · [后台管理](#-后台管理) · [项目结构](#-项目结构) · [功能亮点](#-功能亮点) · [构建部署](#-构建部署) · [开源与贡献](#-开源与贡献)
 
 </div>
 
@@ -314,6 +315,27 @@ npm run lint     # 代码检查
 ```
 
 推荐部署到 [Vercel](https://vercel.com)，零配置自动识别 Next.js。
+
+---
+
+## 🤝 开源与贡献
+
+本项目基于 [MIT](./LICENSE) 许可证开源，欢迎 Star、Fork 和 PR。
+
+| 文档 | 说明 |
+|------|------|
+| [CONTRIBUTING.md](./CONTRIBUTING.md) | 贡献指南：开发流程、提交规范、代码规范 |
+| [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) | 社区行为准则（Contributor Covenant） |
+| [SECURITY.md](./SECURITY.md) | 安全漏洞报告渠道 |
+| [Issue 模板](./.github/ISSUE_TEMPLATE) | Bug 报告 / 功能建议模板 |
+
+### 贡献者
+
+感谢所有为本项目做出贡献的人：
+
+<a href="https://github.com/xianshi3/Reality-Blog/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=xianshi3/Reality-Blog" />
+</a>
 
 ---
 
