@@ -28,6 +28,15 @@ export async function createServerSupabase() {
   });
 }
 
+// 校验当前请求是否已登录，未登录返回 null
+// 所有后台写操作接口（文章/资料/存储）必须先调用此函数
+export async function requireUser() {
+  const supabase = await createServerSupabase();
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) return null;
+  return data.user;
+}
+
 // 服务端管理客户端（service role key，绕过 RLS）
 // 仅用于受保护的服务端 API 路由（如图片存储管理），切勿暴露给客户端
 export function createServerSupabaseAdmin() {

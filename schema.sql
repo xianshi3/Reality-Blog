@@ -64,10 +64,39 @@ INSERT INTO public.profile (id, name, title, avatar_url, github_url, twitter_url
 VALUES (1, 'Reality', 'Full Stack Developer', '/avatar.png', 'https://github.com/xianshi3', 'https://x.com/xianshi_3', '/parallax-bg.png', 'Reality Blog', '探索技术与世界的边界')
 ON CONFLICT (id) DO NOTHING;
 
+-- ==================== 点赞原子自增函数 ====================
+-- SECURITY DEFINER 绕过 RLS，允许匿名访客点赞，且 UPDATE 原子执行无竞态
+-- 后台写接口已改为服务端鉴权，此函数仅允许自增 likes 字段，无越权风险
+CREATE OR REPLACE FUNCTION public.increment_likes(article_id uuid)
+RETURNS integer
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  new_likes integer;
+BEGIN
+  UPDATE public.articles
+  SET likes = COALESCE(likes, 0) + 1
+  WHERE id = article_id
+  RETURNING likes INTO new_likes;
+
+  IF new_likes IS NULL THEN
+    RAISE EXCEPTION 'article not found';
+  END IF;
+
+  RETURN new_likes;
+END;
+$$;
+
 -- ==================== 存储桶 ====================
 -- 在 Supabase Dashboard → Storage 手动创建 article-images 桶
 -- 或者执行下方 SQL（需要 service_role key，建议在 Dashboard 操作）
 -- INSERT INTO storage.buckets (id, name, public) VALUES ('article-images', 'article-images', true);
+
+-- 上传已改为走服务端鉴权接口（service role），桶无需再对匿名用户开放上传。
+-- 建议在 Dashboard → Storage → Policies 中撤销 article-images 的匿名 INSERT 策略，
+-- 仅保留匿名 SELECT（公开读取）即可。
 
 -- ==================== 已有数据库升级脚本 ====================
 -- 如果 profile 表已存在但缺少视差字段，执行下方 SQL：

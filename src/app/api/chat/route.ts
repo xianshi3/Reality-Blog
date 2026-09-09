@@ -9,7 +9,24 @@ const client = new ZhipuAI({
 const MAX_MESSAGES = 20;
 const MAX_CONTENT_LENGTH = 2000;
 
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX = 10;
+const rateHits = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const hits = (rateHits.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  hits.push(now);
+  rateHits.set(ip, hits);
+  return hits.length > RATE_LIMIT_MAX;
+}
+
 export async function POST(req: Request) {
+  const ip = (req.headers.get("x-forwarded-for") ?? "unknown").split(",")[0].trim();
+  if (isRateLimited(ip)) {
+    return new Response("Too many requests, please slow down", { status: 429 });
+  }
+
   try {
     const { messages } = await req.json();
 

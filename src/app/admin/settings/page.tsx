@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { uploadImage } from "@/lib/upload";
+import { uploadImageWithProgress } from "@/lib/upload";
 import ImageCropper from "@/components/common/ImageCropper";
 import { FaCheck, FaUpload, FaUser, FaGear, FaImage } from "react-icons/fa6";
 
@@ -49,6 +49,8 @@ export default function SettingsPage() {
   const [cropFile, setCropFile] = useState<File | null>(null);
   const [cropField, setCropField] = useState<"avatar_url" | "parallax_image_url" | null>(null);
   const [cropDataUrl, setCropDataUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadPercent, setUploadPercent] = useState(0);
 
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const parallaxInputRef = useRef<HTMLInputElement>(null);
@@ -76,18 +78,26 @@ export default function SettingsPage() {
 
   const handleCropConfirm = async (blob: Blob) => {
     if (!cropField) return;
-    const file = new File([blob], cropFile?.name || "crop.jpg", { type: "image/jpeg" });
-    try {
-      const url = await uploadImage(file);
-      setProfile((prev) => prev ? { ...prev, [cropField]: url } : prev);
-      setMessage(cropField === "avatar_url" ? "头像上传成功" : "背景图上传成功");
-      setError("");
-    } catch {
-      setError("上传失败");
-    }
+    const field = cropField;
     setCropFile(null);
     setCropField(null);
     setCropDataUrl(null);
+    const file = new File([blob], cropFile?.name || "crop.jpg", { type: "image/jpeg" });
+    try {
+      setUploading(true);
+      setUploadPercent(0);
+      const url = await uploadImageWithProgress(file, (loaded, total) => {
+        setUploadPercent(total > 0 ? Math.round((loaded / total) * 100) : 0);
+      });
+      setProfile((prev) => prev ? { ...prev, [field]: url } : prev);
+      setMessage(field === "avatar_url" ? "头像上传成功" : "背景图上传成功");
+      setError("");
+    } catch {
+      setError("上传失败");
+    } finally {
+      setUploading(false);
+      setUploadPercent(0);
+    }
   };
 
   const handleCropCancel = () => {
@@ -166,6 +176,11 @@ export default function SettingsPage() {
             <button className="admin-btn admin-btn-secondary" onClick={() => avatarInputRef.current?.click()}>
               <FaUpload /> 上传头像
             </button>
+            {uploading && (
+              <div className="upload-progress mt-3" role="progressbar" aria-valuenow={uploadPercent}>
+                <div className="upload-progress-bar" style={{ width: `${uploadPercent}%` }} />
+              </div>
+            )}
           </div>
         </div>
 
@@ -222,6 +237,11 @@ export default function SettingsPage() {
               <button className="admin-btn admin-btn-secondary" onClick={() => parallaxInputRef.current?.click()}>
                 <FaUpload /> 上传
               </button>
+              {uploading && (
+                <div className="upload-progress mt-3" role="progressbar" aria-valuenow={uploadPercent}>
+                  <div className="upload-progress-bar" style={{ width: `${uploadPercent}%` }} />
+                </div>
+              )}
             </div>
           </div>
 

@@ -230,7 +230,8 @@ CREATE TABLE profile (
 | `GET/PUT` | `/api/profile` | 个人信息 |
 | `POST` | `/api/chat` | AI 聊天 (SSE) |
 | `POST` | `/api/auth/set-cookie` | 登录会话 |
-| `DELETE` | `/api/storage` | 删除图片 |
+| `POST` | `/api/storage` | 上传图片（需登录，service role 落存储） |
+| `DELETE` | `/api/storage` | 删除图片（需登录） |
 
 ---
 

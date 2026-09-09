@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { uploadImage } from "@/lib/upload";
+import { uploadImageWithProgress } from "@/lib/upload";
 import { FaTrashCan, FaImages, FaUpload, FaUser, FaImage } from "react-icons/fa6";
 import "./images.css";
 
@@ -29,6 +29,7 @@ export default function ImageManagerPage() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [uploadPercent, setUploadPercent] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -141,15 +142,19 @@ export default function ImageManagerPage() {
 
   const handleUpload = async (file: File) => {
     setUploading(true);
+    setUploadPercent(0);
     try {
-      const url = await uploadImage(file);
+      const url = await uploadImageWithProgress(file, (loaded, total) => {
+        setUploadPercent(total > 0 ? Math.round((loaded / total) * 100) : 0);
+      });
       const name = url.split("/").pop()!;
       const { data: urlData } = supabase.storage.from("article-images").getPublicUrl(name);
       setImages((prev) => [{ name, publicUrl: urlData.publicUrl, article: null }, ...prev]);
     } catch (err) {
-      alert("上传失败");
+      alert("上传失败：" + (err instanceof Error ? err.message : "未知错误"));
     } finally {
       setUploading(false);
+      setUploadPercent(0);
     }
   };
 
@@ -166,7 +171,7 @@ export default function ImageManagerPage() {
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
         >
-          <FaUpload /> {uploading ? "上传中..." : "上传图片"}
+          <FaUpload /> {uploading ? `上传中 ${uploadPercent}%...` : "上传图片"}
         </button>
         <input
           ref={inputRef}
@@ -175,6 +180,11 @@ export default function ImageManagerPage() {
           className="hidden"
           onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0])}
         />
+        {uploading && (
+          <div className="upload-progress" role="progressbar" aria-valuenow={uploadPercent}>
+            <div className="upload-progress-bar" style={{ width: `${uploadPercent}%` }} />
+          </div>
+        )}
       </div>
 
       {loading ? (

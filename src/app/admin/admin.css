@@ -1276,3 +1276,17 @@
   70% { transform: scale(0.9); }
   100% { transform: scale(1); }
 }
+.upload-progress {
+  margin-top: 10px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(99, 102, 241, 0.15);
+  overflow: hidden;
+  max-width: 320px;
+}
+.upload-progress-bar {
+  height: 100%;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #6366f1, #a855f7);
+  transition: width 0.2s ease;
+}

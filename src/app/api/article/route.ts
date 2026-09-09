@@ -1,7 +1,10 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabaseServer';
+import { createServerSupabase, requireUser } from '@/lib/supabaseServer';
 
 export async function POST(req: Request) {
+  const user = await requireUser();
+  if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 });
+
   try {
     const supabase = await createServerSupabase();
     const body = await req.json();
@@ -20,6 +23,9 @@ export async function POST(req: Request) {
 }
 
 export async function PUT(req: Request) {
+  const user = await requireUser();
+  if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 });
+
   try {
     const supabase = await createServerSupabase();
     const body = await req.json();
@@ -44,6 +50,9 @@ export async function PUT(req: Request) {
 }
 
 export async function DELETE(req: Request) {
+  const user = await requireUser();
+  if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 });
+
   try {
     const supabase = await createServerSupabase();
     const { id } = await req.json();

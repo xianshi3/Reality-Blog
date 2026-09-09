@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabase } from '@/lib/supabaseServer';
+import { createServerSupabase, requireUser } from '@/lib/supabaseServer';
 
 const DEFAULT_PROFILE = {
   id: 1,
@@ -38,6 +38,9 @@ export async function GET() {
 }
 
 export async function PUT(req: Request) {
+  const user = await requireUser();
+  if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 });
+
   try {
     const supabase = await createServerSupabase();
     const body = await req.json();
