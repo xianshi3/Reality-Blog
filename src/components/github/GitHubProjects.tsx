@@ -32,6 +32,7 @@ export default async function GitHubProjects() {
             href={`https://github.com/${GITHUB_USERNAME}`}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={`查看 GitHub 主页（${GITHUB_USERNAME}）`}
             className="github-projects-more"
           >
             查看全部 <FaArrowUpRightFromSquare className="w-3 h-3" />
@@ -45,6 +46,7 @@ export default async function GitHubProjects() {
               href={repo.html_url}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={`${repo.name} GitHub 仓库`}
               className="github-project-card group"
             >
               <div className="github-project-top">
@@ -55,6 +57,16 @@ export default async function GitHubProjects() {
               <p className="github-project-desc">
                 {repo.description || "暂无简介"}
               </p>
+
+              {repo.topics.length > 0 && (
+                <div className="github-project-topics">
+                  {repo.topics.slice(0, 3).map((topic) => (
+                    <span key={topic} className="github-project-topic">
+                      {topic}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               <div className="github-project-bottom">
                 <span className="github-project-stat">

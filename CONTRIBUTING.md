@@ -45,8 +45,8 @@ npx tsc --noEmit      # TypeScript 类型检查
 npm run build         # 生产构建
 ```
 
-- 遵循现有目录结构：`src/app`（路由）、`src/components`（按领域分组的组件）、`src/lib`（工具）
-- 新增环境变量必须同步更新 `.env.example`
+- 遵循现有目录结构：`src/app`（路由）、`src/components`（按领域分组的组件）、`src/lib`（工具）、`src/config`（站点配置，如 GitHub 精选仓库）
+- 新增环境变量必须同步更新 `.env.example` 与 README 的「环境变量」章节
 
 ## 数据库变更
 

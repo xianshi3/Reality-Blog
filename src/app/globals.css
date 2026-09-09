@@ -699,11 +699,32 @@ body {
   overflow: hidden;
 }
 .dark .github-project-desc { color: #9ca3af; }
+.github-project-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.github-project-topic {
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.3rem 0.55rem;
+  border-radius: 9999px;
+  color: #6366f1;
+  background-color: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  white-space: nowrap;
+}
+.dark .github-project-topic {
+  color: #a5b4fc;
+  background-color: rgba(129, 140, 248, 0.12);
+  border-color: rgba(129, 140, 248, 0.25);
+}
 .github-project-bottom {
   display: flex;
   align-items: center;
   gap: 1rem;
   padding-top: 0.55rem;
+  margin-top: auto;
   border-top: 1px solid rgba(229, 231, 235, 0.9);
 }
 .dark .github-project-bottom { border-color: rgba(55, 65, 81, 0.7); }

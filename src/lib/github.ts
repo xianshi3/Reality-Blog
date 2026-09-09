@@ -4,7 +4,6 @@ export interface GitHubRepo {
   name: string;
   description: string | null;
   html_url: string;
-  homepage: string | null;
   language: string | null;
   stargazers_count: number;
   forks_count: number;
@@ -12,6 +11,7 @@ export interface GitHubRepo {
 }
 
 const GITHUB_API = "https://api.github.com";
+const FETCH_TIMEOUT_MS = 10_000;
 
 async function fetchRepo(fullName: string): Promise<GitHubRepo | null> {
   try {
@@ -26,6 +26,7 @@ async function fetchRepo(fullName: string): Promise<GitHubRepo | null> {
 
     const res = await fetch(`${GITHUB_API}/repos/${fullName}`, {
       headers,
+      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       next: { revalidate: 3600 },
     });
 

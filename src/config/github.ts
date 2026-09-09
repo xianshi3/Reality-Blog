@@ -1,6 +1,12 @@
+/**
+ * GitHub 项目展示配置
+ *
+ * - GITHUB_USERNAME：GitHub 用户名，用于生成「查看全部」链接与仓库完整路径
+ * - FEATURED_REPOS：首页展示的仓库名列表，按数组顺序展示，可自行增删
+ *   （需为 GITHUB_USERNAME 名下的公开仓库；API 拉取失败的仓库会自动跳过）
+ */
 export const GITHUB_USERNAME = "xianshi3";
 
-// 首页展示的项目（按顺序展示，可自行增删）
 export const FEATURED_REPOS = [
   "reality-blog",
   "virtual-path-mes",
