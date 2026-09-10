@@ -160,7 +160,7 @@ npm run dev
 ```env
 NEXT_PUBLIC_SUPABASE_URL=           # Supabase 项目地址
 NEXT_PUBLIC_SUPABASE_ANON_KEY=      # Supabase 匿名密钥
-SUPABASE_SERVICE_ROLE_KEY=          # Supabase 服务角色密钥（仅服务端，图片上传/删除）
+SUPABASE_SERVICE_ROLE_KEY=          # Supabase 服务角色密钥（仅服务端，写操作落库 + AI 聊天跨实例限流）
 ADMIN_EMAIL=                        # 管理员邮箱（强烈建议：后台页面与写接口仅允许该邮箱登录）
 ZHIPU_API_KEY=                      # 智谱 AI API 密钥
 NEXT_PUBLIC_SITE_URL=               # 站点真实域名（sitemap / robots / OG 元数据）
@@ -204,7 +204,7 @@ CREATE TABLE profile (
 );
 ```
 
-> 完整 DDL、RLS 策略与点赞原子自增函数（`increment_likes`）见 [`schema.sql`](./schema.sql)
+> 完整 DDL、RLS 策略、点赞原子自增函数（`increment_likes`）与跨实例限流表/函数（`rate_limits` / `rate_limit_check`）见 [`schema.sql`](./schema.sql)
 
 ### Supabase 配置步骤
 
@@ -213,6 +213,8 @@ CREATE TABLE profile (
 3. **Storage** → 创建公开 bucket `article-images`
 4. **SQL Editor** → 执行 `schema.sql`
 5. **Storage** → Policies → 撤销 `article-images` 的匿名 INSERT 策略（上传已改走服务端鉴权接口，只需保留公开读取）
+
+> 升级旧部署时直接重新执行 `schema.sql` 即可：脚本含 `IF NOT EXISTS` 与幂等的升级语句（如撤销旧的开放写策略、新增限流表），重复执行安全。
 
 ---
 
@@ -233,12 +235,12 @@ CREATE TABLE profile (
 | `GET/POST/PUT/DELETE` | `/api/article` | 文章 CRUD（写操作需登录） |
 | `GET/POST` | `/api/article/[id]/like` | 点赞（RPC 原子自增，支持匿名访客） |
 | `GET/PUT` | `/api/profile` | 个人信息（PUT 需登录） |
-| `POST` | `/api/chat` | AI 聊天 (SSE，按 IP 限流) |
+| `POST` | `/api/chat` | AI 聊天 (SSE，跨实例限流) |
 | `POST` | `/api/auth/set-cookie` | 登录会话 |
 | `POST` | `/api/storage` | 上传图片（需登录，service role 落存储） |
 | `DELETE` | `/api/storage` | 删除图片（需登录） |
 
-> 安全说明：所有写接口由服务端 `requireUser` 统一校验会话；配置 `ADMIN_EMAIL` 后仅管理员邮箱可操作。后台页面由 `proxy.ts` 拦截未登录请求。
+> 安全说明：所有写接口由服务端 `requireUser` 统一校验会话（`auth.getUser()` 向 Supabase 服务器验签）；配置 `ADMIN_EMAIL` 后仅管理员邮箱可操作。数据库仅开放公开 `SELECT`，写操作全部经 service role 落库，任何注册用户都无法通过 anon key 直接增删改。后台页面由 `proxy.ts` 拦截未登录请求。
 
 ---
 
@@ -269,14 +271,14 @@ src/
 ├── config/                 # 站点配置（GitHub 精选仓库等）
 ├── lib/                    # 工具库（Supabase 客户端, 上传, GitHub API）
 ├── types/                  # TypeScript 类型
-└── proxy.ts                # 认证代理（Next.js 16 Proxy 约定，本地解码 JWT 判断会话）
+└── proxy.ts                # 认证代理（Next.js 16 Proxy 约定，调用 getUser() 验签判断会话）
 ```
 
 ---
 
 ## 🌟 功能亮点
 
-### 首頁视差效果
+### 首页视差效果
 
 背景图随滚动偏移，鼠标悬停产生 3D 旋转 + 位移视差。支持通过后台自定义背景、标题和副标题，留空则自动隐藏。
 
@@ -309,10 +311,11 @@ src/
 
 ### 安全
 
-- 🔐 后台写接口统一服务端会话校验（`requireUser`），可选 `ADMIN_EMAIL` 白名单
+- 🔐 后台写接口统一服务端会话校验（`requireUser` → `auth.getUser()` 验签），可选 `ADMIN_EMAIL` 白名单
+- 🔒 数据库最小权限：仅公开 `SELECT`，文章/资料的增删改全部经 service role 落库，anon key 只读
 - 📤 图片上传走服务端鉴权接口（service role），杜绝匿名直传滥用
-- ❤️ 点赞使用 `increment_likes` RPC 原子自增（SECURITY DEFINER），无并发竞态
-- 🚦 AI 聊天接口按 IP 限流，防止 API 密钥被盗刷
+- ❤️ 点赞使用 `increment_likes` RPC 原子自增（SECURITY DEFINER），无并发竞态；前端本地记录已赞，刷新不重复点赞
+- 🚦 AI 聊天接口跨实例限流（数据库 RPC 计数，进程内兜底），防止 API 密钥被盗刷
 
 ---
 

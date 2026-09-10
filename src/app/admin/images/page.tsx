@@ -10,7 +10,7 @@ interface ImageItem {
   name: string;
   size?: number;
   publicUrl: string;
-  article?: { id: number; title: string } | null;
+  article?: { id: string; title: string } | null;
   usage?: string;
 }
 

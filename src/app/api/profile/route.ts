@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { createServerSupabase, requireUser } from '@/lib/supabaseServer';
+import { createServerSupabase, createServerSupabaseAdmin, requireUser } from '@/lib/supabaseServer';
 
 const DEFAULT_PROFILE = {
   id: 1,
@@ -42,7 +42,7 @@ export async function PUT(req: Request) {
   if (!user) return NextResponse.json({ error: '未登录' }, { status: 401 });
 
   try {
-    const supabase = await createServerSupabase();
+    const supabase = createServerSupabaseAdmin();
     const body = await req.json();
     const { id, updated_at, ...updateData } = body;
 

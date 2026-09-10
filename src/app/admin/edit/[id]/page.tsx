@@ -35,6 +35,12 @@ interface ArticleData {
   [key: string]: unknown;
 }
 
+function toDateInput(date: string | null | undefined): string {
+  if (!date) return "";
+  // 兼容 "YYYY-MM-DD" 与 "YYYY-MM-DDTHH:mm:ss[.ffffff]" 两种格式
+  return typeof date === "string" && date.length >= 10 ? date.slice(0, 10) : "";
+}
+
 function LoadingSkeleton() {
   return (
     <div className="editor-page">
@@ -84,7 +90,11 @@ export default function EditArticle() {
       }
 
       if (data) {
-        setForm(data as unknown as ArticleData);
+        setForm({
+          ...(data as unknown as ArticleData),
+          // 数据库存的是完整时间戳，日期输入框只接受 YYYY-MM-DD
+          date: toDateInput(data.date),
+        });
       }
       setLoading(false);
     })();

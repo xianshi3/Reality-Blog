@@ -1,4 +1,3 @@
-import { headers } from 'next/headers';
 import Link from 'next/link';
 import Header from '@/components/layout/Header';
 import MainContent from '@/components/common/MainContent';
@@ -18,15 +17,15 @@ const PAGE_SIZE = 6;
  * 博客首页组件（SSR）
  * 加载指定页码的文章数据，并渲染完整页面结构
  */
-export default async function Home() {
-  // 从请求头中获取完整 URL（用于获取 query 参数）
-  const headersList = await headers();
-  const fullUrl = headersList.get('x-url') || 'http://localhost/';
-  const url = new URL(fullUrl);
-  const pageParam = url.searchParams.get('page');
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ page?: string }>;
+}) {
+  const sp = await searchParams;
 
   // 当前页码，默认为第1页（非法参数一律回退到第1页）
-  const rawPage = parseInt(pageParam ?? '1', 10);
+  const rawPage = parseInt(sp.page ?? '1', 10);
   const page = Number.isFinite(rawPage) && rawPage > 0 ? rawPage : 1;
 
   // Supabase 查询文章的起止索引

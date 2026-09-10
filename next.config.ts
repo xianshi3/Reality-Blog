@@ -1,20 +1,25 @@
+// 从环境变量动态读取 Supabase 域名，避免硬编码，方便 fork 与多环境部署
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+let supabaseHost = "";
+if (supabaseUrl) {
+  try {
+    supabaseHost = new URL(supabaseUrl).hostname;
+  } catch {
+    supabaseHost = "";
+  }
+}
+
 const nextConfig = {
-  experimental: {
-    serverActions: {
-      // 这里可以根据需要配置，比如请求体大小限制等，也可以留空
-      // 例子：
-      // bodySizeLimit: "1mb",
-      // allowedOrigins: ["https://example.com"],
-    },
-  },
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "ivkxjxonuvzrarjxtnhk.supabase.co",  // 你的 Supabase 域名
-        pathname: "/storage/v1/object/public/**",
-      },
-    ],
+    remotePatterns: supabaseHost
+      ? [
+          {
+            protocol: "https",
+            hostname: supabaseHost,
+            pathname: "/storage/v1/object/public/**",
+          },
+        ]
+      : [],
   },
 };
 

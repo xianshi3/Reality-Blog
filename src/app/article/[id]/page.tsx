@@ -19,6 +19,7 @@ import type { Article } from '@/types/article';
 import Footer from '@/components/layout/Footer';
 import LikeButton from '@/components/common/LikeButton';
 import { createServerSupabase } from '@/lib/supabaseServer';
+import { parseTags } from '@/lib/parseTags';
 import ArticleContent from '@/components/article/ArticleContent';
 import ArticleToc from '@/components/article/ArticleToc';
 import ReturnHome from '@/components/common/ReturnHome';
@@ -53,7 +54,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ id: st
   const article: Article = {
     ...data,
     link: `/article/${data.id}`,
-    tags: data.tags ? data.tags.split(',') : [],
+    tags: parseTags(data.tags),
   };
 
   // 当前年份（用于 Footer）

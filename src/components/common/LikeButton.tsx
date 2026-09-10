@@ -6,6 +6,30 @@ interface LikeButtonProps {
   initialLikes?: number;
 }
 
+const LIKED_STORAGE_KEY = "liked-articles";
+
+function getLikedIds(): string[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(LIKED_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveLikedId(articleId: string) {
+  try {
+    const ids = getLikedIds();
+    if (!ids.includes(articleId)) {
+      localStorage.setItem(LIKED_STORAGE_KEY, JSON.stringify([...ids, articleId]));
+    }
+  } catch {
+    // 忽略存储失败（隐私模式等）
+  }
+}
+
 export default function LikeButton({ articleId, initialLikes = 0 }: LikeButtonProps) {
   const [liked, setLiked] = useState(false);
   const [count, setCount] = useState(initialLikes);
@@ -14,6 +38,13 @@ export default function LikeButton({ articleId, initialLikes = 0 }: LikeButtonPr
   useEffect(() => {
     setCount(initialLikes);
   }, [initialLikes]);
+
+  // 匿名点赞去重：从本地存储恢复“已赞”状态，避免刷新后重复点赞
+  useEffect(() => {
+    if (getLikedIds().includes(articleId)) {
+      setLiked(true);
+    }
+  }, [articleId]);
 
   const handleLike = async () => {
     if (liked) return;
@@ -36,6 +67,7 @@ export default function LikeButton({ articleId, initialLikes = 0 }: LikeButtonPr
 
       const json = await res.json();
       setCount(json.likes);
+      saveLikedId(articleId);
     } catch (error) {
       alert("网络错误，点赞失败");
       setLiked(false);

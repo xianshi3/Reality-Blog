@@ -3,26 +3,14 @@ import type { CookieOptions } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-// 从 access_token 的 JWT payload 中解码 email（仅用于跳转判断，不做鉴权依据）
-// 不访问 session.user，避免 supabase-js 的 insecure 警告
-function getEmailFromToken(token: string): string | null {
-  try {
-    const payload = token.split('.')[1];
-    if (!payload) return null;
-    const claims = JSON.parse(Buffer.from(payload, 'base64url').toString('utf8'));
-    return typeof claims.email === 'string' ? claims.email : null;
-  } catch {
-    return null;
-  }
-}
-
 export async function proxy(req: NextRequest) {
   const res = NextResponse.next();
 
-  // 注入完整请求 URL 到 headers，供 Server Component 获取 searchParams
-  res.headers.set('x-url', req.url);
+  // 仅在访问后台/登录页时才做鉴权，避免对公开页面发起不必要的网络请求
+  const pathname = req.nextUrl.pathname;
+  const needsAuth = pathname.startsWith('/admin') || pathname === '/login';
+  if (!needsAuth) return res;
 
-  // Supabase 认证相关代码
   const cookieStore = {
     getAll() {
       return req.cookies.getAll().map(({ name, value }) => ({ name, value }));
@@ -47,22 +35,23 @@ export async function proxy(req: NextRequest) {
     cookies: cookieStore,
   });
 
+  // 使用 getUser() 向 Supabase 服务器验证 JWT 签名，邮箱信息可信
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
   // 若配置了 ADMIN_EMAIL，仅该邮箱可访问后台（防止其他注册用户越权）
   const adminEmail = process.env.ADMIN_EMAIL;
-  const sessionEmail = session ? getEmailFromToken(session.access_token) : null;
-  const isAdmin = session && (!adminEmail || sessionEmail === adminEmail);
+  const isAdmin = !!user && !error && (!adminEmail || user.email === adminEmail);
 
   // 未登录访问后台 → 跳转登录页
-  if (!isAdmin && req.nextUrl.pathname.startsWith('/admin')) {
+  if (!isAdmin && pathname.startsWith('/admin')) {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
   // 已登录访问登录页 → 跳转后台
-  if (isAdmin && req.nextUrl.pathname === '/login') {
+  if (isAdmin && pathname === '/login') {
     return NextResponse.redirect(new URL('/admin', req.url));
   }
 

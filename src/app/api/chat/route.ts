@@ -1,4 +1,5 @@
 import { ZhipuAI } from "zhipuai";
+import { createServerSupabaseAdmin } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
 
@@ -11,26 +12,53 @@ const MAX_CONTENT_LENGTH = 2000;
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 10;
+
+// 进程内限流兜底：单实例部署或未配置 service role 时使用
 const rateHits = new Map<string, number[]>();
 
-function isRateLimited(ip: string): boolean {
+function isRateLimitedInMemory(ip: string): boolean {
   const now = Date.now();
-  if (rateHits.size > 10_000) {
-    for (const [key, hits] of rateHits) {
-      const recent = hits.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
-      if (recent.length === 0) rateHits.delete(key);
-      else rateHits.set(key, recent);
-    }
-  }
   const hits = (rateHits.get(ip) ?? []).filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
   hits.push(now);
   rateHits.set(ip, hits);
+
+  if (rateHits.size > 10_000) {
+    for (const [key, ts] of rateHits) {
+      if (ts.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) rateHits.delete(key);
+    }
+  }
+
   return hits.length > RATE_LIMIT_MAX;
+}
+
+// 跨实例限流：借助 Supabase 数据库共享计数（service role 调用 RPC），
+// 避免 Serverless 多实例下进程内限流失效；数据库不可用时回退到进程内限流。
+async function isRateLimited(ip: string): Promise<boolean> {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return isRateLimitedInMemory(ip);
+  }
+
+  try {
+    const supabase = createServerSupabaseAdmin();
+    const { data, error } = await supabase.rpc("rate_limit_check", {
+      p_key: ip,
+      p_window_ms: RATE_LIMIT_WINDOW_MS,
+      p_max: RATE_LIMIT_MAX,
+    });
+
+    if (!error && typeof data === "boolean") {
+      return !data;
+    }
+  } catch {
+    // 忽略，回退到进程内限流
+  }
+
+  return isRateLimitedInMemory(ip);
 }
 
 export async function POST(req: Request) {
   const ip = (req.headers.get("x-forwarded-for") ?? "unknown").split(",")[0].trim();
-  if (isRateLimited(ip)) {
+  if (await isRateLimited(ip)) {
     return new Response("Too many requests, please slow down", { status: 429 });
   }
 

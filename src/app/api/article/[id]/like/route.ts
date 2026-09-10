@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabaseServer";
+import { createServerSupabase, createServerSupabaseAdmin } from "@/lib/supabaseServer";
 
 // GET 方法：从 URL 解析 id
 export async function GET(req: Request) {
@@ -43,7 +43,8 @@ export async function POST(
   );
 
   if (rpcError) {
-    const { data: article, error: fetchError } = await supabase
+    const admin = createServerSupabaseAdmin();
+    const { data: article, error: fetchError } = await admin
       .from("articles")
       .select("likes")
       .eq("id", id)
@@ -55,7 +56,7 @@ export async function POST(
 
     const newLikes = (article.likes ?? 0) + 1;
 
-    const { error: updateError } = await supabase
+    const { error: updateError } = await admin
       .from("articles")
       .update({ likes: newLikes })
       .eq("id", id);
