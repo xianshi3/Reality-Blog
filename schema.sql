@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS public.articles (
   tags text DEFAULT '{}',
   image_url text,
   likes integer DEFAULT 0,
+  ai_summary text,
   CONSTRAINT articles_pkey PRIMARY KEY (id)
 );
 
@@ -148,3 +149,6 @@ DROP POLICY IF EXISTS "articles_update_auth" ON public.articles;
 DROP POLICY IF EXISTS "articles_delete_auth" ON public.articles;
 DROP POLICY IF EXISTS "profile_insert_auth" ON public.profile;
 DROP POLICY IF EXISTS "profile_update_auth" ON public.profile;
+
+-- 如果 articles 表已存在但缺少 AI 摘要字段，执行下方 SQL：
+ALTER TABLE public.articles ADD COLUMN IF NOT EXISTS ai_summary text;

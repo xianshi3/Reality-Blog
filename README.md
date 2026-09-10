@@ -72,6 +72,7 @@
 | <img src="https://img.shields.io/badge/Markdown-000000?style=flat-square&logo=markdown&logoColor=white"/> 写作 | 全功能 Markdown 编辑器，工具栏一键插入标题、列表、代码块、图片语法 |
 | <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white"/> 后台管理 | 控制台统计、文章管理（搜索/分页/分类筛选）、图片管理、个人信息设置 |
 | <img src="https://img.shields.io/badge/ZhipuAI-3859FF?style=flat-square&logoColor=white"/> AI 聊天 | 集成智谱 GLM-4-Flash 模型，浮动气泡 + 全屏双模式，流式输出 |
+| <img src="https://img.shields.io/badge/AI_摘要-6366f1?style=flat-square&logoColor=white"/> AI 摘要 | 文章卡片底部一键生成一句话摘要，服务端 + 本地双重缓存，零重复开销 |
 | <img src="https://img.shields.io/badge/dynamic-6366f1?style=flat-square&label=Parallax&labelColor=6366f1&color=6366f1"/> 视差首页 | 动态视差滚动背景 + 鼠标 3D 倾斜交互，支持自定义背景图与标题 |
 | <img src="https://img.shields.io/badge/Framer-0055FF?style=flat-square&logo=framer&logoColor=white"/> 动画 | 页面过渡动画、卡片悬停效果、视差滚动、点赞微交互 |
 | <img src="https://img.shields.io/badge/dark_mode-000000?style=flat-square&logo=darkreader&logoColor=white"/> 深色模式 | 系统自动感知 + 手动切换，inline script 防 FOUC，全站适配 |
@@ -197,6 +198,7 @@ CREATE TABLE articles (
   content   TEXT,
   tags      TEXT DEFAULT '{}',
   likes     INTEGER DEFAULT 0,
+  ai_summary TEXT,
   image_url TEXT
 );
 ```
@@ -248,6 +250,7 @@ CREATE TABLE profile (
 |------|------|------|
 | `GET/POST/PUT/DELETE` | `/api/article` | 文章 CRUD（写操作需登录） |
 | `GET/POST` | `/api/article/[id]/like` | 点赞（RPC 原子自增，支持匿名访客） |
+| `POST` | `/api/article/[id]/summary` | AI 一句话摘要（限流 + 服务端缓存） |
 | `GET/PUT` | `/api/profile` | 个人信息（PUT 需登录） |
 | `POST` | `/api/chat` | AI 聊天 (SSE，跨实例限流) |
 | `POST` | `/api/auth/set-cookie` | 登录会话 |
@@ -311,6 +314,10 @@ src/
 
 基于智谱 GLM-4-Flash 模型，SSE 流式实时输出。
 
+### AI 摘要
+
+文章卡片底部信息栏内置「AI 摘要」入口（极简文字按钮），点击即可用 GLM-4-Flash 生成一句话摘要：结果写入数据库 `ai_summary` 字段（所有访客共享）并缓存在浏览器本地，重复点击零延迟、零模型开销；再次点击可折叠。接口按 IP 限流，防止密钥滥用。
+
 ### 文章阅读体验
 
 - 📑 可拖拽 **目录导航**（支持固定/浮动切换）
@@ -329,7 +336,7 @@ src/
 - 🔒 数据库最小权限：仅公开 `SELECT`，文章/资料的增删改全部经 service role 落库，anon key 只读
 - 📤 图片上传走服务端鉴权接口（service role），杜绝匿名直传滥用
 - ❤️ 点赞使用 `increment_likes` RPC 原子自增（SECURITY DEFINER），无并发竞态；前端本地记录已赞，刷新不重复点赞
-- 🚦 AI 聊天接口跨实例限流（数据库 RPC 计数，进程内兜底），防止 API 密钥被盗刷
+- 🚦 AI 聊天 / 梗概接口跨实例限流（数据库 RPC 计数，进程内兜底），防止 API 密钥被盗刷
 
 ---
 

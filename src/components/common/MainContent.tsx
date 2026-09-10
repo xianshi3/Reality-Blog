@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { FiBookOpen } from "react-icons/fi";
 import ImageWithLoader from "@/components/common/ImageWithLoader";
+import ArticleCardFooter from "@/components/common/ArticleCardFooter";
 import type { Article } from "@/types/article";
 
 interface MainContentProps {
@@ -30,18 +30,16 @@ export default function MainContent({
       {/* 文章列表 */}
       {/* ===================== */}
 
-      <div
-        key={currentPage}
-        className="animate-fadeInUp"
-      >
+      <div key={currentPage}>
         {/* 统一 grid，不再分年份 */}
         <div className="md:columns-2 columns-1 gap-x-6">
 
-          {articles.map((article) => (
+          {articles.map((article, index) => (
             <div key={article.link} className="break-inside-avoid mb-6">
               <Link
                 href={article.link}
                 className="article-item group flex flex-col w-full overflow-hidden"
+                style={{ animationDelay: `${Math.min(index, 8) * 55}ms` }}
               >
 
                 {/* 封面图 */}
@@ -51,6 +49,7 @@ export default function MainContent({
                       src={article.image_url}
                       alt={article.title}
                       className="w-full h-auto object-contain rounded-lg shadow-sm"
+                      wrapperClassName="w-full transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
                       loading="eager"
                     />
                   </div>
@@ -90,20 +89,8 @@ export default function MainContent({
                     </div>
                   )}
 
-                  {/* 底部信息 */}
-                  <div className="flex justify-between items-center text-sm text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-800">
-                    <span>
-                      {article.date
-                        ? new Date(article.date).toLocaleDateString("zh-CN", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : "未知日期"}
-                    </span>
-
-                    <FiBookOpen className="w-4 h-4 text-gray-300 dark:text-gray-600 group-hover:text-gray-500 dark:group-hover:text-gray-400 transition-colors duration-200" />
-                  </div>
+                  {/* AI 一句话梗概 */}
+                  <ArticleCardFooter articleId={article.id} date={article.date} />
 
                 </div>
               </Link>

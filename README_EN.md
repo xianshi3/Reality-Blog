@@ -72,6 +72,7 @@
 | <img src="https://img.shields.io/badge/Markdown-000000?style=flat-square&logo=markdown&logoColor=white"/> Writing | Full-featured Markdown editor with a toolbar for headings, lists, code blocks and images |
 | <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white"/> Admin Panel | Dashboard stats, article management (search/pagination/category filter), image manager, profile settings |
 | <img src="https://img.shields.io/badge/ZhipuAI-3859FF?style=flat-square&logoColor=white"/> AI Chat | Zhipu GLM-4-Flash model, floating bubble + fullscreen modes, streaming output |
+| <img src="https://img.shields.io/badge/AI_Summary-6366f1?style=flat-square&logoColor=white"/> AI Summary | One-click one-line summary in the article card footer, with server-side + local caching |
 | <img src="https://img.shields.io/badge/dynamic-6366f1?style=flat-square&label=Parallax&labelColor=6366f1&color=6366f1"/> Parallax Home | Dynamic parallax background + 3D mouse tilt, custom background & titles |
 | <img src="https://img.shields.io/badge/Framer-0055FF?style=flat-square&logo=framer&logoColor=white"/> Animations | Page transitions, card hover effects, parallax scrolling, like micro-interactions |
 | <img src="https://img.shields.io/badge/dark_mode-000000?style=flat-square&logo=darkreader&logoColor=white"/> Dark Mode | Auto-detect + manual toggle, inline script prevents FOUC |
@@ -174,6 +175,7 @@ CREATE TABLE articles (
   content   TEXT,
   tags      TEXT DEFAULT '{}',
   likes     INTEGER DEFAULT 0,
+  ai_summary TEXT,
   image_url TEXT
 );
 ```
@@ -225,6 +227,7 @@ CREATE TABLE profile (
 |--------|------|---------|
 | `GET/POST/PUT/DELETE` | `/api/article` | Article CRUD (write requires login) |
 | `GET/POST` | `/api/article/[id]/like` | Likes (atomic RPC, anonymous allowed) |
+| `POST` | `/api/article/[id]/summary` | AI one-line gist (rate-limited + server cache) |
 | `GET/PUT` | `/api/profile` | Profile (PUT requires login) |
 | `POST` | `/api/chat` | AI chat (SSE, cross-instance rate limiting) |
 | `POST` | `/api/auth/set-cookie` | Login session |
@@ -288,6 +291,10 @@ Background scrolls with an offset, and mouse hover creates 3D tilt + parallax. T
 
 Built on the Zhipu GLM-4-Flash model with SSE streaming.
 
+### AI One-Line Summary
+
+The article card footer has an "AI Summary" entry (a minimal text button). Clicking it generates a one-line summary with GLM-4-Flash: the result is stored in the database `ai_summary` column (shared by all visitors) and cached in the browser, so repeated clicks are instant and cost nothing; click again to collapse. The endpoint is IP rate-limited to prevent API key abuse.
+
 ### Reading Experience
 
 - 📑 Draggable **table of contents** (fixed/floating switch)
@@ -306,7 +313,7 @@ Built on the Zhipu GLM-4-Flash model with SSE streaming.
 - 🔒 Least-privilege database: public `SELECT` only; article/profile writes go through the service role; the anon key is read-only
 - 📤 Image uploads go through the authenticated server API (service role), preventing anonymous abuse
 - ❤️ Likes use the atomic `increment_likes` RPC (SECURITY DEFINER), no race conditions; local dedup prevents repeat likes on refresh
-- 🚦 Cross-instance AI chat rate limiting (database RPC count, in-memory fallback) to prevent API key abuse
+- 🚦 Cross-instance AI chat / summary rate limiting (database RPC count, in-memory fallback) to prevent API key abuse
 
 ---
 

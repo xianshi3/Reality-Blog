@@ -9,5 +9,6 @@ export interface Article {
   link: string;
   likes?: number;
   image_url?: string;
+  ai_summary?: string;
 }
 

@@ -24,7 +24,7 @@
 
 ## 其他防护
 
-- **AI 聊天限流**：`/api/chat` 按 IP 限流，计数存储在 `rate_limits` 表中通过 `rate_limit_check` RPC 原子更新，跨 Serverless 实例共享；未配置 `SUPABASE_SERVICE_ROLE_KEY` 时回退到进程内限流
+- **AI 接口限流**：`/api/chat` 与 `/api/article/[id]/summary` 按 IP 限流，计数存储在 `rate_limits` 表中通过 `rate_limit_check` RPC 原子更新，跨 Serverless 实例共享；未配置 `SUPABASE_SERVICE_ROLE_KEY` 时回退到进程内限流
 - **匿名点赞去重**：点赞为匿名操作，服务端无身份可依赖，前端通过 `localStorage` 记录已赞文章，避免同一浏览器重复点赞；如需强去重请引入登录态
 
 ## 已知限制
