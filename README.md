@@ -1,4 +1,10 @@
 <div align="center">
+
+[简体中文](README.md) · [English](README_EN.md)
+
+</div>
+
+<div align="center">
   <br/>
   <br/>
   <img src="https://img.shields.io/badge/Reality-Blog-6366f1?style=for-the-badge&logoColor=white" alt="Reality Blog" height="40"/>
@@ -30,7 +36,15 @@
   <img src="https://img.shields.io/github/license/xianshi3/Reality-Blog?style=flat-square&color=6366f1" alt="License"/>
   <img src="https://img.shields.io/github/actions/workflow/status/xianshi3/Reality-Blog/ci.yml?style=flat-square" alt="CI"/>
   <img src="https://img.shields.io/badge/PRs-welcome-22c55e?style=flat-square" alt="PRs Welcome"/>
+  <img src="https://img.shields.io/github/stars/xianshi3/Reality-Blog?style=flat-square&color=6366f1" alt="Stars"/>
   <img src="https://img.shields.io/github/last-commit/xianshi3/Reality-Blog?style=flat-square&color=6366f1" alt="Last Commit"/>
+
+  <br/>
+  <br/>
+
+  <!-- Live Demo + Deploy -->
+  <a href="https://reality-blog.vercel.app"><img src="https://img.shields.io/badge/Live%20Demo-6366f1?style=for-the-badge&logo=vercel&logoColor=white" alt="Live Demo"/></a>
+  <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fxianshi3%2Freality-blog&env=NEXT_PUBLIC_SUPABASE_URL,NEXT_PUBLIC_SUPABASE_ANON_KEY,SUPABASE_SERVICE_ROLE_KEY,ADMIN_EMAIL,ZHIPU_API_KEY,NEXT_PUBLIC_SITE_URL&project-name=reality-blog&demo-url=https%3A%2F%2Freality-blog.vercel.app&demo-title=Reality%20Blog&demo-description=A%20modern%20personal%20blog"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
 
   <br/>
   <br/>
